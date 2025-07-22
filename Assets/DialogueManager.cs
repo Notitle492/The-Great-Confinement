@@ -8,7 +8,7 @@ using Ink.Runtime;
 public class DialogueManager : MonoBehaviour
 {
     [Header("Dialogue UI")]
-    [SerializeField] private GameObject dialoguePanel;
+    [SerializeField] private GameObject dialogueCanvas;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private Image portraitImage;
@@ -47,7 +47,7 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
         dialogueIsPlaying = false;
-        dialoguePanel.SetActive(false);
+        dialogueCanvas.SetActive(false);
         choicesPanel.SetActive(false);
     }
 
@@ -64,14 +64,14 @@ public class DialogueManager : MonoBehaviour
     {
         currentStory = new Story(inkJSON.text);
         dialogueIsPlaying = true;
-        dialoguePanel.SetActive(true);
+        dialogueCanvas.SetActive(true);
         ContinueStory();
     }
 
     private void ExitDialogueMode()
     {
         dialogueIsPlaying = false;
-        dialoguePanel.SetActive(false);
+        dialogueCanvas.SetActive(false);
         dialogueText.text = "";
         nameText.text = "";
         portraitImage.sprite = null;
