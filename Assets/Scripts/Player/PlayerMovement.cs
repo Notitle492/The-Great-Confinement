@@ -45,8 +45,13 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
+
+        /* if (DialogueManager.GetInstance().dialogueIsPlaying)
+        {
+            return;
+        } */
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
 }

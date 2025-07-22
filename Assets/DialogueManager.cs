@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Ink.Runtime;
+using UnityEngine.EventSystems;
+
 
 public class DialogueManager : MonoBehaviour
 {
@@ -20,7 +22,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private string defaultName = "???";
 
     private Story currentStory;
-    private bool dialogueIsPlaying;
+    public bool dialogueIsPlaying { get; private set; }
+
     private List<Button> choiceButtons = new List<Button>();
 
     private static DialogueManager instance;
@@ -34,14 +37,14 @@ public class DialogueManager : MonoBehaviour
         instance = this;
     }
 
-    public bool IsDialoguePlaying()
-    {
-        return dialogueIsPlaying;
-    }
-
     public static DialogueManager GetInstance()
     {
         return instance;
+    }
+
+    public bool IsDialoguePlaying()
+    {
+        return dialogueIsPlaying;
     }
 
     private void Start()
@@ -54,6 +57,7 @@ public class DialogueManager : MonoBehaviour
     private void Update()
     {
         if (!dialogueIsPlaying) return;
+
         if (InputManager.GetInstance().GetSubmitPressed() && currentStory.currentChoices.Count == 0)
         {
             ContinueStory();
@@ -146,19 +150,27 @@ public class DialogueManager : MonoBehaviour
     {
         ClearChoices();
 
-        List<Choice> choices = currentStory.currentChoices;
-        if (choices.Count > 0)
+        List<Choice> currentChoices = currentStory.currentChoices;
+        if (currentChoices.Count > 0)
         {
             choicesPanel.SetActive(true);
-            foreach (Choice choice in choices)
+            foreach (Choice choice in currentChoices)
             {
                 Button choiceButton = Instantiate(choiceButtonPrefab, choicesPanel.transform);
                 TextMeshProUGUI choiceText = choiceButton.GetComponentInChildren<TextMeshProUGUI>();
                 choiceText.text = choice.text.Trim();
 
-                choiceButton.onClick.AddListener(() => OnChoiceSelected(choice.index));
+                int choiceIndex = choice.index;
+                choiceButton.onClick.AddListener(() => OnChoiceSelected(choiceIndex));
                 choiceButtons.Add(choiceButton);
             }
+
+            /* // ✅ 自動選中第一個選項
+            if (choiceButtons.Count > 0)
+            {
+                EventSystem.current.SetSelectedGameObject(null); // 清除之前的選擇
+                EventSystem.current.SetSelectedGameObject(choiceButtons[0].gameObject);
+            } */
         }
         else
         {
