@@ -12,17 +12,29 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        Debug.Log("PlayerMovement Start called. Rigidbody2D? " + (rb != null) + ", Animator? " + (animator != null));
+
+        if (rb == null || animator == null)
+        {
+            Debug.LogError("PlayerMovement: Missing Rigidbody2D or Animator!");
+        }
     }
 
     void Update()
     {
-        // 取得玩家輸入（WASD）
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        // 如果對話正在進行，停下來不動
+        if (DialogueManager.GetInstance() != null && DialogueManager.GetInstance().IsDialoguePlaying())
+        {
+            moveInput = Vector2.zero;
+            animator.SetFloat("Horizontal", 0);
+            animator.SetFloat("Vertical", 0);
+            return;
+        }
+
+        // 從 InputManager 取得玩家輸入
+        Vector2 input = InputManager.GetInstance().GetMovementDirection();
         moveInput = input.normalized;
 
-        /* Debug.Log($"Input: {moveInput.x}, {moveInput.y}"); */
-
+        // 設定動畫參數
         animator.SetFloat("Horizontal", moveInput.x);
         animator.SetFloat("Vertical", moveInput.y);
 
@@ -31,12 +43,10 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("LastHorizontal", moveInput.x);
             animator.SetFloat("LastVertical", moveInput.y);
         }
-        
     }
 
     void FixedUpdate()
     {
-        // 用 Rigidbody2D 移動角色
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
 }
