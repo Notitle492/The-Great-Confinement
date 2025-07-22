@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class InputManager : MonoBehaviour
 {
+    private Controls controls;
     private Vector2 moveDirection = Vector2.zero;
     private bool interactPressed = false;
     private bool submitPressed = false;
@@ -22,6 +23,31 @@ public class InputManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(gameObject);
+
+        controls = new Controls(); // ✅ 修正：初始化 Controls
+
+
+        // ✅ 綁定 Move
+        controls.Player.Move.performed += MovePressed;
+        controls.Player.Move.canceled += MovePressed;
+
+        // ✅ 綁定 Interact
+        controls.Player.Interact.performed += InteractButtonPressed;
+        controls.Player.Interact.canceled += InteractButtonPressed;
+
+        // ✅ 綁定 Submit
+        controls.Player.Submit.performed += SubmitButtonPressed;
+        controls.Player.Submit.canceled += SubmitButtonPressed;
+    }
+
+    private void OnEnable()
+    {
+        controls.Enable(); // ✅ 修正
+    }
+
+    private void OnDisable()
+    {
+        controls.Disable(); // ✅ 修正
     }
 
     public static InputManager GetInstance()
@@ -29,7 +55,6 @@ public class InputManager : MonoBehaviour
         return instance;
     }
 
-    // ✅ 外部調用的讀取方法
     public Vector2 GetMovementDirection()
     {
         return moveDirection;
@@ -44,13 +69,13 @@ public class InputManager : MonoBehaviour
     {
         if (submitPressed)
         {
-            submitPressed = false; // 吃一次就清空
+            submitPressed = false;
             return true;
         }
         return false;
     }
 
-    // ✅ 這三個是給 Player Input 事件綁定用的，必須 public
+    // ✅ 給 PlayerInput 事件用
     public void MovePressed(InputAction.CallbackContext context)
     {
         if (context.performed || context.canceled)
