@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
+        
 
         controls = new Controls(); // ✅ 修正：初始化 Controls
 
