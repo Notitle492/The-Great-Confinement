@@ -627,6 +627,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 44667c3c-d70d-4a31-bf84-db4826fa4f48
     m_ActionName: Player/submit[/Keyboard/anyKey]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 257e9c07-85d7-4bd2-adb8-a2fb6f34a6f2
+    m_ActionName: UI/Point
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dde8f1ba-df22-479e-bd34-410f8e8ef45a
+    m_ActionName: UI/LeftClick
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2c8899e0-62d2-4c95-a45b-2102edbbbbca
+    m_ActionName: UI/Navigate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3a4c1812-d504-48ee-8eb8-69720cee902c
+    m_ActionName: UI/Submit
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8d9886d7-a037-476b-a8b3-a212a40c900c
+    m_ActionName: UI/Cancel
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -921,12 +941,12 @@ PrefabInstance:
     - target: {fileID: 4561206447769468151, guid: 9ab59ac78b59b0a48800479d6da267c8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.2
+      value: -5.98
       objectReference: {fileID: 0}
     - target: {fileID: 4561206447769468151, guid: 9ab59ac78b59b0a48800479d6da267c8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.4
+      value: -8.42
       objectReference: {fileID: 0}
     - target: {fileID: 4561206447769468151, guid: 9ab59ac78b59b0a48800479d6da267c8,
         type: 3}
@@ -1508,12 +1528,12 @@ PrefabInstance:
     - target: {fileID: 4561206447769468151, guid: 9ab59ac78b59b0a48800479d6da267c8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.14
+      value: 9.49
       objectReference: {fileID: 0}
     - target: {fileID: 4561206447769468151, guid: 9ab59ac78b59b0a48800479d6da267c8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6
+      value: -6.48
       objectReference: {fileID: 0}
     - target: {fileID: 4561206447769468151, guid: 9ab59ac78b59b0a48800479d6da267c8,
         type: 3}
@@ -3050,12 +3070,12 @@ PrefabInstance:
     - target: {fileID: 6497900731953354867, guid: b9014aa4a601f5e449b84a05334fed07,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.63
+      value: 9.84
       objectReference: {fileID: 0}
     - target: {fileID: 6497900731953354867, guid: b9014aa4a601f5e449b84a05334fed07,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.94
+      value: -1.45
       objectReference: {fileID: 0}
     - target: {fileID: 6497900731953354867, guid: b9014aa4a601f5e449b84a05334fed07,
         type: 3}
