@@ -227,6 +227,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ExitToMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""d9f8383e-edad-4d98-a818-6942ec812940"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -328,6 +337,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4f085e3-b2e8-4f6a-ab23-e04dfe73d44c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ExitToMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -407,6 +427,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
+        m_UI_ExitToMenu = m_UI.FindAction("ExitToMenu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -535,6 +556,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Submit;
     private readonly InputAction m_UI_Cancel;
+    private readonly InputAction m_UI_ExitToMenu;
     public struct UIActions
     {
         private @Controls m_Wrapper;
@@ -544,6 +566,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
+        public InputAction @ExitToMenu => m_Wrapper.m_UI_ExitToMenu;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -568,6 +591,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
+            @ExitToMenu.started += instance.OnExitToMenu;
+            @ExitToMenu.performed += instance.OnExitToMenu;
+            @ExitToMenu.canceled += instance.OnExitToMenu;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -587,6 +613,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
+            @ExitToMenu.started -= instance.OnExitToMenu;
+            @ExitToMenu.performed -= instance.OnExitToMenu;
+            @ExitToMenu.canceled -= instance.OnExitToMenu;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -662,5 +691,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnExitToMenu(InputAction.CallbackContext context);
     }
 }
