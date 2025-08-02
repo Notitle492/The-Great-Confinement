@@ -13,6 +13,9 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private Item currentItem;
 
+    public Sprite defaultSlotImage; // 拖入你希望的預設槽位圖片
+
+
     public void SetItem(Item item)
     {
         currentItem = item;
@@ -26,8 +29,14 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void ClearSlot()
     {
         currentItem = null;
-        icon.sprite = null;
-        icon.enabled = false;
+
+        if (icon != null)
+        {
+            icon.sprite = defaultSlotImage; // 換成預設空圖
+            icon.color = Color.white;
+        }
+        /* icon.sprite = null;
+        icon.enabled = false; */
         if (tooltip != null)
             tooltip.SetActive(false);
     }
