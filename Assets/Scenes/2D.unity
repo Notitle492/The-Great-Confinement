@@ -1106,6 +1106,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemToGive: {fileID: 11400000, guid: b0d5d9fe696308f418b7762b379a0908, type: 2}
+  iconToShow: {fileID: 700987827}
+  appearSound: {fileID: 8300000, guid: 0d88822d7ecd28c46a46e94ebdb86128, type: 3}
 --- !u!4 &199015252 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6497900731953354867, guid: b9014aa4a601f5e449b84a05334fed07,
@@ -2333,6 +2335,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ab59ac78b59b0a48800479d6da267c8, type: 3}
+--- !u!1 &700987827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9079475084033104829, guid: d29d11ef8970a244d97d8982f5e3b225,
+    type: 3}
+  m_PrefabInstance: {fileID: 8784903890722242501}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &700987828 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8247200362314753172, guid: d29d11ef8970a244d97d8982f5e3b225,
@@ -2345,7 +2353,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 8784903890722242501}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 700987827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8dd0f44fabea1d408c101a86b2cabaf, type: 3}
