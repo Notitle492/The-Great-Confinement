@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static InventoryManager Instance;
+
+    public List<Item> items = new List<Item>();
+    public int maxSlots = 8;
+    public InventoryUI inventoryUI;
+
+    public delegate void OnInventoryChanged();
+    public event OnInventoryChanged onInventoryChangedCallback;
+
+    private void Awake()
     {
-        
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool AddItem(Item item)
     {
-        
+        if (items.Count >= maxSlots)
+        {
+            Debug.Log("背包已滿");
+            return false;
+        }
+
+        items.Add(item);
+        inventoryUI?.UpdateUI(items); // ✅ 告訴 UI 更新畫面
+        /* onInventoryChangedCallback?.Invoke(); */
+        return true;
     }
 }

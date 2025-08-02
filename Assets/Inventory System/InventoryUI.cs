@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public List<ItemSlot> slots; // 手動拖進來 8 個 SlotIcon
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateUI(List<Item> items)
     {
-        
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (i < items.Count)
+                slots[i].SetItem(items[i]);
+            else
+                slots[i].ClearSlot();
+        }
     }
 }

@@ -24,6 +24,8 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private IconFader iconFader;
 
+    
+
 
     private Story currentStory;
     public bool dialogueIsPlaying { get; private set; }
@@ -111,15 +113,17 @@ public class DialogueManager : MonoBehaviour
             iconFader.FadeIn(); // ✅ 淡入圖示
         }
 
-        // 🔽 如果角色上有 MonsterIconTrigger，就呼叫圖示顯示
+        // 🔽 如果角色上有 ItemTrigger，就呼叫圖示顯示
         if (currentSpeaker != null)
         {
-            MonsterIconTrigger iconTrigger = currentSpeaker.GetComponent<MonsterIconTrigger>();
+            ItemTrigger iconTrigger = currentSpeaker.GetComponent<ItemTrigger>();
             if (iconTrigger != null)
             {
                 iconTrigger.OnDialogueEnded();
             }
         }
+
+        
     }
 
     private void ContinueStory()
