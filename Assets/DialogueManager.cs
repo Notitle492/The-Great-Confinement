@@ -110,6 +110,16 @@ public class DialogueManager : MonoBehaviour
         {
             iconFader.FadeIn(); // ✅ 淡入圖示
         }
+
+        // 🔽 如果角色上有 MonsterIconTrigger，就呼叫圖示顯示
+        if (currentSpeaker != null)
+        {
+            MonsterIconTrigger iconTrigger = currentSpeaker.GetComponent<MonsterIconTrigger>();
+            if (iconTrigger != null)
+            {
+                iconTrigger.OnDialogueEnded();
+            }
+        }
     }
 
     private void ContinueStory()
@@ -222,22 +232,5 @@ public class DialogueManager : MonoBehaviour
         ContinueStory();
     }
 
-    IEnumerator ShowIconWithDelay()
-    {
-        yield return new WaitForSeconds(1f);
-        iconObject.SetActive(true);
-    }
-
-
-    if (!story.canContinue && !story.currentChoices.Any())
-    {
-        // 通知 NPC
-        currentTalker?.GetComponent<NPCIconTrigger>()?.OnDialogueEnded();
-    }
-
-    // 你從外部呼叫 DialogueManager 的時候
-    DialogueManager.Instance.StartDialogue(Test_monsterInkJSON, Monster); // 這裡的 gameObject 是某個 NPC
-
-
-
+            
 }

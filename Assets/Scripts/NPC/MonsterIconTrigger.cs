@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class NPCIconTrigger : MonoBehaviour
+public class MonsterIconTrigger : MonoBehaviour
 {
-    public GameObject iconObject; // 要出現的圖示
+    public GameObject PenAndQuestionIcon; // 要出現的圖示
     private bool hasTalked = false;
 
     // DialogueManager 呼叫這個方法，代表對話結束
@@ -10,8 +10,10 @@ public class NPCIconTrigger : MonoBehaviour
     {
         if (!hasTalked)
         {
-            iconObject.SetActive(true);
+            PenAndQuestionIcon.SetActive(true);
             hasTalked = true;
         }
     }
+
+    
 }
