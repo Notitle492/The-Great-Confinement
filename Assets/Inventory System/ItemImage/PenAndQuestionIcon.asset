@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PenAndQuestionIcon
   m_EditorClassIdentifier: 
   ItemID: 3
-  ItemName: "\u7B46+\u554F\u865F\u5716\u793A"
+  ItemName: "NPC1\u7121\u7B46\u66B4\u8E81"
   ItemImage: {fileID: 21300000, guid: 4f776c3e21213034da99f292c48418b2, type: 3}

@@ -22,8 +22,12 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         icon.sprite = item.ItemImage;
         icon.enabled = true;
 
-        if (tooltipText != null)
-            tooltipText.text = item.ItemName;
+        /* if (tooltipText != null)
+            tooltipText.text = item.ItemName; */
+        
+        // 不在這裡設置 tooltip，等滑鼠進入時再設置
+        if (tooltip != null)
+            tooltip.SetActive(false); // 一開始不顯示
     }
 
     public void ClearSlot()
@@ -44,12 +48,18 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (currentItem != null && tooltip != null)
-            tooltip.SetActive(true);
+        {
+            tooltip.SetActive(true); // 顯示 chatbox
+            if (tooltipText != null)
+                tooltipText.text = currentItem.ItemName; // 只在滑鼠進來時顯示名稱
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (tooltip != null)
-            tooltip.SetActive(false);
+        {
+            tooltip.SetActive(false); // 滑鼠離開就關閉
+        }
     }
 }
