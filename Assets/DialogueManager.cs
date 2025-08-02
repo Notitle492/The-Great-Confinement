@@ -21,12 +21,27 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Sprite defaultPortrait;
     [SerializeField] private string defaultName = "???";
 
+
+    [SerializeField] private IconFader iconFader;
+
+
     private Story currentStory;
     public bool dialogueIsPlaying { get; private set; }
 
     private List<Button> choiceButtons = new List<Button>();
 
     private static DialogueManager instance;
+
+    private GameObject currentSpeaker;
+    public void StartDialogue(TextAsset inkJSON, GameObject speaker)
+{
+    currentSpeaker = speaker;
+    currentStory = new Story(inkJSON.text);
+    dialogueIsPlaying = true;
+    dialogueCanvas.SetActive(true);
+    ContinueStory();
+}
+
 
     private void Awake()
     {
@@ -81,6 +96,20 @@ public class DialogueManager : MonoBehaviour
         portraitImage.sprite = null;
         portraitImage.color = new Color(1, 1, 1, 0);
         ClearChoices();
+
+
+        // 🔽 嘗試取得 CanvasGroup 並停用互動（這不是必要，但可強化穩定性）
+        if (dialogueCanvas.TryGetComponent<CanvasGroup>(out CanvasGroup canvasGroup))
+        {
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+        }
+
+        // 🔽 在對話結束後觸發圖示淡入
+        if (iconFader != null)
+        {
+            iconFader.FadeIn(); // ✅ 淡入圖示
+        }
     }
 
     private void ContinueStory()
@@ -192,4 +221,23 @@ public class DialogueManager : MonoBehaviour
         currentStory.ChooseChoiceIndex(choiceIndex);
         ContinueStory();
     }
+
+    IEnumerator ShowIconWithDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        iconObject.SetActive(true);
+    }
+
+
+    if (!story.canContinue && !story.currentChoices.Any())
+    {
+        // 通知 NPC
+        currentTalker?.GetComponent<NPCIconTrigger>()?.OnDialogueEnded();
+    }
+
+    // 你從外部呼叫 DialogueManager 的時候
+    DialogueManager.Instance.StartDialogue(Test_monsterInkJSON, Monster); // 這裡的 gameObject 是某個 NPC
+
+
+
 }

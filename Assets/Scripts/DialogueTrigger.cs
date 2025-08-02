@@ -27,10 +27,12 @@ public class DialogueTrigger : MonoBehaviour
                 visualCue.SetActive(true);
 
             if (InputManager.GetInstance() != null && InputManager.GetInstance().GetInteractPressed()) // 你可以改成自己的輸入方式
-            {
-                DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
+            {   
+                DialogueManager.Instance.StartDialogue(inkJSON, this.gameObject);
+                /* DialogueManager.GetInstance().EnterDialogueMode(inkJSON); */
                 // 之後你可以呼叫 InkDialogueManager 來啟動對話
             }
+            
         }
         else
         {
