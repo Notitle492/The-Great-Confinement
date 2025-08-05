@@ -20,25 +20,36 @@ public class ItemTrigger : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        // 建議避免音效自動播放
+        audioSource.playOnAwake = false;
     }
 
     public void OnDialogueEnded()
     {
+        // 加入物品邏輯（如有）
         if (!hasGivenItem && itemToGive != null)
         {
             InventoryManager.Instance.AddItem(itemToGive);
             hasGivenItem = true;
         }
 
-        if (iconToShow != null && !iconToShow.activeSelf)
-        {
-            iconToShow.SetActive(true);
+        // 顯示圖示（若尚未顯示）
+        bool iconJustShown = false;
 
-            // 播放出現音效
-            if (appearSound != null && audioSource != null)
+        if (iconToShow != null)
+        {
+            if (!iconToShow.activeSelf)
             {
-                audioSource.PlayOneShot(appearSound);
+                iconToShow.SetActive(true);
+                iconJustShown = true; // 圖示是現在才顯示的
             }
+        }
+
+        // 如果圖示剛剛出現，播放音效
+        if (iconJustShown && appearSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(appearSound);
         }
     }
 }
