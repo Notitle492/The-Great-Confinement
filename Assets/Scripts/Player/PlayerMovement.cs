@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.LogError("PlayerMovement: Missing Rigidbody2D or Animator!");
         }
+
+        // 🔹 一開始面向前方（front）
+        animator.SetFloat("LastHorizontal", 0f);
+        animator.SetFloat("LastVertical", -1f);
     }
 
     void Update()

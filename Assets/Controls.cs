@@ -236,6 +236,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchScene"",
+                    ""type"": ""Button"",
+                    ""id"": ""88055be4-6243-4588-883a-fd638d18cbd1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -348,6 +357,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""ExitToMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""80f6c39a-8226-421f-8d23-c22afb03a74f"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchScene"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -428,6 +448,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_ExitToMenu = m_UI.FindAction("ExitToMenu", throwIfNotFound: true);
+        m_UI_SwitchScene = m_UI.FindAction("SwitchScene", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -557,6 +578,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Submit;
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_ExitToMenu;
+    private readonly InputAction m_UI_SwitchScene;
     public struct UIActions
     {
         private @Controls m_Wrapper;
@@ -567,6 +589,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @ExitToMenu => m_Wrapper.m_UI_ExitToMenu;
+        public InputAction @SwitchScene => m_Wrapper.m_UI_SwitchScene;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -594,6 +617,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @ExitToMenu.started += instance.OnExitToMenu;
             @ExitToMenu.performed += instance.OnExitToMenu;
             @ExitToMenu.canceled += instance.OnExitToMenu;
+            @SwitchScene.started += instance.OnSwitchScene;
+            @SwitchScene.performed += instance.OnSwitchScene;
+            @SwitchScene.canceled += instance.OnSwitchScene;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -616,6 +642,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @ExitToMenu.started -= instance.OnExitToMenu;
             @ExitToMenu.performed -= instance.OnExitToMenu;
             @ExitToMenu.canceled -= instance.OnExitToMenu;
+            @SwitchScene.started -= instance.OnSwitchScene;
+            @SwitchScene.performed -= instance.OnSwitchScene;
+            @SwitchScene.canceled -= instance.OnSwitchScene;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -692,5 +721,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnExitToMenu(InputAction.CallbackContext context);
+        void OnSwitchScene(InputAction.CallbackContext context);
     }
 }
