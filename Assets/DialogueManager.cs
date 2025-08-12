@@ -113,7 +113,7 @@ public class DialogueManager : MonoBehaviour
             iconFader.FadeIn(); // ✅ 淡入圖示
         }
 
-        // 🔽 如果角色上有 ItemTrigger，就呼叫圖示顯示
+        /* // 🔽 如果角色上有 ItemTrigger，就呼叫圖示顯示
         if (currentSpeaker != null)
         {
             ItemTrigger iconTrigger = currentSpeaker.GetComponent<ItemTrigger>();
@@ -121,7 +121,7 @@ public class DialogueManager : MonoBehaviour
             {
                 iconTrigger.OnDialogueEnded();
             }
-        }
+        } */
 
         
     }

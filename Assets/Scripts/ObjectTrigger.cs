@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;  // 引用新輸入系統
 
 public class ObjectTrigger : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class ObjectTrigger : MonoBehaviour
 
     private ItemTrigger itemTrigger;  // 同物件上掛的ItemTrigger組件
 
+    private PlayerInput playerInput;  // 用 PlayerInput 監聽
+    
+
     private void Awake()
     {
         if (visualCue != null)
@@ -17,38 +21,59 @@ public class ObjectTrigger : MonoBehaviour
 
         // 取得同物件上的 ItemTrigger
         itemTrigger = GetComponent<ItemTrigger>();
+        playerInput = FindObjectOfType<PlayerInput>(); // 找到全場的 PlayerInput
         if (itemTrigger == null)
         {
             Debug.LogWarning("ObjectTrigger: 找不到同物件上的 ItemTrigger 組件");
+        }
+
+        
+    }
+
+    private void OnEnable()
+    {
+        if (playerInput != null)
+        {
+            playerInput.actions["Interact"].performed += OnInteract;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (playerInput != null)
+        {
+            playerInput.actions["Interact"].performed -= OnInteract;
         }
     }
 
     private void Update()
     {
-        if (playerInRange && !hasInteracted)
+        if (playerInRange)
         {
-            if (visualCue != null)
+            if (visualCue != null && !visualCue.activeSelf)
                 visualCue.SetActive(true);
-
-            // 按下 E 鍵，觸發互動
-            if (InputManager.GetInstance() != null && InputManager.GetInstance().GetInteractPressed())
-            {
-                // 呼叫 ItemTrigger 的方法來處理新增物品和圖示
-                if (itemTrigger != null)
-                {
-                    itemTrigger.OnDialogueEnded();  // 這裡名字是OnDialogueEnded，沒錯的話就是呼叫它
-                    hasInteracted = true;
-
-                    // 互動後隱藏提示
-                    if (visualCue != null)
-                        visualCue.SetActive(false);
-                }
-            }
         }
         else
         {
-            if (visualCue != null)
+            if (visualCue != null && visualCue.activeSelf)
                 visualCue.SetActive(false);
+        }
+
+        
+    }
+
+    private void OnInteract(InputAction.CallbackContext context)
+    {
+        if (playerInRange && !hasInteracted)
+        {
+            if (itemTrigger != null)
+            {
+                itemTrigger.Interact();
+                hasInteracted = true;
+                if (visualCue != null)
+                    visualCue.SetActive(false);
+                Debug.Log("ObjectTrigger: 互動觸發");
+            }
         }
     }
 
