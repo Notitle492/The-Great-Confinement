@@ -223,6 +223,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ExitTo2D",
+                    "type": "Button",
+                    "id": "4a729841-b2a1-4208-958d-d94dbf251a3e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -344,6 +353,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "SwitchScene",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "75631abf-dba1-4fb9-85c0-025558e3f0c9",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ExitTo2D",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

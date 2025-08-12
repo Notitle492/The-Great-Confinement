@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5566038, g: 0.007876454, b: 0.013144849, a: 1}
+  m_Color: {r: 0.468, g: 0.0065915543, b: 0.009887405, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -889,8 +889,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284045567
-  m_fontColor: {r: 1, g: 0.3443396, b: 0.34916058, a: 1}
+    rgba: 4284900798
+  m_fontColor: {r: 0.745283, g: 0.3972499, b: 0.39933395, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1897,6 +1897,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1586350881}
+  - component: {fileID: 1586350882}
   m_Layer: 5
   m_Name: PuzzleUI
   m_TagString: Untagged
@@ -1929,6 +1930,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1586350882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586350880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 558f1b2657b9bfa41b89e4052b9e6cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1673275293
 GameObject:
   m_ObjectHideFlags: 0

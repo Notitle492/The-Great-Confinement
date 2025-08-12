@@ -245,6 +245,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ExitTo2D"",
+                    ""type"": ""Button"",
+                    ""id"": ""4a729841-b2a1-4208-958d-d94dbf251a3e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -368,6 +377,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchScene"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75631abf-dba1-4fb9-85c0-025558e3f0c9"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ExitTo2D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -449,6 +469,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_ExitToMenu = m_UI.FindAction("ExitToMenu", throwIfNotFound: true);
         m_UI_SwitchScene = m_UI.FindAction("SwitchScene", throwIfNotFound: true);
+        m_UI_ExitTo2D = m_UI.FindAction("ExitTo2D", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -579,6 +600,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_ExitToMenu;
     private readonly InputAction m_UI_SwitchScene;
+    private readonly InputAction m_UI_ExitTo2D;
     public struct UIActions
     {
         private @Controls m_Wrapper;
@@ -590,6 +612,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @ExitToMenu => m_Wrapper.m_UI_ExitToMenu;
         public InputAction @SwitchScene => m_Wrapper.m_UI_SwitchScene;
+        public InputAction @ExitTo2D => m_Wrapper.m_UI_ExitTo2D;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -620,6 +643,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @SwitchScene.started += instance.OnSwitchScene;
             @SwitchScene.performed += instance.OnSwitchScene;
             @SwitchScene.canceled += instance.OnSwitchScene;
+            @ExitTo2D.started += instance.OnExitTo2D;
+            @ExitTo2D.performed += instance.OnExitTo2D;
+            @ExitTo2D.canceled += instance.OnExitTo2D;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -645,6 +671,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @SwitchScene.started -= instance.OnSwitchScene;
             @SwitchScene.performed -= instance.OnSwitchScene;
             @SwitchScene.canceled -= instance.OnSwitchScene;
+            @ExitTo2D.started -= instance.OnExitTo2D;
+            @ExitTo2D.performed -= instance.OnExitTo2D;
+            @ExitTo2D.canceled -= instance.OnExitTo2D;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -722,5 +751,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnExitToMenu(InputAction.CallbackContext context);
         void OnSwitchScene(InputAction.CallbackContext context);
+        void OnExitTo2D(InputAction.CallbackContext context);
     }
 }
