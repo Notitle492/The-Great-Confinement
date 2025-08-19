@@ -10,15 +10,21 @@ public class ItemTrigger : MonoBehaviour
 
     public GameObject iconToShow;      // 更通用：要出現的任意圖示
     public AudioClip appearSound;      // 出現時的音效
-    private AudioSource audioSource;
+    public AudioSource audioSource;    // 直接在 Inspector 指派的 AudioSource
+    public bool useOneShotAudio = false; // 是否用 PlayClipAtPoint 播放一次性音效
+
 
     private void Awake()
     {
-        // 確保這個物件有 AudioSource 組件
-        audioSource = GetComponent<AudioSource>();
+        /// 如果沒有在 Inspector 指派，就自動取得
+        if (audioSource == null && !useOneShotAudio)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+
         if (audioSource == null)
         {
-            audioSource = gameObject.AddComponent<AudioSource>();
+            /* audioSource = gameObject.AddComponent<AudioSource>(); */
 
             audioSource.spatialBlend = 0f; // 0 是 2D 音效，1 是 3D 音效
             // 建議避免音效自動播放
@@ -49,17 +55,21 @@ public class ItemTrigger : MonoBehaviour
         if (iconToShow != null && !iconToShow.activeSelf)
         {
             iconToShow.SetActive(true);
-            if (appearSound != null && audioSource != null)
-            {
-                audioSource.PlayOneShot(appearSound);
-            }           
         }
 
-        // ✅ 成功交互後，摧毀這個物件
+        if (appearSound != null)
+        {
+            if (useOneShotAudio)
+                // 用 PlayClipAtPoint 播放一次性音效
+                AudioSource.PlayClipAtPoint(appearSound, Camera.main.transform.position, 1f);
+                
+            else if (audioSource != null)
+                // 原本 Inspector 指派的 AudioSource 播放
+                audioSource.PlayOneShot(appearSound);
+        }
+        // ✅ 成功交互後，摧毀父物件（那個場景物件會消失）
         Destroy(transform.parent.gameObject);
-    }
-
-    
+    }         
 }
 
 
