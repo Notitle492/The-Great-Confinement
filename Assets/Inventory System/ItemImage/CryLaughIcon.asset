@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c84189641e92e584fa7e6d13d66e46f0, type: 3}
   m_Name: CryLaughIcon
   m_EditorClassIdentifier: 
-  ItemID: 2
+  ItemID: 3
   ItemName: "\u670B\u53CB\uFF0C\u8D70\u5ECA"
   ItemImage: {fileID: 21300000, guid: a87779afb7f9a064e99ffd5a40cb9d4c, type: 3}
