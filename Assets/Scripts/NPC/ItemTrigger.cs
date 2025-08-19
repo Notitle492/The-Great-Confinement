@@ -52,9 +52,11 @@ public class ItemTrigger : MonoBehaviour
             if (appearSound != null && audioSource != null)
             {
                 audioSource.PlayOneShot(appearSound);
-            }
-            
+            }           
         }
+
+        // ✅ 成功交互後，摧毀這個物件
+        Destroy(transform.parent.gameObject);
     }
 
     
