@@ -5,10 +5,10 @@ using UnityEngine;
 public class ClassroomBounds : MonoBehaviour
 {
     [Header("邊界設定")]
-    public float minX = -8.5f;
-    public float maxX = 11f;
-    public float minY = 3f;
-    public float maxY = -11f;
+    public float minX = -10.8f;
+    public float maxX = 8.7f;
+    public float minY = -10f;
+    public float maxY = 4f;
 
     private void LateUpdate()
     {
