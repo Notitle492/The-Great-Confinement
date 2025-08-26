@@ -83,15 +83,17 @@ public class IconManager : MonoBehaviour
 
     private void SpawnSlot(IconData data)
     {
+        int assignedIndex = unlockedIcons.Count - 1; // 根據已解鎖數量分配 (0 ~ 4)
+        
         // 先嘗試把圖示放到尚未被佔用的預設 child placeholder
+        
         if (slotContainer != null)
         {
             for (int i = 0; i < slotContainer.childCount; i++)
             {
                 var child = slotContainer.GetChild(i).gameObject;
-                if (assignedPlaceholders.Contains(child)) continue; // 已被用過
+                if (assignedPlaceholders.Contains(child)) continue;
 
-                // 只要這 child 有 Image，就當作可用槽位
                 Image img = child.GetComponent<Image>();
                 if (img == null) img = child.GetComponentInChildren<Image>();
 
@@ -100,14 +102,18 @@ public class IconManager : MonoBehaviour
                     img.sprite = data.iconSprite;
                     assignedPlaceholders.Add(child);
 
-                    // 如果這個 placeholder 有 IconSlot 元件，呼叫 Setup（可支援 hover）
-                    var slotComp = child.GetComponent<IconSlot>();
-                    if (slotComp != null) slotComp.Setup(data);
+                    var slotScript = child.GetComponent<IconSlot>();
+                    if (slotScript != null)
+                    {
+                        slotScript.Setup(data, assignedIndex); // ✅ 把 index 傳進去
+                        Debug.Log($"SpawnSlot: {data.id} 已呼叫 Setup，TooltipIndex={assignedIndex}");
+                    }
 
                     return;
                 }
             }
         }
+
 
         // 若沒有可用的 placeholder，就 Instantiate 一個預製
         if (slotPrefab != null && slotContainer != null)
@@ -117,9 +123,9 @@ public class IconManager : MonoBehaviour
             if (img == null) img = go.GetComponentInChildren<Image>();
             if (img != null) img.sprite = data.iconSprite;
 
-            // *** 重要：如果 prefab 上有 IconSlot，請呼叫 Setup ***
             var slotScript = go.GetComponent<IconSlot>();
-            if (slotScript != null) slotScript.Setup(data);
+            if (slotScript != null)
+                slotScript.Setup(data, assignedIndex); // ✅ 同樣分配
 
             dynamicSpawnedSlots.Add(go);
         }

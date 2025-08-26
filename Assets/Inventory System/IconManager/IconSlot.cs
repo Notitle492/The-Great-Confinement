@@ -6,13 +6,17 @@ using UnityEngine.UI;
 
 public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public Image iconImage;      // 指向顯示圖示的 Image（在 prefab 裡 assign）
+    public Image iconImage;      
     private IconData iconData;
 
-    // 呼叫此函式初始化格子
-    public void Setup(IconData data)
+    private int tooltipIndex = -1; // ❌ 不再在 Inspector 設定，而是由 IconManager 動態指定
+
+    
+    public void Setup(IconData data, int assignedIndex)
     {
         iconData = data;
+        tooltipIndex = assignedIndex;
+
         if (iconImage != null && data != null)
             iconImage.sprite = data.iconSprite;
     }
@@ -20,20 +24,22 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (iconData == null) return;
-        if (TooltipManager.Instance != null)
+        if (TooltipManager.Instance != null && tooltipIndex >= 0)
         {
             string nameToShow = string.IsNullOrEmpty(iconData.displayName) ? iconData.id : iconData.displayName;
-            TooltipManager.Instance.Show(nameToShow, eventData.position);
+            TooltipManager.Instance.Show(tooltipIndex, nameToShow, eventData.position);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        TooltipManager.Instance?.Hide();
+        if (tooltipIndex >= 0)
+            TooltipManager.Instance?.Hide(tooltipIndex);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // 如果將來需要點擊把圖示送到合成區，可在這裡處理（目前先保留）
+        // 之後合成功能可以放這裡
     }
 }
+

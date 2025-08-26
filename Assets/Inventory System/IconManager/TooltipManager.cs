@@ -9,8 +9,8 @@ public class TooltipManager : MonoBehaviour
     public static TooltipManager Instance { get; private set; }
 
     [Header("UI")]
-    public GameObject tooltipObject;             // 你的 chatbox(1) GameObject（整個框）
-    public TextMeshProUGUI tooltipText;          // chatbox(1) 裡的 TMP 文本
+    public List<GameObject> tooltipObjects;       // 拖進 chatbox(1)~chatbox(5)
+    public List<TextMeshProUGUI> tooltipTexts;    // 對應每個 chatbox 的文字
     public Canvas targetCanvas;                  // 放 PuzzleUI 的 Canvas（用來把螢幕座標轉 local）
 
     public Vector2 screenOffset = new Vector2(12f, -12f);
@@ -19,28 +19,39 @@ public class TooltipManager : MonoBehaviour
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
-        if (tooltipObject != null) tooltipObject.SetActive(false);
+
+        // 一開始把所有 tooltip 關閉
+        foreach (var obj in tooltipObjects)
+            if (obj != null) obj.SetActive(false);
     }
 
-    public void Show(string text, Vector2 screenPosition)
+    public void Show(int index, string text, Vector2 screenPosition)
     {
-        if (tooltipObject == null || tooltipText == null) return;
+        if (index < 0 || index >= tooltipObjects.Count) return;
+        if (tooltipObjects[index] == null || tooltipTexts[index] == null) return;
 
-        tooltipObject.SetActive(true);
-        tooltipText.text = text;
+        tooltipObjects[index].SetActive(true);
+        tooltipTexts[index].text = text;
 
-        // 將螢幕座標轉成 Canvas localPosition
+        // 把螢幕座標轉成 Canvas 的 localPosition
         RectTransform canvasRect = targetCanvas.transform as RectTransform;
         Vector2 localPoint;
-        // For Screen Space - Overlay, camera param should be null
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPosition, 
-            targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : targetCanvas.worldCamera, out localPoint);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPosition,
+            targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : targetCanvas.worldCamera,
+            out localPoint);
 
-        tooltipObject.transform.localPosition = localPoint + screenOffset;
+        tooltipObjects[index].transform.localPosition = localPoint + screenOffset;
+
+        
     }
 
-    public void Hide()
+    /// <summary>隱藏指定 index 的 tooltip</summary>
+    public void Hide(int index)
     {
-        if (tooltipObject != null) tooltipObject.SetActive(false);
+        if (index < 0 || index >= tooltipObjects.Count) return;
+        if (tooltipObjects[index] != null)
+            tooltipObjects[index].SetActive(false);
     }
 }
