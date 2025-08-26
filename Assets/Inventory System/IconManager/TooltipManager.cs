@@ -27,6 +27,8 @@ public class TooltipManager : MonoBehaviour
 
     public void Show(int index, string text, Vector2 screenPosition)
     {
+        Debug.Log($"Tooltip.Show index={index}, text={text}, pos={screenPosition}");
+
         if (index < 0 || index >= tooltipObjects.Count) return;
         if (tooltipObjects[index] == null || tooltipTexts[index] == null) return;
 
@@ -44,6 +46,8 @@ public class TooltipManager : MonoBehaviour
 
         tooltipObjects[index].transform.localPosition = localPoint + screenOffset;
 
+        // 🔹 確保 tooltip 顯示在最上層
+        tooltipObjects[index].transform.SetAsLastSibling();
         
     }
 
