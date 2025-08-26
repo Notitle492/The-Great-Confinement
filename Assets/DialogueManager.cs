@@ -116,8 +116,7 @@ public class DialogueManager : MonoBehaviour
         // 🔽 對話結束後，呼叫 NPC 的 OnDialogueEnded()
         if (currentSpeaker != null)
         {
-            // 優先呼叫 ItemTrigger（如果存在）
-            // 1. 嘗試呼叫 DialogueTrigger 的 OnDialogueEnded()
+            
             DialogueTrigger dialogueTrigger = currentSpeaker.GetComponent<DialogueTrigger>();
             if (dialogueTrigger != null)
             {
