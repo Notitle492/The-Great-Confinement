@@ -22,9 +22,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         icon.sprite = item.ItemImage;
         icon.enabled = true;
 
-        /* if (tooltipText != null)
-            tooltipText.text = item.ItemName; */
-        
+                
         // 不在這裡設置 tooltip，等滑鼠進入時再設置
         if (tooltip != null)
             tooltip.SetActive(false); // 一開始不顯示

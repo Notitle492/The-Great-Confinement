@@ -99,6 +99,11 @@ public class IconManager : MonoBehaviour
                 {
                     img.sprite = data.iconSprite;
                     assignedPlaceholders.Add(child);
+
+                    // 如果這個 placeholder 有 IconSlot 元件，呼叫 Setup（可支援 hover）
+                    var slotComp = child.GetComponent<IconSlot>();
+                    if (slotComp != null) slotComp.Setup(data);
+
                     return;
                 }
             }
@@ -111,6 +116,11 @@ public class IconManager : MonoBehaviour
             Image img = go.GetComponent<Image>();
             if (img == null) img = go.GetComponentInChildren<Image>();
             if (img != null) img.sprite = data.iconSprite;
+
+            // *** 重要：如果 prefab 上有 IconSlot，請呼叫 Setup ***
+            var slotScript = go.GetComponent<IconSlot>();
+            if (slotScript != null) slotScript.Setup(data);
+
             dynamicSpawnedSlots.Add(go);
         }
         else
