@@ -26,6 +26,11 @@ public class ReturnTo2D : MonoBehaviour
 
     private void OnExit(InputAction.CallbackContext context)
     {
-        SceneManager.LoadScene("2D"); // 或 buildIndex = 0，看你主選單是第幾個
+        // 只卸載 PuzzleUI，不重新載入 2D
+        if (SceneManager.GetSceneByName("PuzzleUI").isLoaded)
+        {
+            SceneManager.UnloadSceneAsync("PuzzleUI");
+            Debug.Log("已卸載 PuzzleUI，回到 2D 場景");
+        }
     }
 }
