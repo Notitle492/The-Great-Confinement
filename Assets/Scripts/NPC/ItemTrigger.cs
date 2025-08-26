@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; // 確保引入
 
 public class ItemTrigger : MonoBehaviour
 {
@@ -38,84 +39,62 @@ public class ItemTrigger : MonoBehaviour
     public void Interact()
     {
         if (hasGivenItem) return; // 避免重複觸發
+        
+        // ✅ 先 生成圖示
+        if (iconToShow != null)
+        {
+        Sprite spriteToUse = null;
+        Image img = iconToShow.GetComponent<Image>();
+        if (img != null)
+            spriteToUse = img.sprite;
+        else
+            Debug.LogWarning("ItemTrigger: iconToShow 沒有 Image 元件");
 
-        bool added = false;
+        if (spriteToUse != null)
+        {
+            IconData icon = new IconData(
+                IconType.Object,
+                spriteToUse,
+                itemToGive.ItemID.ToString(),
+                itemToGive.ItemName
+            );
 
+            IconManager.Instance?.AddIcon(icon);
+        }
+    }
+
+
+        // ✅ 再給背包
         if (itemToGive != null)
         {
-            added = InventoryManager.Instance.AddItem(itemToGive);
+            bool added = InventoryManager.Instance.AddItem(itemToGive);
             if (!added)
             {
                 Debug.LogWarning("背包已滿，無法加入物品: " + itemToGive.ItemName);
                 return;
             }
-            hasGivenItem = true;
+            
         }
 
-        if (iconToShow != null && !iconToShow.activeSelf)
-        {
-            iconToShow.SetActive(true);
-        }
+        // ✅ 設定已互動旗標
+        hasGivenItem = true;
 
+
+        // ✅ 播放音效
         if (appearSound != null)
         {
             if (useOneShotAudio)
                 // 用 PlayClipAtPoint 播放一次性音效
                 AudioSource.PlayClipAtPoint(appearSound, Camera.main.transform.position, 1f);
                 
-            else if (audioSource != null)
+            else
                 // 原本 Inspector 指派的 AudioSource 播放
-                audioSource.PlayOneShot(appearSound);
+                audioSource?.PlayOneShot(appearSound);
         }
         // ✅ 成功交互後，摧毀父物件（那個場景物件會消失）
         Destroy(transform.parent.gameObject);
+
+
     }         
 }
 
-
-
-/* public void OnDialogueEnded()
-    {
-        // 加入物品邏輯（如有）
-        if (!hasGivenItem && itemToGive != null)
-        {
-            InventoryManager.Instance.AddItem(itemToGive);
-            hasGivenItem = true;
-        }
-
-        // 顯示圖示（若尚未顯示）
-        bool iconJustShown = false;
-
-        if (iconToShow != null)
-        {
-            if (!iconToShow.activeSelf)
-            {
-                iconToShow.SetActive(true);
-                iconJustShown = true; // 圖示是現在才顯示的
-            }
-        }
-
-        // 如果圖示剛剛出現，播放音效
-        if (iconJustShown && appearSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(appearSound);
-        }
-    } */
-
-/* public class MonsterIconTrigger : MonoBehaviour
-{
-    public GameObject PenAndQuestionIcon; // 要出現的圖示
-    private bool hasTalked = false;
-
-    // DialogueManager 呼叫這個方法，代表對話結束
-    public void OnDialogueEnded()
-    {
-        if (!hasTalked)
-        {
-            PenAndQuestionIcon.SetActive(true);
-            hasTalked = true;
-        }
-    }
-
-    
-} */

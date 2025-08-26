@@ -113,16 +113,21 @@ public class DialogueManager : MonoBehaviour
             iconFader.FadeIn(); // ✅ 淡入圖示
         }
 
-        /* // 🔽 如果角色上有 ItemTrigger，就呼叫圖示顯示
+        // 🔽 對話結束後，呼叫 NPC 的 OnDialogueEnded()
         if (currentSpeaker != null)
         {
-            ItemTrigger iconTrigger = currentSpeaker.GetComponent<ItemTrigger>();
-            if (iconTrigger != null)
+            // 優先呼叫 ItemTrigger（如果存在）
+            // 1. 嘗試呼叫 DialogueTrigger 的 OnDialogueEnded()
+            DialogueTrigger dialogueTrigger = currentSpeaker.GetComponent<DialogueTrigger>();
+            if (dialogueTrigger != null)
             {
-                iconTrigger.OnDialogueEnded();
+                dialogueTrigger.OnDialogueEnded();
             }
-        } */
+            
+        }
 
+        // ✅ 清除 speaker
+        currentSpeaker = null;
         
     }
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;  // 引用新輸入系統
+using UnityEngine.UI; // 確保引入
 
 public class ObjectTrigger : MonoBehaviour
 {

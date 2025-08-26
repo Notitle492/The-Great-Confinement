@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; // 確保引入
 
 public class DialogueTrigger : MonoBehaviour
 {
@@ -10,6 +11,16 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Ink JSON")]
     [SerializeField] private TextAsset inkJSON;
 
+    [Header("圖示相關")]
+
+    public Sprite ItemImage; // 對話圖示圖
+    public string ItemID; // 唯一ID
+    public string ItemName;
+
+    [Tooltip("是否在對話結束後給圖示")]
+    public bool giveIconAfterDialogue = false;  // ✅ 新增開關
+
+    private bool hasTalked = false;
     private bool playerInRange;
 
     private void Awake()
@@ -55,5 +66,24 @@ public class DialogueTrigger : MonoBehaviour
         {
             playerInRange = false;
         }
+    }
+
+    public void OnDialogueEnded()
+    {
+        if (hasTalked || !giveIconAfterDialogue) return; // ✅ 只處理指定的 NPC
+
+        IconData icon = new IconData(
+            IconType.Dialogue,
+            ItemImage,
+            ItemID,
+            ItemName
+        );
+        
+        if (IconManager.Instance != null)
+            IconManager.Instance.AddIcon(icon);
+        else
+            Debug.LogWarning("DialogueTrigger: 找不到 IconManager");
+
+        hasTalked = true;  
     }
 }

@@ -1187,6 +1187,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualCue: {fileID: 1919571165}
   inkJSON: {fileID: 4900000, guid: 3e6ef9f5a0f9a02409e97b180944665f, type: 3}
+  ItemImage: {fileID: 21300000, guid: a87779afb7f9a064e99ffd5a40cb9d4c, type: 3}
+  ItemID: 3
+  ItemName: "\u670B\u53CB\uFF0C\u8D70\u5ECA"
+  giveIconAfterDialogue: 1
 --- !u!61 &143570364
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2529,6 +2533,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualCue: {fileID: 1292314358}
   inkJSON: {fileID: 4900000, guid: bb9a4b23fc2949f4ab2cb5fc6e678022, type: 3}
+  ItemImage: {fileID: 0}
+  ItemID: 
+  ItemName: 
+  giveIconAfterDialogue: 0
 --- !u!1 &588208335
 GameObject:
   m_ObjectHideFlags: 0
