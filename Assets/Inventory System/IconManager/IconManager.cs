@@ -142,4 +142,12 @@ public class IconManager : MonoBehaviour
     }
 
     public IReadOnlyList<IconData> GetUnlockedIcons() => unlockedIcons;
+
+    public void ClearAllIcons()
+    {
+        unlockedIcons.Clear(); // 把已解鎖的圖示清空
+        ClearUI();             // 把 UI 上的圖示清空（用你已經寫好的 ClearUI 方法）
+    }
+
+
 }

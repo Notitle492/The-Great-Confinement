@@ -44,6 +44,12 @@ public class MainMenuController : MonoBehaviour
     
     public void PlayGame()
     {
+        // 開新遊戲前清除舊資料
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
