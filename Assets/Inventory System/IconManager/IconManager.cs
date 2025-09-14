@@ -107,7 +107,7 @@ public class IconManager : MonoBehaviour
                     var slotScript = child.GetComponent<IconSlot>();
                     if (slotScript != null)
                     {
-                        slotScript.Setup(data, assignedIndex); // ✅ 把 index 傳進去
+                        slotScript.Setup(data); // ✅ 只傳 IconData
                         Debug.Log($"SpawnSlot: {data.id} 已呼叫 Setup，TooltipIndex={assignedIndex}");
                     }
 
@@ -127,8 +127,10 @@ public class IconManager : MonoBehaviour
 
             var slotScript = go.GetComponent<IconSlot>();
             if (slotScript != null)
-                slotScript.Setup(data, assignedIndex); // ✅ 同樣分配
-
+            {
+                slotScript.Setup(data); // ✅ 只傳一個 IconData
+            }
+            
             dynamicSpawnedSlots.Add(go);
         }
         else
