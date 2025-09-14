@@ -27,15 +27,13 @@ public class TooltipManager : MonoBehaviour
 
     public void Show(int index, string text, Vector2 screenPosition)
     {
-        Debug.Log($"Tooltip.Show index={index}, text={text}, pos={screenPosition}");
-
         if (index < 0 || index >= tooltipObjects.Count) return;
         if (tooltipObjects[index] == null || tooltipTexts[index] == null) return;
 
         tooltipObjects[index].SetActive(true);
         tooltipTexts[index].text = text;
 
-        // 把螢幕座標轉成 Canvas 的 localPosition
+        /* // 把螢幕座標轉成 Canvas 的 localPosition
         RectTransform canvasRect = targetCanvas.transform as RectTransform;
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -44,7 +42,8 @@ public class TooltipManager : MonoBehaviour
             targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : targetCanvas.worldCamera,
             out localPoint);
 
-        tooltipObjects[index].transform.localPosition = localPoint + screenOffset;
+        tooltipObjects[index].transform.SetParent(targetCanvas.transform, true); // 🔹 強制到 Canvas 根層
+        tooltipObjects[index].transform.localPosition = localPoint + screenOffset; */
 
         // 🔹 確保 tooltip 顯示在最上層
         tooltipObjects[index].transform.SetAsLastSibling();

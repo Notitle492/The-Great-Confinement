@@ -23,7 +23,8 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log($"PointerEnter {name}, data={iconData}");
+        Debug.Log($"PointerEnter {name}, iconData={iconData}, tooltipIndex={tooltipIndex}");
+
         if (iconData == null) return;
         if (TooltipManager.Instance != null && tooltipIndex >= 0)
         {

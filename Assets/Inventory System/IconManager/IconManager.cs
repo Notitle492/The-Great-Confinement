@@ -83,8 +83,10 @@ public class IconManager : MonoBehaviour
 
     private void SpawnSlot(IconData data)
     {
-        int assignedIndex = unlockedIcons.Count - 1; // 根據已解鎖數量分配 (0 ~ 4)
+        int assignedIndex = Mathf.Clamp(unlockedIcons.Count - 1, 0, TooltipManager.Instance.tooltipObjects.Count - 1);
         
+        
+
         // 先嘗試把圖示放到尚未被佔用的預設 child placeholder
         
         if (slotContainer != null)
