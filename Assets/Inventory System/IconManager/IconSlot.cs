@@ -16,13 +16,13 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public GameObject tooltipObject;        // 直接拖入 chatbox(1/2/3...)
     public TextMeshProUGUI tooltipText;
 
-    /* private int tooltipIndex = -1; // ❌ 不再在 Inspector 設定，而是由 IconManager 動態指定 */
+    
 
     
-    public void Setup(IconData data/* , int assignedIndex */)
+    public void Setup(IconData data)
     {
         iconData = data;
-        /* tooltipIndex = assignedIndex; */
+        
 
         if (iconImage != null && data != null)
             iconImage.sprite = data.iconSprite;
@@ -36,14 +36,7 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        /* Debug.Log($"PointerEnter {name}, iconData={iconData}, tooltipIndex={tooltipIndex}");
-
-        if (iconData == null) return;
-        if (TooltipManager.Instance != null && tooltipIndex >= 0)
-        {
-            string nameToShow = string.IsNullOrEmpty(iconData.displayName) ? iconData.id : iconData.displayName;
-            TooltipManager.Instance.Show(tooltipIndex, nameToShow);
-        } */
+        
         // 只有在 slot 已經有圖示時才顯示 tooltip
         if (iconData == null || iconImage == null || iconImage.sprite == null)
             return;
@@ -54,8 +47,7 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        /* if (tooltipIndex >= 0)
-            TooltipManager.Instance?.Hide(tooltipIndex); */
+        
         if (tooltipObject != null)
             tooltipObject.SetActive(false);
     }
