@@ -179,7 +179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "NPC2\u7684\u7B46"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 190c86d5fe5b682439cae15742bce3e0, type: 2}
   m_sharedMaterial: {fileID: 2484250157519304405, guid: 190c86d5fe5b682439cae15742bce3e0,
@@ -2357,6 +2357,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 053c7c835b905744da46721819399277, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  synthesisContainer: {fileID: 1982002077}
+  synthesisPrefab: {fileID: 5322475028688250436, guid: f3891384b176f114a9bdd05edc8316cf,
+    type: 3}
   slotContainer: {fileID: 672262410}
   slotPrefab: {fileID: 1423781926}
   defaultSlotSprite: {fileID: 21300000, guid: a28bd349d5f2a2e44810bbcb0eead18c, type: 3}
@@ -2666,7 +2669,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "NPC2\u7684\u7B46"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 190c86d5fe5b682439cae15742bce3e0, type: 2}
   m_sharedMaterial: {fileID: 2484250157519304405, guid: 190c86d5fe5b682439cae15742bce3e0,
@@ -3127,7 +3130,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "NPC2\u7684\u7B46"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 190c86d5fe5b682439cae15742bce3e0, type: 2}
   m_sharedMaterial: {fileID: 2484250157519304405, guid: 190c86d5fe5b682439cae15742bce3e0,
@@ -3808,6 +3811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 187077634620724612}
+  isSynthesisSlot: 0
   tooltipObject: {fileID: 1631270501}
   tooltipText: {fileID: 516818059}
 --- !u!1001 &1380312310407420176
@@ -3963,6 +3967,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 1380312310407420178}
+  isSynthesisSlot: 0
   tooltipObject: {fileID: 1758906323}
   tooltipText: {fileID: 559303250}
 --- !u!1001 &5072876523736115256
@@ -4124,6 +4129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 5072876523736115259}
+  isSynthesisSlot: 1
   tooltipObject: {fileID: 2031872718}
   tooltipText: {fileID: 1536874592}
 --- !u!1001 &5722867511630845303
@@ -4279,6 +4285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 5722867511630845305}
+  isSynthesisSlot: 1
   tooltipObject: {fileID: 78959353}
   tooltipText: {fileID: 1736595104}
 --- !u!1001 &6341238963731280577
@@ -4448,6 +4455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 6341238963731280578}
+  isSynthesisSlot: 0
   tooltipObject: {fileID: 1962786240}
   tooltipText: {fileID: 151083104}
 --- !u!1001 &7028563990136769371
@@ -4603,6 +4611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 7028563990136769373}
+  isSynthesisSlot: 0
   tooltipObject: {fileID: 1223222851}
   tooltipText: {fileID: 1290163750}
 --- !u!1001 &7476541821802744056
@@ -4762,6 +4771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 7476541821802744058}
+  isSynthesisSlot: 0
   tooltipObject: {fileID: 1663870690}
   tooltipText: {fileID: 156252044}
 --- !u!114 &7476541821802744060
@@ -4961,6 +4971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 8032586491353707293}
+  isSynthesisSlot: 1
   tooltipObject: {fileID: 777608621}
   tooltipText: {fileID: 21841799}
 --- !u!1660057539 &9223372036854775807

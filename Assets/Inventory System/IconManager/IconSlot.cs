@@ -11,6 +11,8 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Image iconImage;      
     private IconData iconData;
 
+    public bool isSynthesisSlot = false; // 標記這個 Slot 是合成區還是顯示區
+
 
     [Header("對應的 Tooltip")]
     public GameObject tooltipObject;        // 直接拖入 chatbox(1/2/3...)
@@ -54,7 +56,18 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // 之後合成功能可以放這裡
+        if (iconData == null) return;
+
+        if (!isSynthesisSlot)
+        {
+            // 顯示區圖示點擊 → 切換合成區
+            IconManager.Instance.ToggleSynthesis(iconData);
+        }
+        else
+        {
+            // 合成區圖示點擊 → 移除自己
+            IconManager.Instance.RemoveFromSynthesis(iconData);
+        }
     }
 }
 
