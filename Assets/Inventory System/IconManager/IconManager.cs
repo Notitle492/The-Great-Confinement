@@ -82,17 +82,8 @@ public class IconManager : MonoBehaviour
 
         Debug.Log($"[ToggleSynthesis] 嘗試處理 {data.id}");
 
-        // 檢查是否已經在合成區
-        if (synthesisSlots.ContainsKey(data.id))
-        {
-            // 如果已經在合成區，就移除
-            RemoveFromSynthesis(data);
-        }
-        else
-        {
-            // 如果不在合成區，就加入
-            AddToSynthesisDuplicate(data);
-        }
+        // 改為：總是新增到合成區（不檢查是否已存在）
+        AddToSynthesisDuplicate(data);
     }
 
     // 將方法獨立出來
