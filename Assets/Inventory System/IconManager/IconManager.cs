@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class IconManager : MonoBehaviour
 {
@@ -30,8 +31,6 @@ public class IconManager : MonoBehaviour
     [Header("PuzzleUI 主物件")]
     [SerializeField] private GameObject puzzleUI;
 
-
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -41,6 +40,20 @@ public class IconManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject); // 跨場景保存
+    }
+
+    private void Update()
+    {
+        // 測試用：按 T 鍵手動觸發第一個圖示的點擊
+        if (UnityEngine.InputSystem.Keyboard.current != null && 
+            UnityEngine.InputSystem.Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            if (unlockedIcons.Count > 0)
+            {
+                Debug.Log($"[測試] 手動觸發 ToggleSynthesis: {unlockedIcons[0].id}");
+                ToggleSynthesis(unlockedIcons[0]);
+            }
+        }
     }
 
     // 嘗試找到 synthesisContainer 底下第一個尚未被使用、且帶有 IconSlot 的 placeholder
@@ -53,12 +66,12 @@ public class IconManager : MonoBehaviour
             var child = synthesisContainer.GetChild(i).gameObject;
             var slot = child.GetComponent<IconSlot>();
             if (slot != null && !slot.HasIcon())
-            return child;
+                return child;
         }
         return null;
     }
 
-    // 點擊顯示區圖示 → 切換合成區
+    // ToggleSynthesis 方法
     public void ToggleSynthesis(IconData data)
     {
         if (data == null)
@@ -69,13 +82,23 @@ public class IconManager : MonoBehaviour
 
         Debug.Log($"[ToggleSynthesis] 嘗試處理 {data.id}");
 
-        // 已在合成區 → 移除
+        // 檢查是否已經在合成區
         if (synthesisSlots.ContainsKey(data.id))
         {
-            Debug.Log($"[ToggleSynthesis] {data.id} 已存在於合成區，準備移除");
+            // 如果已經在合成區，就移除
             RemoveFromSynthesis(data);
-            return;
         }
+        else
+        {
+            // 如果不在合成區，就加入
+            AddToSynthesisDuplicate(data);
+        }
+    }
+
+    // 將方法獨立出來
+    public void AddToSynthesisDuplicate(IconData data)
+    {
+        if (data == null) return;
 
         // 嘗試找空的 placeholder
         IconSlot emptySlot = null;
@@ -92,31 +115,39 @@ public class IconManager : MonoBehaviour
             }
         }
 
+        GameObject go;
         if (emptySlot != null)
         {
+            go = emptySlot.gameObject;
             emptySlot.Setup(data);
             emptySlot.isSynthesisSlot = true;
-            synthesisSlots[data.id] = emptySlot.gameObject;
-            return;
-        }
-
-        // 如果沒有空 Slot，就 Instantiate
-        if (synthesisPrefab != null && synthesisContainer != null)
-        {
-            GameObject go = Instantiate(synthesisPrefab, synthesisContainer);
-            IconSlot slot = go.GetComponent<IconSlot>();
-            if (slot != null)
-            {
-                slot.Setup(data);
-                slot.isSynthesisSlot = true;
-            }
             synthesisSlots[data.id] = go;
-            dynamicSynthesisSlots.Add(go);
+            Debug.Log($"[ToggleSynthesis] {data.id} 已加入合成區: {emptySlot.name}");
         }
         else
         {
-            Debug.LogWarning("IconManager.ToggleSynthesis: synthesisContainer or synthesisPrefab not assigned.");
+            // 如果沒有空 Slot，就 Instantiate
+            if (synthesisPrefab != null && synthesisContainer != null)
+            {
+                go = Instantiate(synthesisPrefab, synthesisContainer);
+                IconSlot slot = go.GetComponent<IconSlot>();
+                if (slot != null)
+                {
+                    slot.Setup(data);
+                    slot.isSynthesisSlot = true;
+                }
+                synthesisSlots[data.id] = go;
+                dynamicSynthesisSlots.Add(go);
+                Debug.Log($"[ToggleSynthesis] {data.id} 已 Instantiate 到合成區");
+            }
+            else
+            {
+                Debug.LogWarning("IconManager.ToggleSynthesis: synthesisContainer or synthesisPrefab not assigned.");
+                return;
+            }
         }
+
+        EnsureClickableSlot(go, go.GetComponent<IconSlot>());
     }
 
     // 移除合成區圖示（會根據是否為動態產生選擇 Destroy 或 Clear placeholder）
@@ -145,12 +176,6 @@ public class IconManager : MonoBehaviour
         }
 
         synthesisSlots.Remove(data.id);
-
-        /* if (synthesisSlots.ContainsKey(data.id))
-        {
-            Destroy(synthesisSlots[data.id]);
-            synthesisSlots.Remove(data.id);
-        } */
     }
 
     /// <summary>在 PuzzleUI 場景呼叫，指定要把圖示生成到哪個容器、用什麼預製</summary>
@@ -160,7 +185,6 @@ public class IconManager : MonoBehaviour
         slotPrefab = prefab;
         RebuildUI();
     }
-
         
     /// <summary>離開 PuzzleUI 時可呼叫（可選）</summary>
     public void UnbindUI()
@@ -230,9 +254,10 @@ public class IconManager : MonoBehaviour
         dynamicSynthesisSlots.Clear();
     }
 
-
     private void ClearSynthesisPlaceholders()
     {
+        if (synthesisContainer == null) return;
+        
         foreach (Transform child in synthesisContainer)
         {
             var slot = child.GetComponent<IconSlot>();
@@ -247,6 +272,8 @@ public class IconManager : MonoBehaviour
 
     public void TogglePuzzleUI()
     {
+        if (puzzleUI == null) return;
+        
         puzzleUI.SetActive(!puzzleUI.activeSelf);
         
         if (puzzleUI.activeSelf)
@@ -254,65 +281,45 @@ public class IconManager : MonoBehaviour
         // 不要再呼叫 ClearUI() → 保留玩家圖示
     }
 
-
-
     private void SpawnSlot(IconData data)
     {
-        int assignedIndex = Mathf.Clamp(unlockedIcons.Count - 1, 0, TooltipManager.Instance.tooltipObjects.Count - 1);
-
         // 先嘗試把圖示放到尚未被佔用的預設 child placeholder
-        
         if (slotContainer != null)
         {
             for (int i = 0; i < slotContainer.childCount; i++)
             {
                 var child = slotContainer.GetChild(i).gameObject;
                 var slotScript = child.GetComponent<IconSlot>();
-                if (slotScript != null && slotScript.HasIcon())
-                    continue; // 已有圖示，跳過
-
-                // 找到空的 slot
-                if (slotScript != null)
+                if (slotScript != null && !slotScript.HasIcon())
                 {
+                    // 找到空的 slot
                     slotScript.isSynthesisSlot = false;  // 顯示區
                     slotScript.Setup(data);
-                    Debug.Log($"SpawnSlot: {data.id} 已呼叫 Setup，TooltipIndex={assignedIndex}");
-                }
-                else
-                {
-                    // 只是 Image 的 placeholder
-                    Image img = child.GetComponent<Image>();
-                    if (img == null) img = child.GetComponentInChildren<Image>();
-                    if (img != null) img.sprite = data.iconSprite;
-                }
 
-                return;
+                    // 確保可以被點擊
+                    EnsureClickableSlot(child, slotScript);
+
+                    Debug.Log($"SpawnSlot: {data.id} 已設置到 placeholder");
+                    return;
+                }
             }
         }
-
 
         // 若沒有可用的 placeholder，就 Instantiate 一個預製
         if (slotPrefab != null && slotContainer != null)
         {
             var go = Instantiate(slotPrefab, slotContainer);
-            Image img = go.GetComponent<Image>();
-            if (img == null) img = go.GetComponentInChildren<Image>();
-            if (img != null) img.sprite = data.iconSprite;
 
             var slotScript = go.GetComponent<IconSlot>();
             if (slotScript != null)
             {
-                slotScript.isSynthesisSlot = false; // ✅ 顯示區
-                slotScript.Setup(data); // ✅ 只傳一個 IconData
+                slotScript.isSynthesisSlot = false; // 顯示區
+                slotScript.Setup(data); // 只傳一個 IconData
 
-                // ✅ 如果 slot 有 Button，綁定點擊事件
-                Button btn = go.GetComponent<Button>();
-                if (btn != null)
-                {
-                    btn.onClick.RemoveAllListeners();
-                    btn.onClick.AddListener(() => slotScript.OnPointerClick(null));
-                }
-
+                // 確保可以被點擊
+                EnsureClickableSlot(go, slotScript);
+                
+                Debug.Log($"SpawnSlot: {data.id} 已 Instantiate 新的 slot");
             }
             
             dynamicSpawnedSlots.Add(go);
@@ -323,6 +330,59 @@ public class IconManager : MonoBehaviour
         }
     }
 
+    // 在 SpawnSlot 方法後面新增這個方法
+    private void EnsureClickableSlot(GameObject slotObject, IconSlot slotScript)
+    {
+        if (slotObject == null || slotScript == null) return;
+
+        // 方法 1: 確保 Image 可以接收射線
+        Image img = slotObject.GetComponent<Image>();
+        if (img == null) img = slotObject.GetComponentInChildren<Image>();
+        if (img != null)
+        {
+            img.raycastTarget = true;
+            Debug.Log($"設置 {slotScript.IconData?.id} 的 Image.raycastTarget = true");
+        }
+        
+        // 方法 2: 如果有 Button 組件，設置點擊事件
+        Button btn = slotObject.GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.interactable = true;
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(() => 
+            {
+                Debug.Log($"[Button] 點擊 {slotScript.IconData?.id}");
+                if (slotScript.IconData != null)
+                {
+                    ToggleSynthesis(slotScript.IconData);
+                }
+            });
+        }
+        
+        // 方法 3: 添加 EventTrigger 作為備用方案
+        var eventTrigger = slotObject.GetComponent<EventTrigger>();
+        if (eventTrigger == null)
+        {
+            eventTrigger = slotObject.AddComponent<EventTrigger>();
+        }
+        
+        // 清除舊的事件
+        eventTrigger.triggers.Clear();
+        
+        // 添加點擊事件
+        var clickEntry = new EventTrigger.Entry();
+        clickEntry.eventID = EventTriggerType.PointerClick;
+        clickEntry.callback.AddListener((data) => 
+        {
+            Debug.Log($"[EventTrigger] 點擊 {slotScript.IconData?.id}");
+            if (slotScript.IconData != null)
+            {
+                ToggleSynthesis(slotScript.IconData);
+            }
+        });
+        eventTrigger.triggers.Add(clickEntry);
+    }
 
     // ClearUI 也要清空合成區（保留 placeholder 結構，但清除內容）
     private void ClearUI()
@@ -337,6 +397,8 @@ public class IconManager : MonoBehaviour
             if (go) Destroy(go);
         dynamicSynthesisSlots.Clear();
        
+        // 清空合成區字典
+        synthesisSlots.Clear();
     }
 
     public IReadOnlyList<IconData> GetUnlockedIcons() => unlockedIcons;
@@ -346,6 +408,4 @@ public class IconManager : MonoBehaviour
         unlockedIcons.Clear(); // 把已解鎖的圖示清空
         ClearUI();             // 把 UI 上的圖示清空（用你已經寫好的 ClearUI 方法）
     }
-
-
 }

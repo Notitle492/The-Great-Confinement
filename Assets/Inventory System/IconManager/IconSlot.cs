@@ -21,31 +21,39 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public GameObject tooltipObject;        // 直接拖入 chatbox(1/2/3...)
     public TextMeshProUGUI tooltipText;
 
+    private void Start()
+    {
+        // 確保 iconImage 被正確賦值
+        if (iconImage == null)
+        {
+            Debug.LogWarning($"IconSlot {gameObject.name} 的 iconImage 尚未指向 Image！請拖入");
+            iconImage = GetComponent<Image>();
+            if (iconImage == null)
+                iconImage = GetComponentInChildren<Image>();
+        }
+        
+        // 確保可以接收點擊
+        if (iconImage != null)
+            iconImage.raycastTarget = true;
+        Debug.Log($"[IconSlot] Start - {gameObject.name}, HasImage: {iconImage != null}");
+    }
     
 
     
     public void Setup(IconData data)
     {
         iconData = data;
-        
-
-        if (iconImage != null && data != null)
+        if (iconImage != null)
+        {
             iconImage.sprite = data.iconSprite;
-        else if (iconImage != null && data == null)
-            iconImage.sprite = null;
-
-        if (tooltipText != null)
-            tooltipText.text = data != null ? (string.IsNullOrEmpty(data.displayName) ? data.id : data.displayName) : "";
-
-        if (tooltipObject != null)
-            tooltipObject.SetActive(false); // 一開始隱藏
+            iconImage.enabled = true;
+        }
+        
     }
 
-    // 判斷這個 slot 是否已經有圖示（由 IconSlot 自己管理）
-    public bool HasIcon()
-    {
-        return iconData != null;
-    }
+    // ✅ 這裡保留一個就好
+    public bool HasIcon() => iconData != null;
+
 
     // 清空 slot（placeholder 用），可傳入預設圖（null 表示清空）
     public void Clear(Sprite defaultSprite = null)
@@ -80,6 +88,8 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log($"[TEST] OnPointerClick 觸發，slot={name}, isSynthesis={isSynthesisSlot}");
+
         
         if (!HasIcon())
         {
@@ -89,9 +99,8 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (!isSynthesisSlot)
         {
-            Debug.Log($"[OnPointerClick] 顯示區 {iconData.id} 被點擊 → 嘗試加入合成區");
-            // 顯示區點擊 → 切換合成區（由 IconManager 管理）
-            IconManager.Instance?.ToggleSynthesis(iconData);
+            Debug.Log($"[OnPointerClick] 顯示區 {iconData.id} 被點擊 → 生成合成區分身");
+            IconManager.Instance?.AddToSynthesisDuplicate(iconData);
         }
         else
         {
