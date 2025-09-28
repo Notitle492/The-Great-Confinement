@@ -1187,9 +1187,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualCue: {fileID: 1919571165}
   inkJSON: {fileID: 4900000, guid: 3e6ef9f5a0f9a02409e97b180944665f, type: 3}
-  ItemImage: {fileID: 21300000, guid: a87779afb7f9a064e99ffd5a40cb9d4c, type: 3}
+  ItemImage: {fileID: 21300000, guid: 143db60acfdc42c4e8e02c7da714fa49, type: 3}
   ItemID: 3
-  ItemName: "\u670B\u53CB\uFF0C\u8D70\u5ECA"
+  ItemName: "\u6211\u7684\u7B46"
   giveIconAfterDialogue: 1
 --- !u!61 &143570364
 BoxCollider2D:
@@ -1248,8 +1248,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159e78488eb476d47bde934649fe3ca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemToGive: {fileID: 11400000, guid: 2290027302a573b4da03c84296c491ec, type: 2}
-  iconToShow: {fileID: 526561474}
+  itemToGive: {fileID: 11400000, guid: eea7fda821aed904286658227d10b186, type: 2}
+  iconToShow: {fileID: 3459448050213668617, guid: cfe812b54e4509d4bad7c5a694e907dd,
+    type: 3}
   appearSound: {fileID: 8300000, guid: a73f722434ec21c4bbf6ba815518cff5, type: 3}
   audioSource: {fileID: 143570366}
   useOneShotAudio: 1
@@ -2429,12 +2430,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.19, y: 0.24}
   m_EdgeRadius: 0
---- !u!1 &526561474 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5155376134016732950, guid: 69112d07be8a50a47b77f02b99e6d852,
-    type: 3}
-  m_PrefabInstance: {fileID: 3965172074590264578}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &526561475 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 28992978385040822, guid: 69112d07be8a50a47b77f02b99e6d852,
@@ -8008,8 +8003,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159e78488eb476d47bde934649fe3ca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemToGive: {fileID: 11400000, guid: 5bd8b68e9c4163743941d5f007fc31f1, type: 2}
-  iconToShow: {fileID: 3662534677092850538, guid: 2d88d6d812d9c7d42aa0edf104bc68b7,
+  itemToGive: {fileID: 11400000, guid: e3288ed6c8f83d54ca1b75bb804e75d4, type: 2}
+  iconToShow: {fileID: 8238405900341331259, guid: d1f7d6acb977c2f44b8bb6de8916ae05,
     type: 3}
   appearSound: {fileID: 8300000, guid: a73f722434ec21c4bbf6ba815518cff5, type: 3}
   audioSource: {fileID: 2104810426}
