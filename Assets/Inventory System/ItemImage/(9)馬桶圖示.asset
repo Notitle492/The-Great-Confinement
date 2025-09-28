@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c84189641e92e584fa7e6d13d66e46f0, type: 3}
-  m_Name: PenAndQuestionIcon
+  m_Name: "(9)\u99AC\u6876\u5716\u793A"
   m_EditorClassIdentifier: 
-  ItemID: 2
-  ItemName: "NPC1\u7121\u7B46\u66B4\u8E81"
-  ItemImage: {fileID: 21300000, guid: 4f776c3e21213034da99f292c48418b2, type: 3}
+  ItemID: 9
+  ItemName: "\u4ED6\u807D\u8D77\u4F86\u9700\u8981\u67D0\u6A23\u6771\u897F"
+  ItemImage: {fileID: 21300000, guid: 1b54de4fbed737d4d9144598109659b9, type: 3}

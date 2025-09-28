@@ -2358,7 +2358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   synthesisContainer: {fileID: 1982002077}
-  synthesisPrefab: {fileID: 5322475028688250436, guid: f3891384b176f114a9bdd05edc8316cf,
+  synthesisPrefab: {fileID: 5322475028688250436, guid: 22c6fb3cf10e8a341b8e6d8c91804a81,
     type: 3}
   slotContainer: {fileID: 672262410}
   slotPrefab: {fileID: 1423781926}
@@ -4300,6 +4300,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PuzzleZoneSlotIcon(1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 30735421797084782, guid: 721b0a8fcc5d309468f63726a33d5aeb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2085111243910018420, guid: 721b0a8fcc5d309468f63726a33d5aeb,
         type: 3}

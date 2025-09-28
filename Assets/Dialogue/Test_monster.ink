@@ -14,7 +14,11 @@
 
 # name:Monster 
 # portrait:monster_無表情
-小心我攻擊你 -> END
+小心我攻擊你
+
+# name:Player
+# portrait:human
+來啊 -> END
 
 
 - 回答結束 
