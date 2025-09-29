@@ -97,7 +97,11 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         }
 
-        if (!isSynthesisSlot)
+        // 無論是顯示區還是合成區，都使用切換邏輯
+        Debug.Log($"[OnPointerClick] {iconData.id} 被點擊 → 執行切換邏輯");
+        IconManager.Instance?.ToggleSynthesis(iconData);
+
+        /* if (!isSynthesisSlot)
         {
             Debug.Log($"[OnPointerClick] 顯示區 {iconData.id} 被點擊 → 生成合成區分身");
             IconManager.Instance?.AddToSynthesisDuplicate(iconData);
@@ -107,7 +111,7 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             Debug.Log($"[OnPointerClick] 合成區 {iconData.id} 被點擊 → 移除");
             // 合成區點擊 → 移除（由 IconManager 管理）
             IconManager.Instance?.RemoveFromSynthesis(iconData);
-        }
+        } */
     }
 }
 

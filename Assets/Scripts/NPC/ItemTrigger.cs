@@ -7,7 +7,7 @@ public class ItemTrigger : MonoBehaviour
 
     private bool hasGivenItem = false;
 
-    [Header("圖示與音效")]
+    [Header("圖示")]
 
     public GameObject iconToShow;      // 更通用：要出現的任意圖示
     public AudioClip appearSound;      // 出現時的音效
@@ -17,6 +17,7 @@ public class ItemTrigger : MonoBehaviour
 
     private void Awake()
     {
+
         /// 如果沒有在 Inspector 指派，就自動取得
         if (audioSource == null && !useOneShotAudio)
         {
@@ -43,25 +44,25 @@ public class ItemTrigger : MonoBehaviour
         // ✅ 先 生成圖示
         if (iconToShow != null)
         {
-        Sprite spriteToUse = null;
-        Image img = iconToShow.GetComponent<Image>();
-        if (img != null)
-            spriteToUse = img.sprite;
-        else
-            Debug.LogWarning("ItemTrigger: iconToShow 沒有 Image 元件");
+            Sprite spriteToUse = null;
+            Image img = iconToShow.GetComponent<Image>();
+            if (img != null)
+                spriteToUse = img.sprite;
+            else
+                Debug.LogWarning("ItemTrigger: iconToShow 沒有 Image 元件");
 
-        if (spriteToUse != null)
-        {
-            IconData icon = new IconData(
-                IconType.Object,
-                spriteToUse,
-                itemToGive.ItemID.ToString(),
-                itemToGive.ItemName
-            );
+            if (spriteToUse != null)
+            {
+                IconData icon = new IconData(
+                    IconType.Object,
+                    spriteToUse,
+                    itemToGive.ItemID.ToString(),
+                    itemToGive.ItemName
+                );
 
-            IconManager.Instance?.AddIcon(icon);
+                IconManager.Instance?.AddIcon(icon);
+            }
         }
-    }
 
 
         // ✅ 再給背包
@@ -73,6 +74,9 @@ public class ItemTrigger : MonoBehaviour
                 Debug.LogWarning("背包已滿，無法加入物品: " + itemToGive.ItemName);
                 return;
             }
+
+            // ✅ 播放 "Pickup" 音效
+            SoundManager.Instance.PlaySound2D("Pickup");
             
         }
 

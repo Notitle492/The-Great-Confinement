@@ -16,6 +16,11 @@ public class MainMenuController : MonoBehaviour
 
     private Controls controls;
 
+    private void Start()
+    {
+        MusicManager.Instance.PlayMusic("MainMenu");
+    }
+
     private void Awake()
     {
         controls = new Controls();
@@ -44,6 +49,17 @@ public class MainMenuController : MonoBehaviour
     
     public void PlayGame()
     {
+
+        /* LevelManager.Instance.LoadScene("2D", "MainMenu");
+        MusicManager.Instance.PlayMusic("MainMenu"); */
+
+        // 換場景
+        SceneManager.LoadScene("2D");
+
+        // 播放音樂
+        MusicManager.Instance.PlayMusic("MainMenu");
+
+
         // 開新遊戲前清除舊資料
         if (IconManager.Instance != null)
         {
