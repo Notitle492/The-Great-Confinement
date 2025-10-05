@@ -53,20 +53,17 @@ public class MainMenuController : MonoBehaviour
         /* LevelManager.Instance.LoadScene("2D", "MainMenu");
         MusicManager.Instance.PlayMusic("MainMenu"); */
 
-        // 換場景
-        SceneManager.LoadScene("2D");
-
-        // 播放音樂
-        MusicManager.Instance.PlayMusic("MainMenu");
-
-
         // 開新遊戲前清除舊資料
         if (IconManager.Instance != null)
         {
             IconManager.Instance.ClearAllIcons();
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        // 播放 2D 場景的音樂（請替換成你在 MusicLibrary 中設定的實際音樂名稱）
+        MusicManager.Instance.PlayMusic("2D");  // ← 改成你的 2D 場景音樂名稱
+
+        // 載入 2D 場景
+        SceneManager.LoadScene("2D");
     }
 
     public void Save()
