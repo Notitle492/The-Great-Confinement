@@ -114,4 +114,3 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         } */
     }
 }
-

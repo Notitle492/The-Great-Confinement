@@ -172,17 +172,27 @@ public class IconManager : MonoBehaviour
     /// <summary>在 PuzzleUI 場景呼叫，指定要把圖示生成到哪個容器、用什麼預製</summary>
     public void BindUI(Transform container, GameObject prefab)
     {
+        if (container == null || prefab == null)
+        {
+            Debug.LogError("IconManager.BindUI: container 或 prefab 為 null！");
+            return;
+        }
+        
+        // ✅ 即使已經有參考，也強制更新（以防 missing）
         slotContainer = container;
         slotPrefab = prefab;
+        Debug.Log($"[IconManager] BindUI 成功 - Container: {container.name}, Prefab: {prefab.name}");
         RebuildUI();
     }
         
     /// <summary>離開 PuzzleUI 時可呼叫（可選）</summary>
     public void UnbindUI()
     {
-        ClearUI();
-        slotContainer = null;
-        slotPrefab = null;
+        Debug.Log("[IconManager] UnbindUI - 只清除動態 UI，不清空容器參考");
+        ClearDynamicSlots(); // ✅ 改用這個，只清除動態生成的物件
+        // ❌ 不要設 null！保留 slotContainer 和 slotPrefab 的參考
+        // slotContainer = null;  // 絕對不要這樣做
+        // slotPrefab = null;     // 絕對不要這樣做
     }
 
     /// <summary>解鎖一個新圖示（若已存在則忽略）</summary>
