@@ -39,19 +39,37 @@ public class ItemTrigger : MonoBehaviour
 
     public void Interact()
     {
-        if (hasGivenItem) return; // 避免重複觸發
+        if (hasGivenItem) 
+        {
+            Debug.Log("ItemTrigger: 已經互動過，跳過");
+            return; // 避免重複觸發
+        }
+        
+        Debug.Log($"ItemTrigger.Interact() 開始 - itemToGive: {itemToGive?.ItemName}");
+        
+        // ✅ 先檢查 IconManager 是否存在
+        if (IconManager.Instance == null)
+        {
+            Debug.LogError("ItemTrigger: IconManager.Instance 是 null！請確保場景中有 IconManager");
+            return;
+        }
         
         // ✅ 先 生成圖示
         if (iconToShow != null)
         {
+            Debug.Log($"ItemTrigger: 準備生成圖示，iconToShow = {iconToShow.name}");
+        
             Sprite spriteToUse = null;
             Image img = iconToShow.GetComponent<Image>();
             if (img != null)
+            {
                 spriteToUse = img.sprite;
+                Debug.Log($"ItemTrigger: 找到 Image 組件，sprite = {spriteToUse?.name}");
+            }
             else
                 Debug.LogWarning("ItemTrigger: iconToShow 沒有 Image 元件");
 
-            if (spriteToUse != null)
+            if (spriteToUse != null && itemToGive != null)
             {
                 IconData icon = new IconData(
                     IconType.Object,
@@ -60,14 +78,30 @@ public class ItemTrigger : MonoBehaviour
                     itemToGive.ItemName
                 );
 
-                IconManager.Instance?.AddIcon(icon);
+                bool addedIcon = IconManager.Instance.AddIcon(icon);
+                Debug.Log($"ItemTrigger: AddIcon 結果 = {addedIcon}");
+                /* IconManager.Instance?.AddIcon(icon); */
             }
+            else
+            {
+                Debug.LogWarning($"ItemTrigger: 無法生成圖示 - spriteToUse={spriteToUse}, itemToGive={itemToGive}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("ItemTrigger: iconToShow 是 null，跳過圖示生成");
         }
 
 
         // ✅ 再給背包
         if (itemToGive != null)
         {
+            if (InventoryManager.Instance == null)
+            {
+                Debug.LogError("ItemTrigger: InventoryManager.Instance 是 null！");
+                return;
+            }
+            
             bool added = InventoryManager.Instance.AddItem(itemToGive);
             if (!added)
             {
@@ -75,30 +109,55 @@ public class ItemTrigger : MonoBehaviour
                 return;
             }
 
+            Debug.Log($"ItemTrigger: 物品 {itemToGive.ItemName} 已加入背包");
+
             // ✅ 播放 "Pickup" 音效
-            SoundManager.Instance.PlaySound2D("Pickup");
-            
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySound2D("Pickup");
+            }
+            else
+            {
+                Debug.LogWarning("ItemTrigger: SoundManager.Instance 是 null，無法播放音效");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("ItemTrigger: itemToGive 是 null");
         }
 
         // ✅ 設定已互動旗標
         hasGivenItem = true;
+        Debug.Log("ItemTrigger: 設定 hasGivenItem = true");
 
 
         // ✅ 播放音效
         if (appearSound != null)
         {
             if (useOneShotAudio)
+            {
                 // 用 PlayClipAtPoint 播放一次性音效
                 AudioSource.PlayClipAtPoint(appearSound, Camera.main.transform.position, 1f);
-                
-            else
+                Debug.Log("ItemTrigger: 播放 appearSound (PlayClipAtPoint)");
+            }
+            else if (audioSource != null)
+            {
                 // 原本 Inspector 指派的 AudioSource 播放
                 audioSource?.PlayOneShot(appearSound);
+                Debug.Log("ItemTrigger: 播放 appearSound (AudioSource)");
+            }
         }
+
         // ✅ 成功交互後，摧毀父物件（那個場景物件會消失）
-        Destroy(transform.parent.gameObject);
-
-
+        if (transform.parent != null)
+        {
+            Debug.Log($"ItemTrigger: 摧毀父物件 {transform.parent.name}");
+            Destroy(transform.parent.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning("ItemTrigger: transform.parent 是 null，無法摧毀");
+        }
     }         
 }
 

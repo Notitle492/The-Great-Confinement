@@ -65,16 +65,43 @@ public class ObjectTrigger : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext context)
     {
+
+        Debug.Log($"ObjectTrigger.OnInteract 觸發 - playerInRange={playerInRange}, hasInteracted={hasInteracted}");
+
         if (playerInRange && !hasInteracted)
         {
             if (itemTrigger != null)
+            {
+                Debug.Log("ObjectTrigger: 呼叫 itemTrigger.Interact()");
+                
+                try
+                {
+                    itemTrigger.Interact();
+                    hasInteracted = true;
+                    
+                    if (visualCue != null)
+                        visualCue.SetActive(false);
+                        
+                    Debug.Log("ObjectTrigger: 互動完成");
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"ObjectTrigger: 互動時發生錯誤 - {e.Message}\n{e.StackTrace}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("ObjectTrigger: itemTrigger 是 null");
+            }
+
+            /* if (itemTrigger != null)
             {
                 itemTrigger.Interact();
                 hasInteracted = true;
                 if (visualCue != null)
                     visualCue.SetActive(false);
                 Debug.Log("ObjectTrigger: 互動觸發");
-            }
+            } */
         }
     }
 

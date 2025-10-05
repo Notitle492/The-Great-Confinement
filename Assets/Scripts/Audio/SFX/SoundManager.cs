@@ -40,30 +40,8 @@ public class SoundManager : MonoBehaviour
     public void PlaySound2D(string soundName)
     {
 
-
-        if (sfxLibrary == null)
-        {
-            Debug.LogWarning("SoundManager: sfxLibrary 尚未指派");
-            return;
-        }
-
-        if (sfx2DSource == null)
-        {
-            Debug.LogWarning("SoundManager: sfx2DSource 尚未指派");
-            return;
-        }
-
-        AudioClip clip = sfxLibrary.GetClipFromName(soundName);
-        if (clip == null)
-        {
-            Debug.LogWarning("SoundManager: 找不到音效 " + soundName);
-            return;
-        }
-
+        sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName));
         
-
-        /* sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName)); */
-        sfx2DSource.PlayOneShot(clip);
     }
 
 }
