@@ -31,6 +31,11 @@ public class IconManager : MonoBehaviour
     [Header("PuzzleUI 主物件")]
     [SerializeField] private GameObject puzzleUI;
 
+    // 儲存合成區已放入的圖示ID（或 IconData）
+    private readonly List<IconData> synthesisHistory = new List<IconData>();
+
+    public IReadOnlyList<IconData> GetSynthesisHistory() => synthesisHistory;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -82,12 +87,21 @@ public class IconManager : MonoBehaviour
 
         Debug.Log($"[ToggleSynthesis] 嘗試處理 {data.id}");
 
-        // 改為：總是新增到合成區（不檢查是否已存在）
-        AddToSynthesisDuplicate(data);
+
+        // 若合成區中已經有該圖示，則不再重複新增
+        if (synthesisSlots.ContainsKey(data.id))
+        {
+            Debug.Log($"[ToggleSynthesis] {data.id} 已存在於合成區，不重複生成。");
+            return;
+        }
+        
+        // 新增一個該圖示到合成區
+        AddSingleToSynthesis(data);
+        
     }
 
-    // 將方法獨立出來
-    public void AddToSynthesisDuplicate(IconData data)
+    // ✅ 新增或取代原本的 AddToSynthesisDuplicate 方法
+    private void AddSingleToSynthesis(IconData data)
     {
         if (data == null) return;
 
@@ -95,9 +109,18 @@ public class IconManager : MonoBehaviour
         IconSlot emptySlot = null;
         if (synthesisContainer != null)
         {
-            foreach (Transform child in synthesisContainer)
+
+            int childCount = synthesisContainer.childCount;
+            for (int i = 0; i < childCount; i++)
             {
-                IconSlot slot = child.GetComponent<IconSlot>();
+                // 🚫 跳過最後一格（第三格）
+                if (i == childCount - 1)
+                {
+                    Debug.Log($"[AddSingleToSynthesis] 跳過第 {i + 1} 個 slot（保留為合成結果用）");
+                    continue;
+                }
+
+                IconSlot slot = synthesisContainer.GetChild(i).GetComponent<IconSlot>();
                 if (slot != null && !slot.HasIcon())
                 {
                     emptySlot = slot;
@@ -105,19 +128,29 @@ public class IconManager : MonoBehaviour
                 }
             }
         }
+            /* foreach (Transform child in synthesisContainer)
+            {
+                IconSlot slot = child.GetComponent<IconSlot>();
+                if (slot != null && !slot.HasIcon())
+                {
+                    emptySlot = slot;
+                    break;
+                }
+            } */
 
         GameObject go;
         if (emptySlot != null)
         {
+            // 使用現有的 placeholder
             go = emptySlot.gameObject;
             emptySlot.Setup(data);
             emptySlot.isSynthesisSlot = true;
             synthesisSlots[data.id] = go;
-            Debug.Log($"[ToggleSynthesis] {data.id} 已加入合成區: {emptySlot.name}");
+            Debug.Log($"[ToggleSynthesis] {data.id} 已加入合成區（使用空 slot）");
         }
         else
         {
-            // 如果沒有空 Slot，就 Instantiate
+            // 若沒有空 slot，就 Instantiate 一個新的
             if (synthesisPrefab != null && synthesisContainer != null)
             {
                 go = Instantiate(synthesisPrefab, synthesisContainer);
@@ -129,18 +162,27 @@ public class IconManager : MonoBehaviour
                 }
                 synthesisSlots[data.id] = go;
                 dynamicSynthesisSlots.Add(go);
-                Debug.Log($"[ToggleSynthesis] {data.id} 已 Instantiate 到合成區");
+                Debug.Log($"[ToggleSynthesis] {data.id} 已 Instantiate 到合成區（單一複製）");
             }
             else
             {
-                Debug.LogWarning("IconManager.ToggleSynthesis: synthesisContainer or synthesisPrefab not assigned.");
+                Debug.LogWarning("IconManager.AddSingleToSynthesis: synthesisContainer 或 synthesisPrefab 未指定。");
                 return;
             }
         }
 
+        // 如果這個圖示已經存在紀錄，就不用再重複加入
+        if (!synthesisHistory.Contains(data))
+        {
+            synthesisHistory.Add(data);
+        }
+
+        // 確保這個 slot 能夠被點擊（例如用來移除或互動）
         EnsureClickableSlot(go, go.GetComponent<IconSlot>());
     }
 
+
+    
     // 移除合成區圖示（會根據是否為動態產生選擇 Destroy 或 Clear placeholder）
     public void RemoveFromSynthesis(IconData data)
     {
@@ -170,29 +212,21 @@ public class IconManager : MonoBehaviour
     }
 
     /// <summary>在 PuzzleUI 場景呼叫，指定要把圖示生成到哪個容器、用什麼預製</summary>
-    public void BindUI(Transform container, GameObject prefab)
+    public void BindUI(Transform container, GameObject prefab, Transform synthesis, GameObject puzzleUI)
     {
-        if (container == null || prefab == null)
-        {
-            Debug.LogError("IconManager.BindUI: container 或 prefab 為 null！");
-            return;
-        }
-        
-        // ✅ 即使已經有參考，也強制更新（以防 missing）
         slotContainer = container;
         slotPrefab = prefab;
-        Debug.Log($"[IconManager] BindUI 成功 - Container: {container.name}, Prefab: {prefab.name}");
+        synthesisContainer = synthesis;
+        this.puzzleUI = puzzleUI;
         RebuildUI();
     }
         
     /// <summary>離開 PuzzleUI 時可呼叫（可選）</summary>
     public void UnbindUI()
     {
-        Debug.Log("[IconManager] UnbindUI - 只清除動態 UI，不清空容器參考");
-        ClearDynamicSlots(); // ✅ 改用這個，只清除動態生成的物件
-        // ❌ 不要設 null！保留 slotContainer 和 slotPrefab 的參考
-        // slotContainer = null;  // 絕對不要這樣做
-        // slotPrefab = null;     // 絕對不要這樣做
+        ClearUI();
+        slotContainer = null;
+        slotPrefab = null;
     }
 
     /// <summary>解鎖一個新圖示（若已存在則忽略）</summary>
@@ -224,6 +258,7 @@ public class IconManager : MonoBehaviour
 
         if (slotContainer == null) return;
 
+        // 重建顯示區圖示
         foreach (var icon in unlockedIcons)
         {
             // 如果 slot 已經存在（HasIcon=true），就跳過
@@ -240,6 +275,16 @@ public class IconManager : MonoBehaviour
             if (!alreadyExists)
                 SpawnSlot(icon);
         }
+
+        // 重建合成區 UI：根據歷史紀錄
+        foreach (var data in synthesisHistory)
+        {
+            if (!synthesisSlots.ContainsKey(data.id))
+            {
+                AddSingleToSynthesis(data);
+            }
+        }
+
     }
 
     private void ClearDynamicSlots()
@@ -278,8 +323,10 @@ public class IconManager : MonoBehaviour
         puzzleUI.SetActive(!puzzleUI.activeSelf);
         
         if (puzzleUI.activeSelf)
-            RebuildUI(); // 只新增尚未生成的 slot
-        // 不要再呼叫 ClearUI() → 保留玩家圖示
+        {
+            RebuildUI();
+            // 不要再清空合成區，保留歷史紀錄
+        }
     }
 
     private void SpawnSlot(IconData data)
