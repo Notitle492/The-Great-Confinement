@@ -24,8 +24,6 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private IconFader iconFader;
 
-    
-
 
     private Story currentStory;
     public bool dialogueIsPlaying { get; private set; }
@@ -121,8 +119,16 @@ public class DialogueManager : MonoBehaviour
             if (dialogueTrigger != null)
             {
                 dialogueTrigger.OnDialogueEnded();
-            }
-            
+
+                // 如果需要對話結束後整個父物件消失
+                if (dialogueTrigger.disappearAfterDialogue)
+                {
+                    Transform parent = dialogueTrigger.transform.parent;
+                    if (parent != null)
+                        parent.gameObject.SetActive(false);
+
+                }
+            }   
         }
 
         // ✅ 清除 speaker

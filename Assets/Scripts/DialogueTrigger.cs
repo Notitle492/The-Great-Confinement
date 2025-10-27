@@ -19,9 +19,14 @@ public class DialogueTrigger : MonoBehaviour
 
     [Tooltip("是否在對話結束後給圖示")]
     public bool giveIconAfterDialogue = false;  // ✅ 新增開關
+    [Tooltip("對話結束後是否讓物件消失")]
+    public bool disappearAfterDialogue = false;
+    
 
     private bool hasTalked = false;
     private bool playerInRange;
+
+
 
     private void Awake()
     {

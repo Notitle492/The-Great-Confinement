@@ -1407,6 +1407,7 @@ MonoBehaviour:
   ItemID: 1
   ItemName: "NPC1\u7121\u7B46\u66B4\u8E81"
   giveIconAfterDialogue: 1
+  disappearAfterDialogue: 0
 --- !u!61 &217239682
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2179,12 +2180,12 @@ PrefabInstance:
     - target: {fileID: 5557028873832295277, guid: 645a2e8d806f24b4eae57c489e93c82a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.59
+      value: 24.21
       objectReference: {fileID: 0}
     - target: {fileID: 5557028873832295277, guid: 645a2e8d806f24b4eae57c489e93c82a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -10.209999
+      value: -10.38
       objectReference: {fileID: 0}
     - target: {fileID: 5557028873832295277, guid: 645a2e8d806f24b4eae57c489e93c82a,
         type: 3}
@@ -2700,6 +2701,7 @@ MonoBehaviour:
   ItemID: 
   ItemName: 
   giveIconAfterDialogue: 0
+  disappearAfterDialogue: 0
 --- !u!1 &588208335
 GameObject:
   m_ObjectHideFlags: 0
@@ -4728,6 +4730,7 @@ MonoBehaviour:
   ItemID: 
   ItemName: 
   giveIconAfterDialogue: 0
+  disappearAfterDialogue: 1
 --- !u!1 &1103038083
 GameObject:
   m_ObjectHideFlags: 0
@@ -5930,7 +5933,7 @@ PrefabInstance:
     - target: {fileID: 1139564772609443124, guid: 9490b23d1c538784888245c9d1ce6dfe,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -11.66
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 1139564772609443124, guid: 9490b23d1c538784888245c9d1ce6dfe,
         type: 3}
@@ -6429,6 +6432,7 @@ MonoBehaviour:
   ItemID: 2
   ItemName: "\u670B\u53CB\uFF0C\u8D70\u5ECA\u3002"
   giveIconAfterDialogue: 1
+  disappearAfterDialogue: 0
 --- !u!61 &1424642964
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8588,6 +8592,7 @@ MonoBehaviour:
   ItemID: 
   ItemName: 
   giveIconAfterDialogue: 0
+  disappearAfterDialogue: 0
 --- !u!61 &2026303525
 BoxCollider2D:
   m_ObjectHideFlags: 0
