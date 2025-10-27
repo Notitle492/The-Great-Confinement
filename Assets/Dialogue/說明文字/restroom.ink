@@ -1,6 +1,6 @@
 ->Chapter1
 === Chapter1 ===
-# name:說明文字
+# name:啊
 # portrait:
 
 門被鎖上了。

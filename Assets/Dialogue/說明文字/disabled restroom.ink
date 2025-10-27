@@ -1,6 +1,6 @@
 ->Chapter1
 === Chapter1 ===
-# name:說明文字
+# name:注意
 # portrait:
 
 小心地滑，稍後再走。
