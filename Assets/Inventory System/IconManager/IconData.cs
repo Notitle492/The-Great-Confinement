@@ -15,12 +15,15 @@ public class IconData
     public Sprite iconSprite;
     public string id;           // 唯一識別（避免重複）
     public string displayName;  // 顯示名稱（可選）
+    public string itemDescription; // ✅ 圖示的詳細描述文字
 
-    public IconData(IconType type, Sprite sprite, string id, string name = null)
+
+    public IconData(IconType type, Sprite sprite, string id, string name = null, string description = "")
     {
         iconType = type;
         iconSprite = sprite;
         this.id = id;
         displayName = name;
+        itemDescription = description; // ✅ 一定要賦值
     }
 }

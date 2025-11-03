@@ -17,10 +17,6 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public bool isSynthesisSlot = false; // 標記這個 Slot 是合成區還是顯示區
 
 
-    [Header("對應的 Tooltip")]
-    public GameObject tooltipObject;        // 直接拖入 chatbox(1/2/3...)
-    public TextMeshProUGUI tooltipText;
-
     private void Start()
     {
         // 確保 iconImage 被正確賦值
@@ -61,29 +57,21 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         iconData = null;
         if (iconImage != null)
             iconImage.sprite = defaultSprite; 
-
-        if (tooltipText != null)
-            tooltipText.text = "";
-
-        if (tooltipObject != null)
-            tooltipObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        
-        // 只有在 slot 已經有圖示時才顯示 tooltip
         if (!HasIcon()) return;
-
-        if (tooltipObject != null)
-            tooltipObject.SetActive(true);
+        if (iconData != null)
+        {
+            TooltipManager.Instance?.ShowTooltip(gameObject, 
+                $"{iconData.displayName}\n<size=80%><color=#CCCCCC>{iconData.itemDescription}</color></size>");
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        
-        if (tooltipObject != null)
-            tooltipObject.SetActive(false);
+        TooltipManager.Instance?.HideTooltip(gameObject);
     }
 
     public void OnPointerClick(PointerEventData eventData)

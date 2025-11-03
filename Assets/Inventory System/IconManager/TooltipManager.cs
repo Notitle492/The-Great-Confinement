@@ -8,40 +8,84 @@ public class TooltipManager : MonoBehaviour
 {
     public static TooltipManager Instance { get; private set; }
 
-    [Header("UI")]
-    public List<GameObject> tooltipObjects;       // 拖進 chatbox(1)~chatbox(5)
-    public List<TextMeshProUGUI> tooltipTexts;    // 對應每個 chatbox 的文字
-    public Canvas targetCanvas;                  // 放 PuzzleUI 的 Canvas（用來把螢幕座標轉 local）
+    [Header("設定")]
+    public GameObject tooltipPrefab;       // Tooltip 預置物（內含 TextMeshPro）
+    public Canvas targetCanvas;                  // 所屬 Canvas
+    public Vector2 Offset = new Vector2(50f, 0f); // Tooltip 與 Slot 的間距
+    
+    private Dictionary<GameObject, GameObject> activeTooltips = new(); // Slot → Tooltip 實例
 
-    public Vector2 screenOffset = new Vector2(12f, -12f);
+    /* private RectTransform currentTooltip;
+    private TextMeshProUGUI tooltipText; */    
 
     private void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(gameObject); 
+            return; 
+        }
         Instance = this;
 
-        // 一開始把所有 tooltip 關閉
-        foreach (var obj in tooltipObjects)
-            if (obj != null) obj.SetActive(false);
+        /* if (tooltipPrefab != null)
+        {
+            GameObject obj = Instantiate(tooltipPrefab, transform);
+            currentTooltip = obj.GetComponent<RectTransform>();
+            tooltipText = obj.GetComponentInChildren<TextMeshProUGUI>();
+            currentTooltip.gameObject.SetActive(false);
+        } */
     }
 
-    public void Show(int index, string text)
+    /// 顯示 Tooltip 並自動放在 slot 旁邊
+
+    public void ShowTooltip(GameObject slotObj, string text)
     {
-        if (index < 0 || index >= tooltipObjects.Count) return;
-        if (tooltipObjects[index] == null || tooltipTexts[index] == null) return;
+        if (tooltipPrefab == null || targetCanvas == null) return;
 
-        tooltipObjects[index].SetActive(true);
-        tooltipTexts[index].text = text;
+        // 已存在的 Tooltip 不重複生成
+        if (activeTooltips.ContainsKey(slotObj)) return;
 
-        tooltipObjects[index].transform.SetAsLastSibling();
-        
+        GameObject tooltip = Instantiate(tooltipPrefab, targetCanvas.transform);
+        tooltip.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        tooltip.SetActive(true);
+
+        // 設定位置（根據 Slot 的螢幕座標）
+        RectTransform slotRect = slotObj.GetComponent<RectTransform>();
+        RectTransform tooltipRect = tooltip.GetComponent<RectTransform>();
+
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(null, slotRect.position);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            targetCanvas.transform as RectTransform,
+            screenPos + Offset,
+            targetCanvas.worldCamera,
+            out Vector2 localPos
+        );
+        tooltipRect.localPosition = localPos;
+
+        activeTooltips[slotObj] = tooltip;
+
+
+        // Tooltip 出現位置計算完後
+        Vector2 tooltipSize = tooltipRect.sizeDelta;
+        Vector2 canvasSize = (targetCanvas.transform as RectTransform).sizeDelta;
+
+        // 邊界檢查（簡易）
+        if (localPos.x + tooltipSize.x > canvasSize.x / 2)
+            localPos.x = (canvasSize.x / 2) - tooltipSize.x;
+        if (localPos.y - tooltipSize.y < -canvasSize.y / 2)
+            localPos.y = (-canvasSize.y / 2) + tooltipSize.y;
+
+        tooltipRect.localPosition = localPos;
+
+
     }
 
-    /// <summary>隱藏指定 index 的 tooltip</summary>
-    public void Hide(int index)
+    public void HideTooltip(GameObject slotObj)
     {
-        if (index < 0 || index >= tooltipObjects.Count) return;
-        if (tooltipObjects[index] != null)
-            tooltipObjects[index].SetActive(false);
+        if (activeTooltips.TryGetValue(slotObj, out GameObject tooltip))
+        {
+            Destroy(tooltip);
+            activeTooltips.Remove(slotObj);
+        }
     }
 }
