@@ -11,7 +11,8 @@ public class TooltipManager : MonoBehaviour
     [Header("設定")]
     public GameObject tooltipPrefab;       // Tooltip 預置物（內含 TextMeshPro）
     public Canvas targetCanvas;                  // 所屬 Canvas
-    public Vector2 Offset = new Vector2(50f, 0f); // Tooltip 與 Slot 的間距
+    public Vector2 padding = new Vector2(20f, 20f); // 與邊界的留白距離
+    /* public Vector2 Offset = new Vector2(-100f, 0f); */ // Tooltip 與 Slot 的間距
     
     private Dictionary<GameObject, GameObject> activeTooltips = new(); // Slot → Tooltip 實例
 
@@ -36,7 +37,7 @@ public class TooltipManager : MonoBehaviour
         } */
     }
 
-    /// 顯示 Tooltip 並自動放在 slot 旁邊
+    /// 顯示 Tooltip 並放在圖示下方（含邊界檢查）
 
     public void ShowTooltip(GameObject slotObj, string text)
     {
@@ -52,31 +53,45 @@ public class TooltipManager : MonoBehaviour
         // 設定位置（根據 Slot 的螢幕座標）
         RectTransform slotRect = slotObj.GetComponent<RectTransform>();
         RectTransform tooltipRect = tooltip.GetComponent<RectTransform>();
+        RectTransform canvasRect = targetCanvas.transform as RectTransform;
 
-        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(null, slotRect.position);
+        // === 基本位置：圖示下方 ===
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(targetCanvas.worldCamera, slotRect.position);
+        Vector2 adjustedOffset = new Vector2(0f, -slotRect.rect.height - 20f); // 往下偏移
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            targetCanvas.transform as RectTransform,
-            screenPos + Offset,
+            canvasRect,
+            screenPos + adjustedOffset,
             targetCanvas.worldCamera,
             out Vector2 localPos
         );
         tooltipRect.localPosition = localPos;
 
-        activeTooltips[slotObj] = tooltip;
 
-
-        // Tooltip 出現位置計算完後
+        // === 邊界檢查 ===
         Vector2 tooltipSize = tooltipRect.sizeDelta;
-        Vector2 canvasSize = (targetCanvas.transform as RectTransform).sizeDelta;
+        Vector2 canvasSize = canvasRect.sizeDelta;
 
-        // 邊界檢查（簡易）
-        if (localPos.x + tooltipSize.x > canvasSize.x / 2)
-            localPos.x = (canvasSize.x / 2) - tooltipSize.x;
-        if (localPos.y - tooltipSize.y < -canvasSize.y / 2)
-            localPos.y = (-canvasSize.y / 2) + tooltipSize.y;
+        Vector2 clampedPos = localPos;
+
+        // 左邊界
+        if (clampedPos.x - tooltipSize.x / 2f < -canvasSize.x / 2f + padding.x)
+            clampedPos.x = -canvasSize.x / 2f + tooltipSize.x / 2f + padding.x;
+
+        // 右邊界
+        if (clampedPos.x + tooltipSize.x / 2f > canvasSize.x / 2f - padding.x)
+            clampedPos.x = canvasSize.x / 2f - tooltipSize.x / 2f - padding.x;
+
+        // 下邊界
+        if (clampedPos.y - tooltipSize.y / 2f < -canvasSize.y / 2f + padding.y)
+            clampedPos.y = -canvasSize.y / 2f + tooltipSize.y / 2f + padding.y;
+
+        // 上邊界（很少用，但保險）
+        if (clampedPos.y + tooltipSize.y / 2f > canvasSize.y / 2f - padding.y)
+            clampedPos.y = canvasSize.y / 2f - tooltipSize.y / 2f - padding.y;
 
         tooltipRect.localPosition = localPos;
 
+        activeTooltips[slotObj] = tooltip;
 
     }
 
