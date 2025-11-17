@@ -33,15 +33,6 @@ public class DialogueManager : MonoBehaviour
     private static DialogueManager instance;
 
     private GameObject currentSpeaker;
-    public void StartDialogue(TextAsset inkJSON, GameObject speaker)
-{
-    currentSpeaker = speaker;
-    currentStory = new Story(inkJSON.text);
-    dialogueIsPlaying = true;
-    dialogueCanvas.SetActive(true);
-    ContinueStory();
-}
-
 
     private void Awake()
     {
@@ -79,12 +70,48 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void EnterDialogueMode(TextAsset inkJSON)
+    /// 開始對話（支援指定 Knot）
+    public void StartDialogue(TextAsset inkJSON, GameObject speaker, string knotName = null)
     {
+        currentSpeaker = speaker;
         currentStory = new Story(inkJSON.text);
+
+        // 如果指定了 knot，跳轉到該 knot
+        if (!string.IsNullOrEmpty(knotName))
+        {
+            try
+            {
+                currentStory.ChoosePathString(knotName);
+                Debug.Log($"[DialogueManager] 跳轉到 Knot: {knotName}");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[DialogueManager] 找不到 Knot: {knotName}\n錯誤: {e.Message}");
+                // 如果找不到 knot，就從頭開始
+            }
+        }
+
         dialogueIsPlaying = true;
         dialogueCanvas.SetActive(true);
+
+        // ✅ 確保 CanvasGroup 可以互動
+        if (dialogueCanvas.TryGetComponent<CanvasGroup>(out CanvasGroup canvasGroup))
+        {
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+        }
+
         ContinueStory();
+    }
+
+    /// 進入對話模式（舊方法，保留相容性）
+    public void EnterDialogueMode(TextAsset inkJSON)
+    {
+        StartDialogue(inkJSON, null, null);
+        /* currentStory = new Story(inkJSON.text);
+        dialogueIsPlaying = true;
+        dialogueCanvas.SetActive(true);
+        ContinueStory(); */
     }
 
     private void ExitDialogueMode()
@@ -97,19 +124,12 @@ public class DialogueManager : MonoBehaviour
         portraitImage.color = new Color(1, 1, 1, 0);
         ClearChoices();
 
-
-        // 🔽 嘗試取得 CanvasGroup 並停用互動（這不是必要，但可強化穩定性）
-        if (dialogueCanvas.TryGetComponent<CanvasGroup>(out CanvasGroup canvasGroup))
-        {
-            canvasGroup.interactable = false;
-            canvasGroup.blocksRaycasts = false;
-        }
-
         // 🔽 在對話結束後觸發圖示淡入
         if (iconFader != null)
         {
             iconFader.FadeIn(); // ✅ 淡入圖示
         }
+
 
         // 🔽 對話結束後，呼叫 NPC 的 OnDialogueEnded()
         if (currentSpeaker != null)
