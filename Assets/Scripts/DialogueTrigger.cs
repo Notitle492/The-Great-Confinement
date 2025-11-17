@@ -17,6 +17,12 @@ public class DialogueTrigger : MonoBehaviour
     public string ItemID; // 唯一ID
     public string ItemName;
 
+    [Header("第二次對話圖示")]
+    public Sprite SecondItemImage;
+    public string SecondItemID;
+    public string SecondItemName;
+
+
     [Tooltip("是否在對話結束後給圖示")]
     public bool giveIconAfterDialogue = false;  // ✅ 新增開關
     [Tooltip("對話結束後是否讓物件消失")]
@@ -155,8 +161,8 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (!giveIconAfterDialogue) return; // 只管圖示生成
 
-        // 每個對話只生成一次圖示
-        if (!hasTalked)
+        // 第一次對話 → 第一次圖示
+        if (interactCount == 1)
         {
             IconData icon = new IconData(
                 IconType.Dialogue,
@@ -165,7 +171,20 @@ public class DialogueTrigger : MonoBehaviour
                 ItemName
             );
             IconManager.Instance?.AddIcon(icon);
-            hasTalked = true;
+            return;
+        }
+
+        // 第二次對話 → 第二次圖示
+        if (interactCount == 2)
+        {
+            IconData icon = new IconData(
+                IconType.Dialogue,
+                SecondItemImage,
+                SecondItemID,
+                SecondItemName
+            );
+            IconManager.Instance?.AddIcon(icon);
+            return;
         }
     }
 }

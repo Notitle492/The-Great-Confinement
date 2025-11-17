@@ -1,9 +1,9 @@
 ->Chapter1
 === Chapter1 ===
-# name:NPC 4
-# portrait:npc4
+# name:找到
+# portrait:
 
-盯……
+我的筆。
 
  -> END
 
@@ -11,9 +11,3 @@
 - 回答結束 
 
 -> END
-
-
-
-
-
-

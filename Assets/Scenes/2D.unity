@@ -1243,12 +1243,12 @@ PrefabInstance:
     - target: {fileID: 1139564772609443124, guid: 9490b23d1c538784888245c9d1ce6dfe,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.6
+      value: 34.46
       objectReference: {fileID: 0}
     - target: {fileID: 1139564772609443124, guid: 9490b23d1c538784888245c9d1ce6dfe,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -20.85
+      value: -26.41
       objectReference: {fileID: 0}
     - target: {fileID: 1139564772609443124, guid: 9490b23d1c538784888245c9d1ce6dfe,
         type: 3}
@@ -1535,6 +1535,9 @@ MonoBehaviour:
   ItemImage: {fileID: 21300000, guid: 4f776c3e21213034da99f292c48418b2, type: 3}
   ItemID: 1
   ItemName: "NPC1\u7121\u7B46\u66B4\u8E81"
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 1
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -1999,7 +2002,6 @@ Transform:
   - {fileID: 2008183819}
   - {fileID: 1916739}
   - {fileID: 559928805}
-  - {fileID: 1977239192}
   - {fileID: 30108146}
   - {fileID: 206540546}
   - {fileID: 1307562434}
@@ -2298,6 +2300,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -2414,7 +2419,7 @@ Transform:
   m_GameObject: {fileID: 413242558}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.74, y: -9.05, z: -10}
+  m_LocalPosition: {x: 25.95, y: -26.86, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3388,6 +3393,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -3988,7 +3996,7 @@ Transform:
   m_GameObject: {fileID: 669841874}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.707942, y: -9.056139, z: -10}
+  m_LocalPosition: {x: 23.372227, y: -23.01281, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4611,6 +4619,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -5097,6 +5108,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -5937,6 +5951,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 1
   supportMultipleDialogues: 0
@@ -8114,10 +8131,13 @@ MonoBehaviour:
   ItemImage: {fileID: 21300000, guid: 15333afbdfde03e438814bb56e5124f3, type: 3}
   ItemID: 2
   ItemName: "\u670B\u53CB\uFF0C\u8D70\u5ECA\u3002"
+  SecondItemImage: {fileID: 21300000, guid: 0b5bcd507bf4caa48a1bd2aa44b84d19, type: 3}
+  SecondItemID: 4
+  SecondItemName: "NPC2\u7684\u7B46"
   giveIconAfterDialogue: 1
   disappearAfterDialogue: 0
-  supportMultipleDialogues: 0
-  secondDialogueKnot: 
+  supportMultipleDialogues: 1
+  secondDialogueKnot: npc2_second_time
   firstDialogueKnot: Chapter1
 --- !u!61 &1424642964
 BoxCollider2D:
@@ -8275,7 +8295,7 @@ Transform:
   m_GameObject: {fileID: 1492977728}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.74, y: -9.05, z: 0}
+  m_LocalPosition: {x: 25.95, y: -26.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8429,6 +8449,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -9303,6 +9326,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -9380,7 +9406,7 @@ GameObject:
   - component: {fileID: 1681684659}
   - component: {fileID: 1681684658}
   m_Layer: 0
-  m_Name: NPC
+  m_Name: "NPC(\u591A\u9078\u529F\u80FD)"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10859,90 +10885,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960890328}
   m_CullTransparentMesh: 1
---- !u!1 &1977239191
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1977239192}
-  - component: {fileID: 1977239193}
-  m_Layer: 0
-  m_Name: Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1977239192
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977239191}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.84, y: -9.55, z: 0.01982039}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 374157025}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1977239193
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977239191}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 89e5da10fad868641a6f1fe66b290e0f, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1.3, y: 3.5}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
 --- !u!1001 &2000512433
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11206,6 +11148,9 @@ MonoBehaviour:
   ItemImage: {fileID: 0}
   ItemID: 
   ItemName: 
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
   giveIconAfterDialogue: 0
   disappearAfterDialogue: 0
   supportMultipleDialogues: 0
@@ -11786,8 +11731,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2104810425}
   - component: {fileID: 2104810429}
-  - component: {fileID: 2104810428}
+  - component: {fileID: 2104810431}
   - component: {fileID: 2104810427}
+  - component: {fileID: 2104810430}
   - component: {fileID: 2104810426}
   m_Layer: 0
   m_Name: Trigger3
@@ -11920,24 +11866,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualCue: {fileID: 1420930051}
---- !u!114 &2104810428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2104810424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 159e78488eb476d47bde934649fe3ca5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemToGive: {fileID: 11400000, guid: eea7fda821aed904286658227d10b186, type: 2}
-  iconToShow: {fileID: 3459448050213668617, guid: cfe812b54e4509d4bad7c5a694e907dd,
-    type: 3}
-  appearSound: {fileID: 8300000, guid: 97d618ca4d4978043bae39a6da6a1e35, type: 3}
-  audioSource: {fileID: 2104810426}
-  useOneShotAudio: 0
 --- !u!61 &2104810429
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11983,6 +11911,49 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.37, y: 3.07}
   m_EdgeRadius: 0
+--- !u!114 &2104810430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104810424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualCue: {fileID: 1420930051}
+  inkJSON: {fileID: 4900000, guid: c7cdd42583b7916448f1c6aed9230d91, type: 3}
+  ItemImage: {fileID: 21300000, guid: 143db60acfdc42c4e8e02c7da714fa49, type: 3}
+  ItemID: 3
+  ItemName: "\u6211\u7684\u7B46"
+  SecondItemImage: {fileID: 0}
+  SecondItemID: 
+  SecondItemName: 
+  giveIconAfterDialogue: 1
+  disappearAfterDialogue: 0
+  supportMultipleDialogues: 0
+  secondDialogueKnot: 
+  firstDialogueKnot: Chapter1
+--- !u!114 &2104810431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104810424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc4a8035af7794b4693b736cbf8bd06a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemToGive: {fileID: 11400000, guid: eea7fda821aed904286658227d10b186, type: 2}
+  iconToShow: {fileID: 3459448050213668617, guid: cfe812b54e4509d4bad7c5a694e907dd,
+    type: 3}
+  appearSound: {fileID: 8300000, guid: 97d618ca4d4978043bae39a6da6a1e35, type: 3}
+  audioSource: {fileID: 2104810426}
+  useOneShotAudio: 0
 --- !u!1 &2115851259
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,8 @@ public class ObjectTrigger : MonoBehaviour
     private bool playerInRange = false;
     private bool hasInteracted = false;
 
-    private ItemTrigger itemTrigger;  // 同物件上掛的ItemTrigger組件
+    private MonoBehaviour triggerScript; // 可能是 ItemTrigger 或 ItemTriggerStatic
+
 
     private PlayerInput playerInput;  // 用 PlayerInput 監聽
     
@@ -20,13 +21,16 @@ public class ObjectTrigger : MonoBehaviour
         if (visualCue != null)
             visualCue.SetActive(false);
 
-        // 取得同物件上的 ItemTrigger
-        itemTrigger = GetComponent<ItemTrigger>();
-        playerInput = FindObjectOfType<PlayerInput>(); // 找到全場的 PlayerInput
-        if (itemTrigger == null)
-        {
-            Debug.LogWarning("ObjectTrigger: 找不到同物件上的 ItemTrigger 組件");
-        }
+        // 🔍 自動抓取 ItemTrigger 或 ItemTriggerStatic
+        triggerScript = GetComponent<ItemTrigger>();
+
+        if (triggerScript == null)
+            triggerScript = GetComponent<ItemTriggerStatic>();
+
+        if (triggerScript == null)
+            Debug.LogWarning("ObjectTrigger: 找不到 ItemTrigger 或 ItemTriggerStatic！", this);
+
+        playerInput = FindObjectOfType<PlayerInput>();
 
         
     }
@@ -68,40 +72,33 @@ public class ObjectTrigger : MonoBehaviour
 
         Debug.Log($"ObjectTrigger.OnInteract 觸發 - playerInRange={playerInRange}, hasInteracted={hasInteracted}");
 
-        if (playerInRange && !hasInteracted)
-        {
-            if (itemTrigger != null)
-            {
-                Debug.Log("ObjectTrigger: 呼叫 itemTrigger.Interact()");
-                
-                try
-                {
-                    itemTrigger.Interact();
-                    hasInteracted = true;
-                    
-                    if (visualCue != null)
-                        visualCue.SetActive(false);
-                        
-                    Debug.Log("ObjectTrigger: 互動完成");
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogError($"ObjectTrigger: 互動時發生錯誤 - {e.Message}\n{e.StackTrace}");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("ObjectTrigger: itemTrigger 是 null");
-            }
+        if (!playerInRange)
+            return;
 
-            /* if (itemTrigger != null)
+        if (triggerScript == null)
+        {
+            Debug.LogWarning("ObjectTrigger: 沒有可觸發的 triggerScript");
+            return;
+        }
+
+        if (!hasInteracted)
+        {
+            try
             {
-                itemTrigger.Interact();
+                // ✨ 呼叫 Interact()（無論是 ItemTrigger 或 ItemTriggerStatic）
+                triggerScript.Invoke("Interact", 0f);
+
                 hasInteracted = true;
+
                 if (visualCue != null)
                     visualCue.SetActive(false);
-                Debug.Log("ObjectTrigger: 互動觸發");
-            } */
+
+                Debug.Log("ObjectTrigger: 互動完成");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"ObjectTrigger: 互動錯誤 - {e.Message}\n{e.StackTrace}");
+            }
         }
     }
 
