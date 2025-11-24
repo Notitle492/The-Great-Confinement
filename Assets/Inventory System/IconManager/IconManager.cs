@@ -10,6 +10,12 @@ public class IconManager : MonoBehaviour
     public GameObject synthesisPrefab;   // 合成區圖示用的預製,複製到合成區的圖示 Prefab
     public Sprite defaultSlotSprite;     //（同樣用於合成區 placeholder 清空時的還原）
     
+
+    [Header("合成區設定")]
+    [Tooltip("合成區可用的槽位數量（不含結果槽）")]
+    public int maxSynthesisSlots = 2; // ✅ 前兩格可用
+
+
     // synthesisSlots：合成區狀態表，用圖示id當key，值是對應的合成區圖示GameObject
     private Dictionary<string, GameObject> synthesisSlots = new Dictionary<string, GameObject>();
     
@@ -61,21 +67,6 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    // 嘗試找到 synthesisContainer 底下第一個尚未被使用、且帶有 IconSlot 的 placeholder
-    private GameObject FindEmptySynthesisPlaceholder()
-    {
-        if (synthesisContainer == null) return null;
-
-        for (int i = 0; i < synthesisContainer.childCount; i++)
-        {
-            var child = synthesisContainer.GetChild(i).gameObject;
-            var slot = child.GetComponent<IconSlot>();
-            if (slot != null && !slot.HasIcon())
-                return child;
-        }
-        return null;
-    }
-
     // ToggleSynthesis 方法
     public void ToggleSynthesis(IconData data)
     {
@@ -85,58 +76,77 @@ public class IconManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[ToggleSynthesis] 嘗試處理 {data.id}");
+        Debug.Log($"[ToggleSynthesis] 處理 {data.id}");
 
 
-        // 若合成區中已經有該圖示，則不再重複新增
+        // ✅ 檢查合成區是否已經有該圖示
         if (synthesisSlots.ContainsKey(data.id))
         {
-            Debug.Log($"[ToggleSynthesis] {data.id} 已存在於合成區，不重複生成。");
-            return;
-        }
+            // 已存在 → 移除（回到顯示區）
+            Debug.Log($"[ToggleSynthesis] {data.id} 已在合成區，執行移除");
+            RemoveFromSynthesis(data);
         
-        // 新增一個該圖示到合成區
-        AddSingleToSynthesis(data);
+            // 從歷史紀錄中移除
+            synthesisHistory.Remove(data);
+        }
+        else
+        {
+            // 不存在 → 檢查是否還有空位
+            int currentCount = GetUsableSynthesisSlotCount();
+            
+            if (currentCount >= maxSynthesisSlots)
+            {
+                Debug.LogWarning($"[ToggleSynthesis] 合成區已滿 ({currentCount}/{maxSynthesisSlots})，無法新增 {data.id}");
+                // 可以在這裡播放音效或顯示提示
+                return;
+            }
+            
+            Debug.Log($"[ToggleSynthesis] {data.id} 不在合成區 → 新增 (目前 {currentCount}/{maxSynthesisSlots})");
+            AddSingleToSynthesis(data);
+        }
         
     }
 
-    // ✅ 新增或取代原本的 AddToSynthesisDuplicate 方法
+    // ✅ 新增方法：計算目前已使用的合成槽位數量
+    private int GetUsableSynthesisSlotCount()
+    {
+        int count = 0;
+        if (synthesisContainer != null)
+        {
+            for (int i = 0; i < Mathf.Min(maxSynthesisSlots, synthesisContainer.childCount); i++)
+            {
+                IconSlot slot = synthesisContainer.GetChild(i).GetComponent<IconSlot>();
+                if (slot != null && slot.HasIcon())
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    // ✅ 優化後的 AddSingleToSynthesis
     private void AddSingleToSynthesis(IconData data)
     {
         if (data == null) return;
 
-        // 嘗試找空的 placeholder
+        // 尋找空的 placeholder（只在前 maxSynthesisSlots 格中尋找）
         IconSlot emptySlot = null;
         if (synthesisContainer != null)
         {
-
-            int childCount = synthesisContainer.childCount;
-            for (int i = 0; i < childCount; i++)
+            int searchLimit = Mathf.Min(maxSynthesisSlots, synthesisContainer.childCount);
+            
+            for (int i = 0; i < searchLimit; i++)
             {
-                // 🚫 跳過最後一格（第三格）
-                if (i == childCount - 1)
-                {
-                    Debug.Log($"[AddSingleToSynthesis] 跳過第 {i + 1} 個 slot（保留為合成結果用）");
-                    continue;
-                }
-
                 IconSlot slot = synthesisContainer.GetChild(i).GetComponent<IconSlot>();
                 if (slot != null && !slot.HasIcon())
                 {
                     emptySlot = slot;
+                    Debug.Log($"[AddSingleToSynthesis] 找到空槽位 #{i}");
                     break;
                 }
             }
         }
-            /* foreach (Transform child in synthesisContainer)
-            {
-                IconSlot slot = child.GetComponent<IconSlot>();
-                if (slot != null && !slot.HasIcon())
-                {
-                    emptySlot = slot;
-                    break;
-                }
-            } */
 
         GameObject go;
         if (emptySlot != null)
@@ -146,14 +156,25 @@ public class IconManager : MonoBehaviour
             emptySlot.Setup(data);
             emptySlot.isSynthesisSlot = true;
             synthesisSlots[data.id] = go;
-            Debug.Log($"[ToggleSynthesis] {data.id} 已加入合成區（使用空 slot）");
+            Debug.Log($"[AddSingleToSynthesis] {data.id} 已加入合成區（使用 placeholder）");
         }
         else
         {
-            // 若沒有空 slot，就 Instantiate 一個新的
+            // 檢查是否超過限制
+            if (GetUsableSynthesisSlotCount() >= maxSynthesisSlots)
+            {
+                Debug.LogWarning($"[AddSingleToSynthesis] 無法新增 {data.id}：合成區已滿");
+                return;
+            }
+            
+            // 動態生成（在前 maxSynthesisSlots 個位置）
             if (synthesisPrefab != null && synthesisContainer != null)
             {
                 go = Instantiate(synthesisPrefab, synthesisContainer);
+                
+                // 確保新生成的物件在正確位置（不是最後）
+                go.transform.SetSiblingIndex(Mathf.Min(maxSynthesisSlots - 1, synthesisContainer.childCount - 2));
+                
                 IconSlot slot = go.GetComponent<IconSlot>();
                 if (slot != null)
                 {
@@ -162,22 +183,20 @@ public class IconManager : MonoBehaviour
                 }
                 synthesisSlots[data.id] = go;
                 dynamicSynthesisSlots.Add(go);
-                Debug.Log($"[ToggleSynthesis] {data.id} 已 Instantiate 到合成區（單一複製）");
+                Debug.Log($"[AddSingleToSynthesis] {data.id} 已動態生成到合成區");
             }
             else
             {
-                Debug.LogWarning("IconManager.AddSingleToSynthesis: synthesisContainer 或 synthesisPrefab 未指定。");
+                Debug.LogWarning("[AddSingleToSynthesis] synthesisContainer 或 synthesisPrefab 未指定");
                 return;
             }
         }
 
-        // 如果這個圖示已經存在紀錄，就不用再重複加入
         if (!synthesisHistory.Contains(data))
         {
             synthesisHistory.Add(data);
         }
 
-        // 確保這個 slot 能夠被點擊（例如用來移除或互動）
         EnsureClickableSlot(go, go.GetComponent<IconSlot>());
     }
 
@@ -218,7 +237,30 @@ public class IconManager : MonoBehaviour
         slotPrefab = prefab;
         synthesisContainer = synthesis;
         this.puzzleUI = puzzleUI;
+
+        // ✅ 初始化時標記最後一格為結果槽
+        MarkResultSlot();
+
         RebuildUI();
+    }
+
+    // ✅ 新增方法：標記結果槽位
+    private void MarkResultSlot()
+    {
+        if (synthesisContainer == null) return;
+        
+        int lastIndex = synthesisContainer.childCount - 1;
+        if (lastIndex >= 0)
+        {
+            var resultSlot = synthesisContainer.GetChild(lastIndex).GetComponent<IconSlot>();
+            if (resultSlot != null)
+            {
+                resultSlot.isSynthesisSlot = true; // 標記為合成區
+                // 可以加個特殊標記
+                resultSlot.gameObject.name = "ResultSlot";
+                Debug.Log($"[MarkResultSlot] 已標記第 {lastIndex} 格為結果槽");
+            }
+        }
     }
         
     /// <summary>離開 PuzzleUI 時可呼叫（可選）</summary>
@@ -298,22 +340,6 @@ public class IconManager : MonoBehaviour
         foreach (var go in dynamicSynthesisSlots)
             if (go) Destroy(go);
         dynamicSynthesisSlots.Clear();
-    }
-
-    private void ClearSynthesisPlaceholders()
-    {
-        if (synthesisContainer == null) return;
-        
-        foreach (Transform child in synthesisContainer)
-        {
-            var slot = child.GetComponent<IconSlot>();
-            if (slot != null && !dynamicSynthesisSlots.Contains(slot.gameObject))
-            {
-                // 只有 placeholder 才清空，如果玩家已放入圖示的 slot 保留
-                if (!slot.HasIcon()) 
-                    slot.Clear(null); // 空白
-            }
-        }
     }
 
     public void TogglePuzzleUI()
