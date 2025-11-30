@@ -11,7 +11,7 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Ink JSON")]
     [SerializeField] private TextAsset inkJSON;
 
-    [Header("圖示相關")]
+    [Header("第一次對話圖示")]
 
     public Sprite ItemImage; // 對話圖示圖
     public string ItemID; // 唯一ID
@@ -38,7 +38,7 @@ public class DialogueTrigger : MonoBehaviour
     [Tooltip("第一次對話的 Knot 名稱（預設為 Chapter1）")]
     public string firstDialogueKnot = "Chapter1";
 
-    private bool hasTalked = false;
+    ////private bool hasTalked = false;
     private bool playerInRange;
 
     private int interactCount = 0;
@@ -57,18 +57,27 @@ public class DialogueTrigger : MonoBehaviour
             if (visualCue != null)
                 visualCue.SetActive(true);
 
-            /* if (InputManager.GetInstance() != null && InputManager.GetInstance().GetInteractPressed()) // 你可以改成自己的輸入方式
-            {   
-                DialogueManager.GetInstance().StartDialogue(inkJSON, this.gameObject);
-            } */
-                /* DialogueManager.GetInstance().EnterDialogueMode(inkJSON); */
+            //if (InputManager.GetInstance() != null && InputManager.GetInstance().GetInteractPressed()) // 你可以改成自己的輸入方式
+            //{   
+            //    DialogueManager.GetInstance().StartDialogue(inkJSON, this.gameObject);
+            //} 
+
+                //DialogueManager.GetInstance().EnterDialogueMode(inkJSON); 
+
+
                 // 之後你可以呼叫 InkDialogueManager 來啟動對話
-            if (playerInRange && InputManager.GetInstance().GetInteractPressed())
+
+            //if (playerInRange && InputManager.GetInstance().GetInteractPressed())
+            //{
+            //    if (!DialogueManager.GetInstance().dialogueIsPlaying)
+            //    {
+            //        Interact();
+            //    }
+            //}
+
+            if (InputManager.GetInstance().GetInteractPressed())
             {
-                if (!DialogueManager.GetInstance().dialogueIsPlaying)
-                {
-                    Interact();
-                }
+                Interact();
             }
             
         }
@@ -137,10 +146,6 @@ public class DialogueTrigger : MonoBehaviour
     }
 
 
-
-
-
-
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Player"))
@@ -164,6 +169,13 @@ public class DialogueTrigger : MonoBehaviour
         // 第一次對話 → 第一次圖示
         if (interactCount == 1)
         {
+            if (ItemImage == null || string.IsNullOrEmpty(ItemID))
+            {
+                Debug.LogWarning($"[DialogueTrigger] 第一次對話圖示資料不完整！ItemImage={ItemImage}, ItemID={ItemID}");
+                return;
+            }
+
+
             IconData icon = new IconData(
                 IconType.Dialogue,
                 ItemImage,
@@ -171,20 +183,39 @@ public class DialogueTrigger : MonoBehaviour
                 ItemName
             );
             IconManager.Instance?.AddIcon(icon);
-            return;
+            Debug.Log($"[DialogueTrigger] 第一次對話結束，已加入圖示：{ItemName}");
         }
 
         // 第二次對話 → 第二次圖示
-        if (interactCount == 2)
+        else if (interactCount == 2)  // ✅ 用 else if
         {
-            IconData icon = new IconData(
+            if (SecondItemImage == null || string.IsNullOrEmpty(SecondItemID))
+            {
+                Debug.LogWarning($"[DialogueTrigger] 第二次對話圖示資料不完整！SecondItemImage={SecondItemImage}, SecondItemID={SecondItemID}");
+                return;
+            }
+
+            IconData icon = new IconData(  // ✅ 正確宣告變數
                 IconType.Dialogue,
                 SecondItemImage,
                 SecondItemID,
                 SecondItemName
             );
+
             IconManager.Instance?.AddIcon(icon);
-            return;
+            Debug.Log($"[DialogueTrigger] 第二次對話結束，已加入圖示：{SecondItemName}");
         }
+
+
+        // ✅ 對話後消失（如果有設定）
+        if (disappearAfterDialogue)
+        {
+            gameObject.SetActive(false);
+            Debug.Log($"[DialogueTrigger] 對話結束後物件已隱藏：{gameObject.name}");
+        }
+
+
     }
 }
+
+

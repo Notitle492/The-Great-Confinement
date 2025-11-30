@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 合成配方：定義哪些圖示組合可以合成新圖示
 /// </summary>
-[CreateAssetMenu(fileName = "NewRecipe", menuName = "Synthesis/Recipe")]
+[CreateAssetMenu(fileName = "NewSynthesisRecipe", menuName = "IconSystem/Synthesis Recipe")]
 public class SynthesisRecipe : ScriptableObject
 {
     [Header("合成材料")]
@@ -13,8 +13,8 @@ public class SynthesisRecipe : ScriptableObject
     
     [Header("合成結果")]
     [Tooltip("合成出的新圖示")]
-    public IconData resultIcon;
-    
+    public IconDataSO resultIconSO;
+
     [Header("顯示設定")]
     [Tooltip("配方名稱（用於 Debug）")]
     public string recipeName;

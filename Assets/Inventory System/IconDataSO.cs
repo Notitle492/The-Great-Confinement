@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 /// <summary>
 /// IconData 的 ScriptableObject 版本
 /// 可以在 Unity Inspector 中創建和編輯

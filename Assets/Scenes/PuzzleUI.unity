@@ -846,7 +846,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: ???
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 190c86d5fe5b682439cae15742bce3e0, type: 2}
   m_sharedMaterial: {fileID: 2484250157519304405, guid: 190c86d5fe5b682439cae15742bce3e0,
@@ -2806,7 +2806,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recipes:
-  - {fileID: 11400000, guid: bf916c22fbf7dd344a90d876f9a70237, type: 2}
+  - {fileID: 11400000, guid: b6048c6be39444f49a284a1302127fcf, type: 2}
+  - {fileID: 11400000, guid: 835640d19bf50e34b87d817b3f4bcc00, type: 2}
   synthesisButton: {fileID: 987418031}
   resultSlot: {fileID: 5722867511630845306}
   errorMessageText: {fileID: 337667164}
