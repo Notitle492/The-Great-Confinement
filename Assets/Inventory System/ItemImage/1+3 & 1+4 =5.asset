@@ -15,5 +15,5 @@ MonoBehaviour:
   iconType: 0
   iconSprite: {fileID: 21300000, guid: d363336a5bc4ff548b4779633ccd350a, type: 3}
   id: 5
-  displayName: "\u5716\u793A5"
-  itemDescription: "\u628A\u7B46\u7D66NPC1"
+  displayName: "\u628A\u7B46\u7D66NPC1"
+  itemDescription: 

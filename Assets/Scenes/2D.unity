@@ -1633,8 +1633,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   synthesisContainer: {fileID: 0}
-  synthesisPrefab: {fileID: 0}
-  defaultSlotSprite: {fileID: 0}
+  synthesisPrefab: {fileID: 5322475028688250436, guid: f3891384b176f114a9bdd05edc8316cf,
+    type: 3}
+  defaultSlotSprite: {fileID: 21300000, guid: 22ce5e76a6e76204592883ee7585fdf6, type: 3}
   maxSynthesisSlots: 2
   slotContainer: {fileID: 0}
   slotPrefab: {fileID: 0}
