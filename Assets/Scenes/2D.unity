@@ -1622,7 +1622,7 @@ MonoBehaviour:
   giveIconAfterDialogue: 1
   disappearAfterDialogue: 0
   supportMultipleDialogues: 1
-  secondDialogueKnot: npc1_have_recipes
+  secondDialogueKnot: npc1_repeat
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 1
   conditionalDialogues:
@@ -1646,7 +1646,7 @@ MonoBehaviour:
     rewardSprite: {fileID: 21300000, guid: 6d7d73b950e10fb4287ffa5090006351, type: 3}
     rewardIconID: 6
     rewardIconName: "\u5E0C\u671B\u4ED6\u8A18\u5F97\u9084"
-    description: "\u64C1\u6709\u4EFB\u4E00\u914D\u65B9\u6642\u7D66\u5716\u793A6"
+    description: "\u64C1\u6709\u4EFB\u4E00\u914D\u65B9\u7D44\u5408\u6642\u7D66\u5716\u793A6"
 --- !u!61 &217239682
 BoxCollider2D:
   m_ObjectHideFlags: 0
