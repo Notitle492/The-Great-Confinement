@@ -127,11 +127,14 @@ public class DialogueTrigger : MonoBehaviour
             return;
 
         interactCount++; // 每次互動+1
+        Debug.Log($"互動開始 interactCount={interactCount}, checkSecondInteractionReward={checkSecondInteractionReward}, hasGivenSecondInteractionReward={hasGivenSecondInteractionReward}");
 
         // ✅ 關鍵修改：第2次互動時，先檢查是否滿足獎勵條件
         if (interactCount == 2 && checkSecondInteractionReward && !hasGivenSecondInteractionReward)
         {
+            Debug.Log("進入第2次互動獎勵檢查");
             bool rewardGiven = CheckAndGiveSecondInteractionReward();
+            Debug.Log($"CheckAndGiveSecondInteractionReward 返回: {rewardGiven}");
             if (rewardGiven)
             {
                 Debug.Log($"[{gameObject.name}] 第2次互動：滿足條件，已給予獎勵圖示，不播放對話");
