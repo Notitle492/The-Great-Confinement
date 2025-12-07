@@ -1621,9 +1621,32 @@ MonoBehaviour:
   SecondItemName: 
   giveIconAfterDialogue: 1
   disappearAfterDialogue: 0
-  supportMultipleDialogues: 0
-  secondDialogueKnot: 
+  supportMultipleDialogues: 1
+  secondDialogueKnot: npc1_have_recipes
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 1
+  conditionalDialogues:
+  - requiredIconID: 6
+    dialogueKnot: npc1_has_icon6
+    description: "\u64C1\u6709\u5716\u793A6\u6642\u7684\u5C0D\u8A71"
+  checkSecondInteractionReward: 1
+  secondInteractionRewards:
+  - checkSingleIcon: 1
+    requiredIconID: 5
+    requiredRecipes: []
+    rewardSprite: {fileID: 21300000, guid: 6d7d73b950e10fb4287ffa5090006351, type: 3}
+    rewardIconID: 6
+    rewardIconName: "\u5E0C\u671B\u4ED6\u8A18\u5F97\u9084"
+    description: "\u64C1\u6709\u5716\u793A5\u6642\u7D66\u5716\u793A6"
+  - checkSingleIcon: 0
+    requiredIconID: 
+    requiredRecipes:
+    - {fileID: 11400000, guid: b6048c6be39444f49a284a1302127fcf, type: 2}
+    - {fileID: 11400000, guid: 835640d19bf50e34b87d817b3f4bcc00, type: 2}
+    rewardSprite: {fileID: 21300000, guid: 6d7d73b950e10fb4287ffa5090006351, type: 3}
+    rewardIconID: 6
+    rewardIconName: "\u5E0C\u671B\u4ED6\u8A18\u5F97\u9084"
+    description: "\u64C1\u6709\u4EFB\u4E00\u914D\u65B9\u6642\u7D66\u5716\u793A6"
 --- !u!61 &217239682
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2441,6 +2464,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!61 &405708102
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3534,6 +3561,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!1 &588208335
 GameObject:
   m_ObjectHideFlags: 0
@@ -4760,6 +4791,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!61 &824509850
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5251,6 +5286,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!1 &916068683
 GameObject:
   m_ObjectHideFlags: 0
@@ -6095,6 +6134,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!1 &1103038083
 GameObject:
   m_ObjectHideFlags: 0
@@ -8266,7 +8309,7 @@ MonoBehaviour:
   inkJSON: {fileID: 4900000, guid: 9f0ee0f020a49d24ea43e091bae4da63, type: 3}
   ItemImage: {fileID: 21300000, guid: 15333afbdfde03e438814bb56e5124f3, type: 3}
   ItemID: 2
-  ItemName: "\u670B\u53CB\uFF0C\u8D70\u5ECA\u3002"
+  ItemName: "\u670B\u53CB\uFF0C\u8D70\u5ECA"
   SecondItemImage: {fileID: 21300000, guid: 0b5bcd507bf4caa48a1bd2aa44b84d19, type: 3}
   SecondItemID: 4
   SecondItemName: "NPC2\u7684\u7B46"
@@ -8275,6 +8318,10 @@ MonoBehaviour:
   supportMultipleDialogues: 1
   secondDialogueKnot: npc2_second_time
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!61 &1424642964
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8593,6 +8640,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!114 &1513082349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9470,6 +9521,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!114 &1642895365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11291,6 +11346,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!61 &2026303525
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12071,6 +12130,10 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  useConditionalDialogue: 0
+  conditionalDialogues: []
+  checkSecondInteractionReward: 0
+  secondInteractionRewards: []
 --- !u!114 &2104810431
 MonoBehaviour:
   m_ObjectHideFlags: 0

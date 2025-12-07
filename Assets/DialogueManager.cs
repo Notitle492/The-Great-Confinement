@@ -237,13 +237,6 @@ public class DialogueManager : MonoBehaviour
                 choiceButton.onClick.AddListener(() => OnChoiceSelected(choiceIndex));
                 choiceButtons.Add(choiceButton);
             }
-
-            /* // ✅ 自動選中第一個選項
-            if (choiceButtons.Count > 0)
-            {
-                EventSystem.current.SetSelectedGameObject(null); // 清除之前的選擇
-                EventSystem.current.SetSelectedGameObject(choiceButtons[0].gameObject);
-            } */
         }
         else
         {
