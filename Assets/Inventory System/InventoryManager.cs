@@ -36,4 +36,25 @@ public class InventoryManager : MonoBehaviour
         /* onInventoryChangedCallback?.Invoke(); */
         return true;
     }
+
+    
+    /// ✅ 新增：根據 ItemID 移除背包中的物品
+    public bool RemoveItemByID(int itemID)
+    {
+        // 尋找符合 ItemID 的物品
+        Item itemToRemove = items.Find(i => i.ItemID == itemID);
+
+        if (itemToRemove != null)
+        {
+            items.Remove(itemToRemove);
+            inventoryUI?.UpdateUI(items);
+            Debug.Log($"[InventoryManager] 已從背包移除物品：{itemToRemove.ItemName} (ID: {itemID})");
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning($"[InventoryManager] 找不到 ItemID={itemID} 的物品");
+            return false;
+        }
+    }
 }

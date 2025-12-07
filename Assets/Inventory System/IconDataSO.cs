@@ -23,13 +23,17 @@ public class IconDataSO : ScriptableObject
     [Tooltip("圖示描述")]
     [TextArea(2, 4)]
     public string itemDescription;
-    
+
+    [Header("背包關聯")]
+    [Tooltip("對應的背包物品 ItemID（用於同步刪除）")]
+    public int linkedInventoryItemID = -1;
+
     /// <summary>
     /// 轉換成 IconData（用於系統內部）
     /// </summary>
     public IconData ToIconData()
     {
-        return new IconData(iconType, iconSprite, id, displayName, itemDescription);
+        return new IconData(iconType, iconSprite, id, displayName, itemDescription, linkedInventoryItemID);
     }
 }
 
@@ -48,13 +52,15 @@ public class IconData
     public string id;
     public string displayName;
     public string itemDescription;
+    public int linkedInventoryItemID;
 
-    public IconData(IconType type, Sprite sprite, string id, string name = null, string description = "")
+    public IconData(IconType type, Sprite sprite, string id, string name = null, string description = "", int inventoryItemID = -1)
     {
         iconType = type;
         iconSprite = sprite;
         this.id = id;
         displayName = name;
         itemDescription = description;
+        linkedInventoryItemID = inventoryItemID;
     }
 }

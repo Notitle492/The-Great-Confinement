@@ -75,7 +75,9 @@ public class ItemTriggerStatic : MonoBehaviour
                     IconType.Object,
                     spriteToUse,
                     itemToGive.ItemID.ToString(),
-                    itemToGive.ItemName
+                    itemToGive.ItemName,
+                    "",  // description
+                    itemToGive.ItemID  // ✅ 關聯背包物品 ID
                 );
 
                 bool addedIcon = IconManager.Instance.AddIcon(icon);

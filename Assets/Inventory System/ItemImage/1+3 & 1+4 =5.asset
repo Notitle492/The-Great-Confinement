@@ -17,3 +17,4 @@ MonoBehaviour:
   id: 5
   displayName: "\u628A\u7B46\u7D66NPC1"
   itemDescription: 
+  linkedInventoryItemID: 3

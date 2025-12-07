@@ -215,7 +215,7 @@ public class IconManager : MonoBehaviour
         {
             dynamicSynthesisSlots.Remove(go);
             Destroy(go);
-            Debug.Log($"Destroyed dynamic synthesis slot for {data.id}");
+            Debug.Log($"[RemoveFromSynthesis] 摧毀動態槽位： {data.id}");
         }
         else
         {
@@ -228,6 +228,9 @@ public class IconManager : MonoBehaviour
         }
 
         synthesisSlots.Remove(data.id);
+
+        // ✅ 關鍵修正：同步移除合成區紀錄（避免跨場景殘留舊資料）
+        synthesisHistory.Remove(data);
     }
 
     /// <summary>在 PuzzleUI 場景呼叫，指定要把圖示生成到哪個容器、用什麼預製</summary>
@@ -494,6 +497,31 @@ public class IconManager : MonoBehaviour
         {
             unlockedIcons.Remove(iconToRemove);
             Debug.Log($"[IconManager] 已從解鎖列表移除圖示：{iconID}");
+
+            // ✅ 同步移除背包中的對應物品
+            if (iconToRemove.linkedInventoryItemID > 0)
+            {
+                if (InventoryManager.Instance != null)
+                {
+                    bool removed = InventoryManager.Instance.RemoveItemByID(iconToRemove.linkedInventoryItemID);
+                    if (removed)
+                    {
+                        Debug.Log($"[IconManager] ✅ 已從背包同步移除物品 ID: {iconToRemove.linkedInventoryItemID}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[IconManager] ⚠️ 無法從背包移除物品 ID: {iconToRemove.linkedInventoryItemID}（可能已被移除）");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("[IconManager] InventoryManager.Instance 是 null，無法同步移除背包物品");
+                }
+            }
+            else
+            {
+                Debug.Log($"[IconManager] 圖示 {iconID} 沒有關聯背包物品 (linkedInventoryItemID = {iconToRemove.linkedInventoryItemID})");
+            }
 
             // 從顯示區 UI 中移除對應的 slot
             RemoveIconFromDisplayUI(iconID);
