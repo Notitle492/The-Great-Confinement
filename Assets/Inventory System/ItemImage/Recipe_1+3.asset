@@ -17,3 +17,5 @@ MonoBehaviour:
   - 3
   resultIconSO: {fileID: 11400000, guid: 2ff2495430e19c348a335c86d18866d1, type: 2}
   recipeName: Recipe_1+3
+  alternativeMaterialsToRemove:
+  - 4

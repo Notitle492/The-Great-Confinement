@@ -154,14 +154,25 @@ public class SynthesisManager : MonoBehaviour
             IconManager.Instance.RemoveFromSynthesis(icon);
         }
 
-        // 2. 在結果槽顯示新圖示
+        // 2. ✅ 從顯示區移除所有相關材料（包含替代材料）
+        List<string> allMaterialsToRemove = recipe.GetAllMaterialsToRemove();
+        foreach (var materialID in allMaterialsToRemove)
+        {
+            bool removed = IconManager.Instance.RemoveIconByID(materialID);
+            if (removed)
+            {
+                Debug.Log($"[SynthesisManager] 已從顯示區移除材料：{materialID}");
+            }
+        }
+
+        // 3. 在結果槽顯示新圖示
         if (resultSlot != null)
         {
             resultSlot.Setup(resultIcon);
             Debug.Log($"[SynthesisManager] 結果槽顯示：{resultIcon.displayName}");
         }
 
-        // 3. 將新圖示解鎖到顯示區
+        // 4. 將新圖示解鎖到顯示區
         bool added = IconManager.Instance.AddIcon(resultIcon);
         if (added)
         {
@@ -172,7 +183,7 @@ public class SynthesisManager : MonoBehaviour
             Debug.Log($"[SynthesisManager] 圖示已存在：{resultIcon.displayName}");
         }
 
-        // 4. 播放成功音效
+        // 5. 播放成功音效
         PlaySound(successSound);
     }
 

@@ -224,7 +224,7 @@ public class IconManager : MonoBehaviour
             {
                 slot.Clear(defaultSlotSprite); // 用預設圖還原或清空
             }
-            Debug.Log($"Cleared placeholder synthesis slot for {data.id}");
+            Debug.Log($"[RemoveFromSynthesis] 清空 placeholder： {data.id}");
         }
 
         synthesisSlots.Remove(data.id);
@@ -476,6 +476,71 @@ public class IconManager : MonoBehaviour
     }
 
     public IReadOnlyList<IconData> GetUnlockedIcons() => unlockedIcons;
+
+    /// <summary>
+    /// 從已解鎖圖示列表中移除指定ID的圖示
+    /// </summary>
+    public bool RemoveIconByID(string iconID)
+    {
+        if (string.IsNullOrEmpty(iconID))
+        {
+            Debug.LogWarning("[IconManager] RemoveIconByID: iconID 是空的");
+            return false;
+        }
+
+        // 從 unlockedIcons 列表中移除
+        IconData iconToRemove = unlockedIcons.Find(i => i.id == iconID);
+        if (iconToRemove != null)
+        {
+            unlockedIcons.Remove(iconToRemove);
+            Debug.Log($"[IconManager] 已從解鎖列表移除圖示：{iconID}");
+
+            // 從顯示區 UI 中移除對應的 slot
+            RemoveIconFromDisplayUI(iconID);
+
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning($"[IconManager] 找不到要移除的圖示：{iconID}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 從顯示區 UI 中移除指定ID的圖示槽位
+    /// </summary>
+    private void RemoveIconFromDisplayUI(string iconID)
+    {
+        if (slotContainer == null) return;
+
+        // 遍歷所有顯示區的 slot
+        for (int i = slotContainer.childCount - 1; i >= 0; i--)
+        {
+            var child = slotContainer.GetChild(i);
+            var slot = child.GetComponent<IconSlot>();
+
+            if (slot != null && slot.HasIcon() && slot.IconData.id == iconID)
+            {
+                // 檢查是否為動態生成的 slot
+                if (dynamicSpawnedSlots.Contains(child.gameObject))
+                {
+                    dynamicSpawnedSlots.Remove(child.gameObject);
+                    Destroy(child.gameObject);
+                    Debug.Log($"[IconManager] 已摧毀顯示區的動態 slot：{iconID}");
+                }
+                else
+                {
+                    // placeholder slot：清空內容
+                    slot.Clear(null);
+                    Debug.Log($"[IconManager] 已清空顯示區的 placeholder slot：{iconID}");
+                }
+
+                return;
+            }
+        }
+    }
+
 
     public void ClearAllIcons()
     {
