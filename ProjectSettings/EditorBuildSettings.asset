@@ -17,6 +17,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PuzzleUI.unity
     guid: 557cba884ac51d5459decf893f304c14
+  - enabled: 1
+    path: Assets/Scenes/RestroomInside.unity
+    guid: 907d1ac8f83997849ba26d9c495884bc
+  - enabled: 1
+    path: Assets/Scenes/RestroomOutside.unity
+    guid: 4a446babe6db1b24cbbb4dbbaf966ea7
+  - enabled: 1
+    path: Assets/Scenes/TheFirstCorridor.unity
+    guid: b3db7774f63c84546b823b08ea36f50a
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3427d6a50d1f52742b4c1abc4ccf3ec8,
       type: 2}
