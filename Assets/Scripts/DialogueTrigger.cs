@@ -5,6 +5,11 @@ using UnityEngine.UI; // 確保引入
 
 public class DialogueTrigger : MonoBehaviour
 {
+
+    [Header("=== 物件識別 ===")]
+    [Tooltip("唯一識別ID（用於跨場景記錄互動狀態）")]
+    public string uniqueObjectID;
+
     [Header("Visual Cue")]
     [SerializeField] private GameObject visualCue;
 
@@ -97,11 +102,28 @@ public class DialogueTrigger : MonoBehaviour
     private int interactCount = 0;
     private bool hasGivenSecondInteractionReward = false; // 防止重複給予獎勵
 
+    // 用於跨場景記錄的 Key
+    private string InteractCountKey => $"{uniqueObjectID}_InteractCount";
+    private string HasGivenRewardKey => $"{uniqueObjectID}_HasGivenReward";
+
     private void Awake()
     {
         playerInRange = false;
         if (visualCue != null)
             visualCue.SetActive(false);
+    }
+
+    private void Start()
+    {
+        // 從 InteractionStateManager 載入跨場景狀態
+        LoadInteractionState();
+
+        // 如果物件已經設定為「對話後消失」且已經互動過，直接隱藏
+        if (disappearAfterDialogue && interactCount > 0)
+        {
+            gameObject.SetActive(false);
+            Debug.Log($"[DialogueTrigger] {uniqueObjectID} 已互動過且設定為消失，物件已隱藏");
+        }
     }
 
     private void Update()
@@ -130,24 +152,26 @@ public class DialogueTrigger : MonoBehaviour
             return;
 
         interactCount++; // 每次互動+1
-        Debug.Log($"互動開始 interactCount={interactCount}, checkSecondInteractionReward={checkSecondInteractionReward}, hasGivenSecondInteractionReward={hasGivenSecondInteractionReward}");
+        SaveInteractionState(); // ✅ 每次互動後儲存狀態
+
+        Debug.Log($"[DialogueTrigger] {uniqueObjectID} 互動開始 interactCount={interactCount}, hasGivenSecondInteractionReward={hasGivenSecondInteractionReward}");
 
         // 關鍵修改：第2次互動時，先檢查是否滿足獎勵條件
         if (interactCount == 2 && checkSecondInteractionReward && !hasGivenSecondInteractionReward)
         {
-            Debug.Log("進入第2次互動獎勵檢查");
+            Debug.Log($"[DialogueTrigger] {uniqueObjectID} 進入第2次互動獎勵檢查");
             bool rewardGiven = CheckAndGiveSecondInteractionReward();
-            Debug.Log($"CheckAndGiveSecondInteractionReward 返回: {rewardGiven}");
+
             if (rewardGiven)
             {
-                Debug.Log($"[{gameObject.name}] 第2次互動：滿足條件，已給予獎勵圖示，不播放對話");
-                return; // 直接返回，不播放對話
+                Debug.Log($"[DialogueTrigger] {uniqueObjectID} 第2次互動：滿足條件，已給予獎勵圖示，不播放對話");
+                return;
             }
         }
 
         // 如果沒有給予獎勵，正常播放對話
         string knotToPlay = DetermineDialogueKnot();
-        Debug.Log($"[{gameObject.name}] 第 {interactCount} 次互動，播放: {knotToPlay}");
+        Debug.Log($"[DialogueTrigger] {uniqueObjectID} 第 {interactCount} 次互動，播放: {knotToPlay}");
         DialogueManager.GetInstance().StartDialogue(inkJSON, this.gameObject, knotToPlay);
 
     }
@@ -157,20 +181,18 @@ public class DialogueTrigger : MonoBehaviour
 
     private string DetermineDialogueKnot()
     {
-        // 優先檢查條件對話
         if (useConditionalDialogue && conditionalDialogues.Count > 0)
         {
             foreach (var condition in conditionalDialogues)
             {
                 if (HasIcon(condition.requiredIconID))
                 {
-                    Debug.Log($"[DialogueTrigger] ✅ 滿足條件：擁有圖示 {condition.requiredIconID}，播放 {condition.dialogueKnot}");
+                    Debug.Log($"[DialogueTrigger] 滿足條件：擁有圖示 {condition.requiredIconID}，播放 {condition.dialogueKnot}");
                     return condition.dialogueKnot;
                 }
             }
         }
 
-        // 若沒有滿足的條件對話，使用多次對話邏輯
         if (supportMultipleDialogues && !string.IsNullOrEmpty(secondDialogueKnot))
         {
             if (interactCount == 1)
@@ -183,9 +205,10 @@ public class DialogueTrigger : MonoBehaviour
             }
         }
 
-        // 預設播放第一個對話
         return firstDialogueKnot;
     }
+
+
 
     /// 檢查玩家是否擁有指定ID的圖示
     private bool HasIcon(string iconID)
@@ -204,12 +227,10 @@ public class DialogueTrigger : MonoBehaviour
         {
             if (icon.id == iconID)
             {
-                Debug.Log($"[DialogueTrigger] ✅ 玩家擁有圖示：{iconID}");
                 return true;
             }
         }
 
-        Debug.Log($"[DialogueTrigger] ❌ 玩家未擁有圖示：{iconID}");
         return false;
     }
 
@@ -235,12 +256,12 @@ public class DialogueTrigger : MonoBehaviour
 
             if (!found)
             {
-                Debug.Log($"[DialogueTrigger] ❌ 缺少配方材料：{requiredID}");
+                Debug.Log($"[DialogueTrigger] 缺少配方材料：{requiredID}");
                 return false;
             }
         }
 
-        Debug.Log($"[DialogueTrigger] ✅ 擁有配方 {recipe.recipeName} 的所有材料");
+        Debug.Log($"[DialogueTrigger] 擁有配方 {recipe.recipeName} 的所有材料");
         return true;
     }
 
@@ -343,6 +364,7 @@ public class DialogueTrigger : MonoBehaviour
             {
                 GiveRewardIcon(condition);
                 hasGivenSecondInteractionReward = true; // 標記已給予獎勵
+                SaveInteractionState(); // 給予獎勵後儲存狀態
                 return true; // 返回 true 表示已給予獎勵
             }
         }
@@ -377,7 +399,7 @@ public class DialogueTrigger : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning($"[DialogueTrigger] ⚠無法移除圖示：{iconIDToRemove}（可能不存在）");
+                        Debug.LogWarning($"[DialogueTrigger] 無法移除圖示：{iconIDToRemove}（可能不存在）");
                     }
                 }
             }
@@ -401,6 +423,79 @@ public class DialogueTrigger : MonoBehaviour
             Debug.Log($"[DialogueTrigger] 獎勵圖示已存在：{condition.rewardIconName}");
         }
     }
+
+    // 新增：載入跨場景互動狀態
+    private void LoadInteractionState()
+    {
+        if (InteractionStateManager.Instance == null)
+        {
+            Debug.LogWarning($"[DialogueTrigger] InteractionStateManager.Instance 是 null，無法載入狀態");
+            return;
+        }
+
+        // 載入互動次數
+        string countData = InteractionStateManager.Instance.GetInteractionData(InteractCountKey);
+        if (!string.IsNullOrEmpty(countData) && int.TryParse(countData, out int savedCount))
+        {
+            interactCount = savedCount;
+            Debug.Log($"[DialogueTrigger] {uniqueObjectID} 載入互動次數：{interactCount}");
+        }
+
+        // 載入是否已給予獎勵
+        string rewardData = InteractionStateManager.Instance.GetInteractionData(HasGivenRewardKey);
+        if (!string.IsNullOrEmpty(rewardData) && bool.TryParse(rewardData, out bool savedReward))
+        {
+            hasGivenSecondInteractionReward = savedReward;
+            Debug.Log($"[DialogueTrigger] {uniqueObjectID} 載入獎勵狀態：{hasGivenSecondInteractionReward}");
+        }
+    }
+
+
+    // 新增：儲存跨場景互動狀態
+    private void SaveInteractionState()
+    {
+        if (InteractionStateManager.Instance == null)
+        {
+            Debug.LogWarning($"[DialogueTrigger] InteractionStateManager.Instance 是 null，無法儲存狀態");
+            return;
+        }
+
+        // 儲存互動次數
+        InteractionStateManager.Instance.SetInteractionData(InteractCountKey, interactCount.ToString());
+
+        // 儲存是否已給予獎勵
+        InteractionStateManager.Instance.SetInteractionData(HasGivenRewardKey, hasGivenSecondInteractionReward.ToString());
+
+        Debug.Log($"[DialogueTrigger] {uniqueObjectID} 已儲存互動狀態：interactCount={interactCount}, hasGivenReward={hasGivenSecondInteractionReward}");
+    }
+
+
+    // 新增：在 Inspector 中自動生成 ID
+    private void OnValidate()
+    {
+        if (string.IsNullOrEmpty(uniqueObjectID))
+        {
+            string sceneName = gameObject.scene.name;
+            if (string.IsNullOrEmpty(sceneName))
+            {
+                sceneName = "Prefab";
+            }
+
+            uniqueObjectID = $"{sceneName}_{gameObject.name}";
+            Debug.Log($"[DialogueTrigger] 自動生成ID：{uniqueObjectID}");
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
+        }
+
+        if (string.IsNullOrEmpty(uniqueObjectID))
+        {
+            Debug.LogError($"[DialogueTrigger] {gameObject.name}: uniqueObjectID 不能為空！");
+        }
+    }
+
+
 }
 
 

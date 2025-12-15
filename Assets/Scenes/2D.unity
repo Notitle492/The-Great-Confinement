@@ -1672,11 +1672,11 @@ GameObject:
   m_Component:
   - component: {fileID: 217239678}
   - component: {fileID: 217239682}
+  - component: {fileID: 217239683}
   - component: {fileID: 217239681}
-  - component: {fileID: 217239680}
   - component: {fileID: 217239679}
   m_Layer: 0
-  m_Name: Trigger2
+  m_Name: Trigger12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1793,24 +1793,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &217239680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 217239677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 159e78488eb476d47bde934649fe3ca5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemToGive: {fileID: 11400000, guid: b0d5d9fe696308f418b7762b379a0908, type: 2}
-  iconToShow: {fileID: 9079475084033104829, guid: d29d11ef8970a244d97d8982f5e3b225,
-    type: 3}
-  appearSound: {fileID: 8300000, guid: 97d618ca4d4978043bae39a6da6a1e35, type: 3}
-  audioSource: {fileID: 217239679}
-  useOneShotAudio: 0
 --- !u!114 &217239681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1823,6 +1805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger12
   visualCue: {fileID: 1192959926}
   inkJSON: {fileID: 4900000, guid: 6332bc4e597bd794a9f815d47a4eacf9, type: 3}
   ItemImage: {fileID: 21300000, guid: 4f776c3e21213034da99f292c48418b2, type: 3}
@@ -1908,6 +1891,29 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.7, y: 5.83}
   m_EdgeRadius: 0
+--- !u!114 &217239683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217239677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ac11da318a9584a8fd4e46a2c8b633, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger12
+  iconToGive: {fileID: 11400000, guid: f97ee53405603ad4ea979cea9830c743, type: 2}
+  itemToGive: {fileID: 0}
+  oneTimeInteraction: 0
+  disappearAfterInteraction: 0
+  requiresSpecificIcon: 0
+  requiredIconID: 
+  failureMessage: "\u9700\u8981\u7279\u5B9A\u9053\u5177\u624D\u80FD\u4E92\u52D5"
+  iconsToRemoveOnSuccess: []
+  successSound: {fileID: 0}
+  failureSound: {fileID: 0}
 --- !u!1 &219810586
 GameObject:
   m_ObjectHideFlags: 0
@@ -2932,7 +2938,7 @@ GameObject:
   - component: {fileID: 405708102}
   - component: {fileID: 405708101}
   m_Layer: 0
-  m_Name: Trigger2
+  m_Name: Trigger10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2965,6 +2971,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger10
   visualCue: {fileID: 1194509475}
   inkJSON: {fileID: 4900000, guid: 150cfbc3ad710b042b0f557aa07cd27c, type: 3}
   ItemImage: {fileID: 0}
@@ -4497,6 +4504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger
   visualCue: {fileID: 1292314358}
   inkJSON: {fileID: 4900000, guid: bb9a4b23fc2949f4ab2cb5fc6e678022, type: 3}
   ItemImage: {fileID: 0}
@@ -5726,7 +5734,7 @@ GameObject:
   - component: {fileID: 824509850}
   - component: {fileID: 824509849}
   m_Layer: 0
-  m_Name: Trigger2
+  m_Name: Trigger13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5759,6 +5767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger13
   visualCue: {fileID: 1356519710}
   inkJSON: {fileID: 4900000, guid: 7e5db76ea55194d4f9b4b217ff68f914, type: 3}
   ItemImage: {fileID: 0}
@@ -6567,6 +6576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger3
   visualCue: {fileID: 2027447870}
   inkJSON: {fileID: 4900000, guid: d86b77de1a4785e4cab9c97073a084d5, type: 3}
   ItemImage: {fileID: 0}
@@ -7564,7 +7574,7 @@ GameObject:
   - component: {fileID: 1064779790}
   - component: {fileID: 1064779788}
   m_Layer: 0
-  m_Name: Trigger3
+  m_Name: Trigger1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7655,6 +7665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger1
   visualCue: {fileID: 2097611728}
   inkJSON: {fileID: 4900000, guid: ba1189aacc77b114b958af9aa09f952f, type: 3}
   ItemImage: {fileID: 0}
@@ -10776,7 +10787,7 @@ GameObject:
   - component: {fileID: 1424642962}
   - component: {fileID: 1424642961}
   m_Layer: 0
-  m_Name: Trigger2
+  m_Name: Trigger14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10923,6 +10934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger14
   visualCue: {fileID: 2036468089}
   inkJSON: {fileID: 4900000, guid: 9f0ee0f020a49d24ea43e091bae4da63, type: 3}
   ItemImage: {fileID: 21300000, guid: 15333afbdfde03e438814bb56e5124f3, type: 3}
@@ -11367,7 +11379,7 @@ GameObject:
   - component: {fileID: 1513082349}
   - component: {fileID: 1513082348}
   m_Layer: 0
-  m_Name: Trigger3
+  m_Name: Trigger4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11400,6 +11412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger4
   visualCue: {fileID: 625188128}
   inkJSON: {fileID: 4900000, guid: 227f2a4e628a3454e8551c4cfa32eb6d, type: 3}
   ItemImage: {fileID: 0}
@@ -12575,7 +12588,7 @@ GameObject:
   - component: {fileID: 1642895365}
   - component: {fileID: 1642895364}
   m_Layer: 0
-  m_Name: Trigger3
+  m_Name: Trigger5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12608,6 +12621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger5
   visualCue: {fileID: 354488175}
   inkJSON: {fileID: 4900000, guid: 00d165a9de35dbf409e15c556412dac4, type: 3}
   ItemImage: {fileID: 0}
@@ -14828,7 +14842,7 @@ GameObject:
   - component: {fileID: 2026303525}
   - component: {fileID: 2026303524}
   m_Layer: 0
-  m_Name: Trigger2
+  m_Name: Trigger11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14861,6 +14875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger11
   visualCue: {fileID: 1251138444}
   inkJSON: {fileID: 4900000, guid: 09f09ac631060f549ac9c62536a17a8f, type: 3}
   ItemImage: {fileID: 0}
@@ -15399,7 +15414,7 @@ GameObject:
   - component: {fileID: 2104810430}
   - component: {fileID: 2104810426}
   m_Layer: 0
-  m_Name: Trigger3
+  m_Name: Trigger2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15586,6 +15601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6db2b783305345b0664caf3cda35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger2
   visualCue: {fileID: 1420930051}
   inkJSON: {fileID: 4900000, guid: c7cdd42583b7916448f1c6aed9230d91, type: 3}
   ItemImage: {fileID: 21300000, guid: 143db60acfdc42c4e8e02c7da714fa49, type: 3}
@@ -15612,15 +15628,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2104810424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc4a8035af7794b4693b736cbf8bd06a, type: 3}
+  m_Script: {fileID: 11500000, guid: e5ac11da318a9584a8fd4e46a2c8b633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: 2D_Trigger2
+  iconToGive: {fileID: 11400000, guid: b7e889e8a92e45f47a9d4853f8383ec7, type: 2}
   itemToGive: {fileID: 11400000, guid: eea7fda821aed904286658227d10b186, type: 2}
-  iconToShow: {fileID: 3459448050213668617, guid: cfe812b54e4509d4bad7c5a694e907dd,
-    type: 3}
-  appearSound: {fileID: 8300000, guid: 97d618ca4d4978043bae39a6da6a1e35, type: 3}
-  audioSource: {fileID: 2104810426}
-  useOneShotAudio: 0
+  oneTimeInteraction: 1
+  disappearAfterInteraction: 1
+  requiresSpecificIcon: 0
+  requiredIconID: 
+  failureMessage: "\u9700\u8981\u7279\u5B9A\u9053\u5177\u624D\u80FD\u4E92\u52D5"
+  iconsToRemoveOnSuccess: []
+  successSound: {fileID: 8300000, guid: 97d618ca4d4978043bae39a6da6a1e35, type: 3}
+  failureSound: {fileID: 0}
 --- !u!1 &2131796365
 GameObject:
   m_ObjectHideFlags: 0
