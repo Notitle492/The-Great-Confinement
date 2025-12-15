@@ -4759,7 +4759,6 @@ GameObject:
   - component: {fileID: 669841876}
   - component: {fileID: 669841875}
   - component: {fileID: 669841878}
-  - component: {fileID: 669841879}
   - component: {fileID: 669841880}
   m_Layer: 0
   m_Name: Main Camera
@@ -4886,18 +4885,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &669841879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 669841874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17573b1fe6fc8cd40b92e478430e07fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &669841880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5163,6 +5150,57 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 739374909}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &770707318
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 770707319}
+  - component: {fileID: 770707320}
+  m_Layer: 0
+  m_Name: PuzzleUIController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &770707319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770707318}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1052849407}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &770707320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770707318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c745560f7d86844a8d2158a2fcf6af6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allowedScenes:
+  - 2D
+  - TheFirstCorridor
+  - RestroomOutside
+  - AccessibleToilet
+  - MensRoom
+  - LadiesRoom
 --- !u!1 &773471338
 GameObject:
   m_ObjectHideFlags: 0
@@ -6982,6 +7020,7 @@ Transform:
   - {fileID: 1188712008}
   - {fileID: 98868101}
   - {fileID: 219810587}
+  - {fileID: 770707319}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1064779784

@@ -9,18 +9,24 @@ public class GameManager : MonoBehaviour
     [Header("Persistent Objects")]
     public GameObject[] persistentObjects;
 
+    private bool isInitialized = false; // 新增：防止重複初始化
+
     private void Awake()
     {
-        if(Instance != null)
+        if (Instance != null && Instance != this)
         {
-            CleanUpAndDestory();
+            Debug.LogWarning("Found duplicate GameManager. Destroying this one.");
+            Destroy(gameObject);
             return;
         }
-        else
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        if (!isInitialized)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
             MarkPersistentObjects();
+            isInitialized = true;
         }
     }
 
@@ -28,21 +34,30 @@ public class GameManager : MonoBehaviour
     {
         foreach (GameObject obj in persistentObjects)
         {
-            if(obj != null)
+            if (obj != null && obj.scene.name != null)
             {
                 DontDestroyOnLoad(obj);
+                Debug.Log($"標記為跨場景保留：{obj.name}");
             }
         }
     }
 
-    private void CleanUpAndDestory()
+    private void OnDestroy()
     {
-        foreach (GameObject obj in persistentObjects)
+        if (Instance == this)
         {
-            
-            Destroy(obj);
-            
+            Instance = null;
         }
-        Destroy(gameObject);
     }
+
+    //private void CleanUpAndDestory()
+    //{
+    //    foreach (GameObject obj in persistentObjects)
+    //    {
+
+    //        Destroy(obj);
+
+    //    }
+    //    Destroy(gameObject);
+    //}
 }

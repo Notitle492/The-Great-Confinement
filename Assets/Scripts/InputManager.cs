@@ -12,17 +12,19 @@ public class InputManager : MonoBehaviour
     private bool submitPressed = false;
 
     private static InputManager instance;
+    private bool isBeingDestroyed = false; // ✅ 新增：標記是否正在被銷毀
 
     private void Awake()
     {
         if (instance != null && instance != this)
         {
-            Debug.LogError("Found more than one Input Manager in the scene.");
+            Debug.LogWarning("Found more than one Input Manager in the scene. Destroying duplicate."); // ✅ 改為 Warning
+            isBeingDestroyed = true; // ✅ 設定標記
             Destroy(gameObject);
             return;
         }
         instance = this;
-        
+        DontDestroyOnLoad(gameObject); // ✅ 新增：讓 InputManager 在場景切換時不被銷毀
 
         controls = new Controls(); // ✅ 修正：初始化 Controls
 
@@ -42,12 +44,37 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        controls.Enable(); // ✅ 修正
+        if (controls != null && !isBeingDestroyed) // ✅ 新增檢查
+        {
+            controls.Enable();
+        }
     }
 
     private void OnDisable()
     {
-        controls.Disable(); // ✅ 修正
+        if (controls != null && !isBeingDestroyed) // ✅ 新增檢查
+        {
+            controls.Disable();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // ✅ 清理事件綁定
+        if (controls != null)
+        {
+            controls.Player.Move.performed -= MovePressed;
+            controls.Player.Move.canceled -= MovePressed;
+            controls.Player.Interact.performed -= InteractButtonPressed;
+            controls.Player.Interact.canceled -= InteractButtonPressed;
+            controls.Player.Submit.performed -= SubmitButtonPressed;
+            controls.Player.Submit.canceled -= SubmitButtonPressed;
+        }
+
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     public static InputManager GetInstance()
