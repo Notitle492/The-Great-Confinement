@@ -23,7 +23,7 @@ public class DialogueTrigger : MonoBehaviour
 
 
     [Tooltip("是否在對話結束後給圖示")]
-    public bool giveIconAfterDialogue = false;  // ✅ 新增開關
+    public bool giveIconAfterDialogue = false;  // 新增開關
     [Tooltip("對話結束後是否讓物件消失")]
     public bool disappearAfterDialogue = false;   
 
@@ -82,6 +82,9 @@ public class DialogueTrigger : MonoBehaviour
         public string rewardIconID;
         public string rewardIconName;
 
+        [Tooltip("給予獎勵時要移除的圖示ID列表（例如：給圖示6時移除圖示5）")]
+        public List<string> iconsToRemoveOnReward = new List<string>();
+
         [Tooltip("條件描述（方便識別）")]
         public string description;
     }
@@ -92,7 +95,7 @@ public class DialogueTrigger : MonoBehaviour
     ////private bool hasTalked = false;
     private bool playerInRange;
     private int interactCount = 0;
-    private bool hasGivenSecondInteractionReward = false; // ✅ 防止重複給予獎勵
+    private bool hasGivenSecondInteractionReward = false; // 防止重複給予獎勵
 
     private void Awake()
     {
@@ -129,7 +132,7 @@ public class DialogueTrigger : MonoBehaviour
         interactCount++; // 每次互動+1
         Debug.Log($"互動開始 interactCount={interactCount}, checkSecondInteractionReward={checkSecondInteractionReward}, hasGivenSecondInteractionReward={hasGivenSecondInteractionReward}");
 
-        // ✅ 關鍵修改：第2次互動時，先檢查是否滿足獎勵條件
+        // 關鍵修改：第2次互動時，先檢查是否滿足獎勵條件
         if (interactCount == 2 && checkSecondInteractionReward && !hasGivenSecondInteractionReward)
         {
             Debug.Log("進入第2次互動獎勵檢查");
@@ -138,11 +141,11 @@ public class DialogueTrigger : MonoBehaviour
             if (rewardGiven)
             {
                 Debug.Log($"[{gameObject.name}] 第2次互動：滿足條件，已給予獎勵圖示，不播放對話");
-                return; // ✅ 直接返回，不播放對話
+                return; // 直接返回，不播放對話
             }
         }
 
-        // ✅ 如果沒有給予獎勵，正常播放對話
+        // 如果沒有給予獎勵，正常播放對話
         string knotToPlay = DetermineDialogueKnot();
         Debug.Log($"[{gameObject.name}] 第 {interactCount} 次互動，播放: {knotToPlay}");
         DialogueManager.GetInstance().StartDialogue(inkJSON, this.gameObject, knotToPlay);
@@ -154,7 +157,7 @@ public class DialogueTrigger : MonoBehaviour
 
     private string DetermineDialogueKnot()
     {
-        // ✅ 優先檢查條件對話
+        // 優先檢查條件對話
         if (useConditionalDialogue && conditionalDialogues.Count > 0)
         {
             foreach (var condition in conditionalDialogues)
@@ -167,7 +170,7 @@ public class DialogueTrigger : MonoBehaviour
             }
         }
 
-        // ✅ 若沒有滿足的條件對話，使用多次對話邏輯
+        // 若沒有滿足的條件對話，使用多次對話邏輯
         if (supportMultipleDialogues && !string.IsNullOrEmpty(secondDialogueKnot))
         {
             if (interactCount == 1)
@@ -180,7 +183,7 @@ public class DialogueTrigger : MonoBehaviour
             }
         }
 
-        // ✅ 預設播放第一個對話
+        // 預設播放第一個對話
         return firstDialogueKnot;
     }
 
@@ -297,7 +300,7 @@ public class DialogueTrigger : MonoBehaviour
         }
 
 
-        // ✅ 對話後消失（如果有設定）
+        // 對話後消失（如果有設定）
         if (disappearAfterDialogue)
         {
             gameObject.SetActive(false);
@@ -318,7 +321,7 @@ public class DialogueTrigger : MonoBehaviour
                 conditionMet = HasIcon(condition.requiredIconID);
                 if (conditionMet)
                 {
-                    Debug.Log($"[DialogueTrigger] ✅ 滿足單一圖示條件：擁有圖示 {condition.requiredIconID}");
+                    Debug.Log($"[DialogueTrigger] 滿足單一圖示條件：擁有圖示 {condition.requiredIconID}");
                 }
             }
             // 檢查配方組合條件
@@ -329,7 +332,7 @@ public class DialogueTrigger : MonoBehaviour
                     if (HasRecipeMaterials(recipe))
                     {
                         conditionMet = true;
-                        Debug.Log($"[DialogueTrigger] ✅ 滿足配方條件：擁有配方 {recipe.recipeName} 的材料");
+                        Debug.Log($"[DialogueTrigger] 滿足配方條件：擁有配方 {recipe.recipeName} 的材料");
                         break; // 只要有一個配方符合就通過
                     }
                 }
@@ -340,12 +343,12 @@ public class DialogueTrigger : MonoBehaviour
             {
                 GiveRewardIcon(condition);
                 hasGivenSecondInteractionReward = true; // 標記已給予獎勵
-                return true; // ✅ 返回 true 表示已給予獎勵
+                return true; // 返回 true 表示已給予獎勵
             }
         }
 
-        Debug.Log($"[DialogueTrigger] ❌ 沒有滿足任何第二次互動的獎勵條件");
-        return false; // ✅ 返回 false 表示未給予獎勵
+        Debug.Log($"[DialogueTrigger] 沒有滿足任何第二次互動的獎勵條件");
+        return false; // 返回 false 表示未給予獎勵
     }
 
     /// 給予獎勵圖示
@@ -357,6 +360,30 @@ public class DialogueTrigger : MonoBehaviour
             return;
         }
 
+        // 先移除舊圖示（如果有設定）
+        if (condition.iconsToRemoveOnReward != null && condition.iconsToRemoveOnReward.Count > 0)
+        {
+            foreach (var iconIDToRemove in condition.iconsToRemoveOnReward)
+            {
+                if (string.IsNullOrEmpty(iconIDToRemove))
+                    continue;
+
+                if (IconManager.Instance != null)
+                {
+                    bool removed = IconManager.Instance.RemoveIconByID(iconIDToRemove);
+                    if (removed)
+                    {
+                        Debug.Log($"[DialogueTrigger] 已移除舊圖示：{iconIDToRemove}（因為獲得了 {condition.rewardIconName}）");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[DialogueTrigger] ⚠無法移除圖示：{iconIDToRemove}（可能不存在）");
+                    }
+                }
+            }
+        }
+
+        // 給予新的獎勵圖示
         IconData rewardIcon = new IconData(
             IconType.Dialogue,
             condition.rewardSprite,
