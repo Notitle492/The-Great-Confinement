@@ -37,11 +37,13 @@ public class MainMenuController : MonoBehaviour
     {
         controls.UI.Enable();
         controls.UI.Cancel.performed += OnCancelPressed;
+        controls.UI.ExitTo2D.performed += OnEscPressed;  // 監聽 Esc 鍵
     }
 
     private void OnDisable()
     {
         controls.UI.Cancel.performed -= OnCancelPressed;
+        controls.UI.ExitTo2D.performed -= OnEscPressed;
         controls.UI.Disable();
     }
 
@@ -54,17 +56,34 @@ public class MainMenuController : MonoBehaviour
     }
 
     
+    /// 新增：監聽 Esc 鍵（從遊戲場景返回主選單時重置進度）
+    
+    private void OnEscPressed(InputAction.CallbackContext context)
+    {
+        // 只在遊戲場景（非主選單）時才處理
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene != "MainMenu")
+        {
+            Debug.Log("[MainMenuController] 玩家按 Esc 返回主選單，重置遊戲進度");
+            ResetGameProgress();
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
+
+
     public void PlayGame()
     {
+        // 開新遊戲前完整重置所有資料
+        ResetGameProgress();
 
         /* LevelManager.Instance.LoadScene("2D", "MainMenu");
         MusicManager.Instance.PlayMusic("MainMenu"); */
 
-        // 開新遊戲前清除舊資料
-        if (IconManager.Instance != null)
-        {
-            IconManager.Instance.ClearAllIcons();
-        }
+        //// 開新遊戲前清除舊資料
+        //if (IconManager.Instance != null)
+        //{
+        //    IconManager.Instance.ClearAllIcons();
+        //}
 
         // 播放 2D 場景的音樂（請替換成你在 MusicLibrary 中設定的實際音樂名稱）
         MusicManager.Instance.PlayMusic("2D");  // ← 改成你的 2D 場景音樂名稱
@@ -72,6 +91,51 @@ public class MainMenuController : MonoBehaviour
         // 載入 2D 場景
         SceneManager.LoadScene("2D");
     }
+
+
+    /// 新增：重置所有遊戲進度
+    private void ResetGameProgress()
+    {
+        Debug.Log("[MainMenuController] 開始重置遊戲進度...");
+
+        // 1. 清除所有圖示
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+            Debug.Log("[MainMenuController] 已清除所有圖示");
+        }
+
+        // 2. 清除背包
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.items.Clear();
+            if (InventoryManager.Instance.inventoryUI != null)
+            {
+                InventoryManager.Instance.inventoryUI.UpdateUI(InventoryManager.Instance.items);
+            }
+            Debug.Log("[MainMenuController] 已清空背包");
+        }
+
+        // 3. 清除所有互動記錄（跨場景狀態）
+        if (InteractionStateManager.Instance != null)
+        {
+            InteractionStateManager.Instance.ClearAllInteractions();
+            Debug.Log("[MainMenuController] 已清除互動記錄");
+        }
+
+        // 4. 清除合成管理器的結果槽
+        if (SynthesisManager.Instance != null)
+        {
+            SynthesisManager.Instance.ClearResultSlot();
+            Debug.Log("[MainMenuController] 已清空合成結果槽");
+        }
+
+        // 5. TODO: 如果有對話系統的進度，也可以在這裡重置
+        // 例如：DialogueManager.Instance?.ResetDialogueProgress();
+
+        Debug.Log("[MainMenuController] 遊戲進度重置完成！");
+    }
+
 
     public void Save()
     {

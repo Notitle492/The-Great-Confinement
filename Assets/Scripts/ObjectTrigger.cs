@@ -11,8 +11,6 @@ public class ObjectTrigger : MonoBehaviour
     private bool hasInteracted = false;
 
     private MonoBehaviour triggerScript; // 可能是 ItemTrigger 或 ItemTriggerStatic
-
-
     private PlayerInput playerInput;  // 用 PlayerInput 監聽
     
 
@@ -21,18 +19,21 @@ public class ObjectTrigger : MonoBehaviour
         if (visualCue != null)
             visualCue.SetActive(false);
 
-        // 🔍 自動抓取 ItemTrigger 或 ItemTriggerStatic
-        triggerScript = GetComponent<ItemTrigger>();
+        // 🔍 自動抓取各種 Trigger 腳本（按優先順序）
+        triggerScript = GetComponent<IconTrigger>();      // ✅ 新增：優先檢查 IconTrigger
+
+        if (triggerScript == null)
+            triggerScript = GetComponent<ItemTrigger>();
 
         if (triggerScript == null)
             triggerScript = GetComponent<ItemTriggerStatic>();
 
         if (triggerScript == null)
-            Debug.LogWarning("ObjectTrigger: 找不到 ItemTrigger 或 ItemTriggerStatic！", this);
+            Debug.LogWarning("ObjectTrigger: 找不到任何 Trigger 腳本！", this);
 
         playerInput = FindObjectOfType<PlayerInput>();
 
-        
+
     }
 
     private void OnEnable()
@@ -81,16 +82,23 @@ public class ObjectTrigger : MonoBehaviour
             return;
         }
 
-        if (!hasInteracted)
+        // ✅ IconTrigger 支援多次互動，所以不檢查 hasInteracted
+        bool isIconTrigger = triggerScript is IconTrigger;
+
+        if (!hasInteracted || isIconTrigger)
         {
             try
             {
-                // ✨ 呼叫 Interact()（無論是 ItemTrigger 或 ItemTriggerStatic）
+                // ✨ 呼叫 Interact()
                 triggerScript.Invoke("Interact", 0f);
 
-                hasInteracted = true;
+                // 只有非 IconTrigger 才設定 hasInteracted
+                if (!isIconTrigger)
+                {
+                    hasInteracted = true;
+                }
 
-                if (visualCue != null)
+                if (visualCue != null && !isIconTrigger)
                     visualCue.SetActive(false);
 
                 Debug.Log("ObjectTrigger: 互動完成");
