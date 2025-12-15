@@ -2373,7 +2373,7 @@ GameObject:
   - component: {fileID: 634648903}
   - component: {fileID: 634648901}
   m_Layer: 0
-  m_Name: Trigger3
+  m_Name: Trigger1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2560,6 +2560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ac11da318a9584a8fd4e46a2c8b633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: RestroomOutside_Trigger1
   iconToGive: {fileID: 11400000, guid: 91f9437c88502514d92009a7dc0d1eb5, type: 2}
   itemToGive: {fileID: 11400000, guid: e00104876af23cd4d81205777c5527bb, type: 2}
   oneTimeInteraction: 1
@@ -2715,7 +2716,7 @@ GameObject:
   - component: {fileID: 655154882}
   - component: {fileID: 655154880}
   m_Layer: 0
-  m_Name: Trigger3
+  m_Name: Trigger2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2902,6 +2903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ac11da318a9584a8fd4e46a2c8b633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueObjectID: RestroomOutside_Trigger2
   iconToGive: {fileID: 11400000, guid: c6e22f104ea9d95429f3967b4e87f816, type: 2}
   itemToGive: {fileID: 11400000, guid: c30cec091ca125c4abfd4b864e9c895b, type: 2}
   oneTimeInteraction: 1

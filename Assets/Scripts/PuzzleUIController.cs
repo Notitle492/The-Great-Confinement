@@ -18,6 +18,10 @@ public class PuzzleUIController : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Debug.LogWarning("Found duplicate PuzzleUIController. Destroying this one.");
+
+            // 阻止 OnEnable 被呼叫
+            enabled = false;
+
             Destroy(gameObject);
             return;
         }
@@ -30,16 +34,22 @@ public class PuzzleUIController : MonoBehaviour
 
     private void OnEnable()
     {
-        controls.UI.Enable();
-        controls.UI.SwitchScene.performed += OnTabPressed;
-        controls.UI.ExitTo2D.performed += OnEscPressed;
+        if (controls != null) // 加入 null 檢查
+        {
+            controls.UI.Enable();
+            controls.UI.SwitchScene.performed += OnTabPressed;
+            controls.UI.ExitTo2D.performed += OnEscPressed;
+        }
     }
 
     private void OnDisable()
     {
-        controls.UI.SwitchScene.performed -= OnTabPressed;
-        controls.UI.ExitTo2D.performed -= OnEscPressed;
-        controls.UI.Disable();
+        if (controls != null) // 加入 null 檢查
+        {
+            controls.UI.SwitchScene.performed -= OnTabPressed;
+            controls.UI.ExitTo2D.performed -= OnEscPressed;
+            controls.UI.Disable();
+        }
     }
 
     private void OnDestroy()

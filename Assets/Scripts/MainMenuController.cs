@@ -25,7 +25,10 @@ public class MainMenuController : MonoBehaviour
     private void Start()
     {
         LoadVolume();
-        MusicManager.Instance.PlayMusic("MainMenu");
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.Instance.PlayMusic("MainMenu");
+        }
     }
 
     private void Awake()
@@ -35,16 +38,22 @@ public class MainMenuController : MonoBehaviour
 
     private void OnEnable()
     {
-        controls.UI.Enable();
-        controls.UI.Cancel.performed += OnCancelPressed;
-        controls.UI.ExitTo2D.performed += OnEscPressed;  // 監聽 Esc 鍵
+        if (controls != null) //加入 null 檢查
+        {
+            controls.UI.Enable();
+            controls.UI.Cancel.performed += OnCancelPressed;
+            controls.UI.ExitTo2D.performed += OnEscPressed;
+        }
     }
 
     private void OnDisable()
     {
-        controls.UI.Cancel.performed -= OnCancelPressed;
-        controls.UI.ExitTo2D.performed -= OnEscPressed;
-        controls.UI.Disable();
+        if (controls != null) // 加入 null 檢查
+        {
+            controls.UI.Cancel.performed -= OnCancelPressed;
+            controls.UI.ExitTo2D.performed -= OnEscPressed;
+            controls.UI.Disable();
+        }
     }
 
     private void OnCancelPressed(InputAction.CallbackContext context)
@@ -86,7 +95,11 @@ public class MainMenuController : MonoBehaviour
         //}
 
         // 播放 2D 場景的音樂（請替換成你在 MusicLibrary 中設定的實際音樂名稱）
-        MusicManager.Instance.PlayMusic("2D");  // ← 改成你的 2D 場景音樂名稱
+        // 改成你的 2D 場景音樂名稱
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.Instance.PlayMusic("2D");
+        }
 
         // 載入 2D 場景
         SceneManager.LoadScene("2D");

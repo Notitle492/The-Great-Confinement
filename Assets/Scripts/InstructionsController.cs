@@ -49,14 +49,20 @@ public class InstructionsController : MonoBehaviour
 
     private void OnEnable()
     {
-        controls.UI.Enable();
-        controls.UI.Cancel.performed += OnCancelPressed;
+        if (controls != null) // 加入 null 檢查
+        {
+            controls.UI.Enable();
+            controls.UI.Cancel.performed += OnCancelPressed;
+        }
     }
 
     private void OnDisable()
     {
-        controls.UI.Cancel.performed -= OnCancelPressed;
-        controls.UI.Disable();
+        if (controls != null) // 加入 null 檢查
+        {
+            controls.UI.Cancel.performed -= OnCancelPressed;
+            controls.UI.Disable();
+        }
     }
 
     private void OnCancelPressed(InputAction.CallbackContext context)
