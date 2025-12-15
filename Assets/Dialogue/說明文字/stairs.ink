@@ -1,6 +1,6 @@
 ->Chapter1
 === Chapter1 ===
-# name:嗯……
+# name:
 # portrait:
 
 樓梯間正在維修中。
