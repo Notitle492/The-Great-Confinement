@@ -41,8 +41,8 @@ public class MainMenuController : MonoBehaviour
         if (controls != null) //加入 null 檢查
         {
             controls.UI.Enable();
-            controls.UI.Cancel.performed += OnCancelPressed;
-            controls.UI.ExitTo2D.performed += OnEscPressed;
+            controls.UI.Cancel.performed += OnCancelPressed; // 滑鼠右鍵
+            controls.UI.ExitTo2D.performed += OnEscPressed; // Esc 鍵
         }
     }
 
@@ -56,6 +56,7 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    /// 滑鼠右鍵：關閉當前面板
     private void OnCancelPressed(InputAction.CallbackContext context)
     {
         if (currentActivePanel != null)
@@ -64,24 +65,33 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    
-    /// 新增：監聽 Esc 鍵（從遊戲場景返回主選單時重置進度）
-    
+
+    /// Esc 鍵：從遊戲場景返回主選單（不重置進度）
+
     private void OnEscPressed(InputAction.CallbackContext context)
     {
         // 只在遊戲場景（非主選單）時才處理
         string currentScene = SceneManager.GetActiveScene().name;
         if (currentScene != "MainMenu")
         {
-            Debug.Log("[MainMenuController] 玩家按 Esc 返回主選單，重置遊戲進度");
-            ResetGameProgress();
+            Debug.Log("[MainMenu] 玩家按 Esc 返回主選單（保留進度）");
+
+            // 播放主選單音樂
+            if (MusicManager.Instance != null)
+            {
+                MusicManager.Instance.PlayMusic("MainMenu");
+            }
+
+            // 只載入主選單，不重置進度
             SceneManager.LoadScene("MainMenu");
         }
     }
 
-
+    /// 開始按鈕：重置所有進度並開始新遊戲
     public void PlayGame()
     {
+        Debug.Log("[MainMenu] 點擊開始按鈕，重置進度並開始新遊戲");
+
         // 開新遊戲前完整重置所有資料
         ResetGameProgress();
 
@@ -146,7 +156,7 @@ public class MainMenuController : MonoBehaviour
         // 5. TODO: 如果有對話系統的進度，也可以在這裡重置
         // 例如：DialogueManager.Instance?.ResetDialogueProgress();
 
-        Debug.Log("[MainMenuController] 遊戲進度重置完成！");
+        Debug.Log("[MainMenuController] 遊戲進度重置完成");
     }
 
 
@@ -163,6 +173,10 @@ public class MainMenuController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 
     public void UpdateMusicVolume(float volume)
