@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5320964aa4ec24e4cab437fab1229fc2, type: 3}
-  m_Name: "8_\u9762\u7D19\u5716\u793A"
+  m_Name: "9_\u99AC\u6876\u5716\u793A"
   m_EditorClassIdentifier: 
-  iconType: 1
-  iconSprite: {fileID: 21300000, guid: d109809d997ad1f45919fb8b129b4a3f, type: 3}
-  id: 8
-  displayName: "\u9762\u7D19\u80FD\u64E6\u6771\u897F\uFF0C\u4F46\u9322\u4E0D\u884C"
+  iconType: 0
+  iconSprite: {fileID: 21300000, guid: 1b54de4fbed737d4d9144598109659b9, type: 3}
+  id: 9
+  displayName: "\u4ED6\u807D\u8D77\u4F86\u9700\u8981\u67D0\u6A23\u6771\u897F"
   itemDescription: 
-  linkedInventoryItemID: -1
+  linkedInventoryItemID: 9

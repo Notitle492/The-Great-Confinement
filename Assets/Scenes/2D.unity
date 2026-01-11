@@ -1824,6 +1824,8 @@ MonoBehaviour:
   - requiredIconID: 6
     dialogueKnot: npc1_has_icon6
     description: "\u64C1\u6709\u5716\u793A6\u6642\u7684\u5C0D\u8A71"
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 1
   secondInteractionRewards:
   - checkSingleIcon: 1
@@ -2987,6 +2989,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!61 &405708102
@@ -4520,6 +4524,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!1 &590023685
@@ -5783,6 +5789,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!61 &824509850
@@ -6592,6 +6600,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!1 &916068683
@@ -7681,6 +7691,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!1 &1093347898
@@ -10950,6 +10962,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!61 &1424642964
@@ -11428,6 +11442,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!114 &1513082349
@@ -12637,6 +12653,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!114 &1642895365
@@ -14275,7 +14293,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1935996691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14891,6 +14909,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!61 &2026303525
@@ -15617,6 +15637,8 @@ MonoBehaviour:
   firstDialogueKnot: Chapter1
   useConditionalDialogue: 0
   conditionalDialogues: []
+  giveRewardAfterDialogue: 0
+  dialogueEndRewards: []
   checkSecondInteractionReward: 0
   secondInteractionRewards: []
 --- !u!114 &2104810431

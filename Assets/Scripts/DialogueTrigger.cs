@@ -62,6 +62,34 @@ public class DialogueTrigger : MonoBehaviour
     [Tooltip("條件對話列表（按順序檢查）")]
     public List<ConditionalDialogue> conditionalDialogues = new List<ConditionalDialogue>();
 
+    [Header("對話結束後條件獎勵")]
+    [Tooltip("是否在對話結束後檢查條件並給予獎勵")]
+    public bool giveRewardAfterDialogue = false;
+
+    [System.Serializable]
+    public class DialogueEndReward
+    {
+        [Header("觸發條件")]
+        [Tooltip("需要播放的對話 Knot（例如：player_has_icon8）")]
+        public string requiredDialogueKnot;
+
+        [Header("獎勵圖示")]
+        [Tooltip("滿足條件後給予的獎勵圖示")]
+        public Sprite rewardSprite;
+        public string rewardIconID;
+        public string rewardIconName;
+
+        [Tooltip("給予獎勵時要移除的圖示ID列表")]
+        public List<string> iconsToRemoveOnReward = new List<string>();
+
+        [Tooltip("條件描述（方便識別）")]
+        public string description;
+    }
+
+    [Tooltip("對話結束後的獎勵列表（按順序檢查）")]
+    public List<DialogueEndReward> dialogueEndRewards = new List<DialogueEndReward>();
+
+
     [Header("第二次互動獎勵設定")]
     [Tooltip("是否在第二次互動時檢查特殊條件並給予獎勵圖示")]
     public bool checkSecondInteractionReward = false;
@@ -101,6 +129,7 @@ public class DialogueTrigger : MonoBehaviour
     private bool playerInRange;
     private int interactCount = 0;
     private bool hasGivenSecondInteractionReward = false; // 防止重複給予獎勵
+    private string lastPlayedKnot = "";
 
     // 用於跨場景記錄的 Key
     private string InteractCountKey => $"{uniqueObjectID}_InteractCount";
@@ -152,7 +181,7 @@ public class DialogueTrigger : MonoBehaviour
             return;
 
         interactCount++; // 每次互動+1
-        SaveInteractionState(); // ✅ 每次互動後儲存狀態
+        SaveInteractionState(); // 每次互動後儲存狀態
 
         Debug.Log($"[DialogueTrigger] {uniqueObjectID} 互動開始 interactCount={interactCount}, hasGivenSecondInteractionReward={hasGivenSecondInteractionReward}");
 
@@ -171,6 +200,7 @@ public class DialogueTrigger : MonoBehaviour
 
         // 如果沒有給予獎勵，正常播放對話
         string knotToPlay = DetermineDialogueKnot();
+        lastPlayedKnot = knotToPlay; // 記錄播放的 Knot
         Debug.Log($"[DialogueTrigger] {uniqueObjectID} 第 {interactCount} 次互動，播放: {knotToPlay}");
         DialogueManager.GetInstance().StartDialogue(inkJSON, this.gameObject, knotToPlay);
 
@@ -284,8 +314,23 @@ public class DialogueTrigger : MonoBehaviour
 
     public void OnDialogueEnded()
     {
-        
-        if (!giveIconAfterDialogue) return; // 只管圖示生成
+        // 優先檢查「對話結束後條件獎勵」
+        if (giveRewardAfterDialogue && dialogueEndRewards.Count > 0)
+        {
+            CheckAndGiveDialogueEndReward();
+        }
+
+        // 原有的「對話結束後給圖示」邏輯
+        if (!giveIconAfterDialogue)
+        {
+            // 如果設定為消失，執行消失邏輯
+            if (disappearAfterDialogue)
+            {
+                gameObject.SetActive(false);
+                Debug.Log($"[DialogueTrigger] 對話結束後物件已隱藏：{gameObject.name}");
+            }
+            return;
+        }
 
         // 第一次對話 → 第一次圖示
         if (interactCount == 1)
@@ -326,6 +371,64 @@ public class DialogueTrigger : MonoBehaviour
         {
             gameObject.SetActive(false);
             Debug.Log($"[DialogueTrigger] 對話結束後物件已隱藏：{gameObject.name}");
+        }
+    }
+
+    /// 檢查並給予對話結束後的條件獎勵
+    private void CheckAndGiveDialogueEndReward()
+    {
+        foreach (var reward in dialogueEndRewards)
+        {
+            // 檢查是否播放了指定的對話
+            if (lastPlayedKnot == reward.requiredDialogueKnot)
+            {
+                Debug.Log($"[DialogueTrigger] ✅ 播放了 {lastPlayedKnot}，給予獎勵：{reward.rewardIconName}");
+                GiveDialogueEndReward(reward);
+                return; // 只給予第一個符合的獎勵
+            }
+        }
+    }
+
+    ///給予對話結束後的獎勵
+    private void GiveDialogueEndReward(DialogueEndReward reward)
+    {
+        if (reward.rewardSprite == null || string.IsNullOrEmpty(reward.rewardIconID))
+        {
+            Debug.LogWarning("[DialogueTrigger] 獎勵圖示資料不完整！");
+            return;
+        }
+
+        // 1. 先移除舊圖示
+        if (reward.iconsToRemoveOnReward != null && reward.iconsToRemoveOnReward.Count > 0)
+        {
+            foreach (var iconIDToRemove in reward.iconsToRemoveOnReward)
+            {
+                if (string.IsNullOrEmpty(iconIDToRemove))
+                    continue;
+
+                if (IconManager.Instance != null)
+                {
+                    bool removed = IconManager.Instance.RemoveIconByID(iconIDToRemove);
+                    if (removed)
+                    {
+                        Debug.Log($"[DialogueTrigger] 已移除舊圖示：{iconIDToRemove}");
+                    }
+                }
+            }
+        }
+
+        // 2. 給予新的獎勵圖示
+        IconData rewardIcon = new IconData(
+            IconType.Dialogue,
+            reward.rewardSprite,
+            reward.rewardIconID,
+            reward.rewardIconName
+        );
+
+        bool added = IconManager.Instance?.AddIcon(rewardIcon) ?? false;
+        if (added)
+        {
+            Debug.Log($"[DialogueTrigger] 對話結束後獎勵已給予：{reward.rewardIconName}");
         }
     }
 
@@ -424,7 +527,7 @@ public class DialogueTrigger : MonoBehaviour
         }
     }
 
-    // 新增：載入跨場景互動狀態
+    // 載入跨場景互動狀態
     private void LoadInteractionState()
     {
         if (InteractionStateManager.Instance == null)
@@ -451,7 +554,7 @@ public class DialogueTrigger : MonoBehaviour
     }
 
 
-    // 新增：儲存跨場景互動狀態
+    // 儲存跨場景互動狀態
     private void SaveInteractionState()
     {
         if (InteractionStateManager.Instance == null)
@@ -470,7 +573,7 @@ public class DialogueTrigger : MonoBehaviour
     }
 
 
-    // 新增：在 Inspector 中自動生成 ID
+    //在 Inspector 中自動生成 ID
     private void OnValidate()
     {
         if (string.IsNullOrEmpty(uniqueObjectID))

@@ -1,9 +1,9 @@
 ->Chapter1
 === Chapter1 ===
-# name:NPC 9
-# portrait:npc9
+# name:NPC 8
+# portrait:npc8
 
-對！就是這個，同學謝謝你。
+有人嗎？
 
  -> END
 

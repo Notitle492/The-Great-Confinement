@@ -3611,6 +3611,7 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: b6048c6be39444f49a284a1302127fcf, type: 2}
   - {fileID: 11400000, guid: 835640d19bf50e34b87d817b3f4bcc00, type: 2}
+  - {fileID: 11400000, guid: ed7258f913b42ba48bd7b577e39ef9a9, type: 2}
   synthesisButton: {fileID: 987418031}
   resultSlot: {fileID: 5722867511630845306}
   errorMessageText: {fileID: 337667164}
