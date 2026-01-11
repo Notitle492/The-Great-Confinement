@@ -6369,6 +6369,7 @@ GameObject:
   - component: {fileID: 897794292}
   - component: {fileID: 897794291}
   - component: {fileID: 897794290}
+  - component: {fileID: 897794294}
   m_Layer: 5
   m_Name: InventoryUI
   m_TagString: Untagged
@@ -6480,6 +6481,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &897794294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897794288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed83b58fc485a9c429a3aafaf0716ec2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryUI: {fileID: 897794290}
 --- !u!1 &902747624
 GameObject:
   m_ObjectHideFlags: 0
@@ -14293,7 +14307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1935996691
 MonoBehaviour:
   m_ObjectHideFlags: 0

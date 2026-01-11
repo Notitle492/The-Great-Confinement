@@ -15,12 +15,24 @@ public class InventoryManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
+            Debug.LogWarning("Found duplicate InventoryManager. Destroying this one.");
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject); //跨場景保留
+        Debug.Log("[InventoryManager] 已設定為跨場景保留");
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     public bool AddItem(Item item)
@@ -32,13 +44,34 @@ public class InventoryManager : MonoBehaviour
         }
 
         items.Add(item);
-        inventoryUI?.UpdateUI(items); // ✅ 告訴 UI 更新畫面
-        /* onInventoryChangedCallback?.Invoke(); */
+        //更新 UI 前先檢查是否存在
+        if (inventoryUI != null)
+        {
+            inventoryUI.UpdateUI(items);
+            Debug.Log($"[InventoryManager] 已更新 UI，當前物品數：{items.Count}");
+        }
+        else
+        {
+            Debug.LogWarning("[InventoryManager] inventoryUI 是 null，無法更新 UI");
+        }
+
         return true;
     }
 
-    
-    /// ✅ 新增：根據 ItemID 移除背包中的物品
+    /// 重新綁定 UI（場景切換後呼叫）
+    public void RebindUI(InventoryUI ui)
+    {
+        inventoryUI = ui;
+        if (inventoryUI != null)
+        {
+            inventoryUI.UpdateUI(items);
+            Debug.Log($"[InventoryManager] UI 已重新綁定，當前物品數：{items.Count}");
+        }
+    }
+
+
+
+    /// 根據 ItemID 移除背包中的物品
     public bool RemoveItemByID(int itemID)
     {
         // 尋找符合 ItemID 的物品
@@ -47,7 +80,12 @@ public class InventoryManager : MonoBehaviour
         if (itemToRemove != null)
         {
             items.Remove(itemToRemove);
-            inventoryUI?.UpdateUI(items);
+
+            if (inventoryUI != null)
+            {
+                inventoryUI.UpdateUI(items);
+            }
+
             Debug.Log($"[InventoryManager] 已從背包移除物品：{itemToRemove.ItemName} (ID: {itemID})");
             return true;
         }

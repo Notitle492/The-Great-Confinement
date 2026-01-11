@@ -29,7 +29,7 @@ public class SceneEntryTrigger : MonoBehaviour
 
     [Tooltip("進入場景後延遲多少秒觸發（給場景時間載入）")]
     [Range(0f, 5f)]
-    public float delayTime = 0.5f;
+    public float delayTime = 1f;
 
     [Header("=== 圖示設定 ===")]
     [Tooltip("是否給予圖示")]
