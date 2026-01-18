@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/PuzzleUI.unity
     guid: 557cba884ac51d5459decf893f304c14
   - enabled: 1
+    path: Assets/Scenes/FriendACutScene.unity
+    guid: ebd4827fe1fca1f4bbc157744da80144
+  - enabled: 1
     path: Assets/Scenes/TheFirstCorridor.unity
     guid: b3db7774f63c84546b823b08ea36f50a
   - enabled: 1

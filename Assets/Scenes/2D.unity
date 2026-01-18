@@ -1819,6 +1819,12 @@ MonoBehaviour:
   supportMultipleDialogues: 1
   secondDialogueKnot: npc1_repeat
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 1
   conditionalDialogues:
   - requiredIconID: 6
@@ -2987,6 +2993,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -4522,6 +4534,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -5788,6 +5806,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -6613,6 +6637,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -7704,6 +7734,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -10975,6 +11011,12 @@ MonoBehaviour:
   supportMultipleDialogues: 1
   secondDialogueKnot: npc2_second_time
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -11455,6 +11497,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -12666,6 +12714,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -14922,6 +14976,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
@@ -15650,6 +15710,12 @@ MonoBehaviour:
   supportMultipleDialogues: 0
   secondDialogueKnot: 
   firstDialogueKnot: Chapter1
+  switchSceneAfterDialogue: 0
+  targetSceneName: 
+  sceneTransitionDelay: 0.5
+  fadeAnimator: {fileID: 0}
+  fadeAnimationName: FadeToBlack
+  fadeTime: 1
   useConditionalDialogue: 0
   conditionalDialogues: []
   giveRewardAfterDialogue: 0
