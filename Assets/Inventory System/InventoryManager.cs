@@ -23,6 +23,14 @@ public class InventoryManager : MonoBehaviour
         }
 
         Instance = this;
+
+        // 脫離父物件（避免被關閉的 Canvas 影響）
+        if (transform.parent != null)
+        {
+            Debug.Log($"[InventoryManager] 從 {transform.parent.name} 脫離到根目錄");
+            transform.SetParent(null);
+        }
+
         DontDestroyOnLoad(gameObject); //跨場景保留
         Debug.Log("[InventoryManager] 已設定為跨場景保留");
     }
@@ -44,11 +52,13 @@ public class InventoryManager : MonoBehaviour
         }
 
         items.Add(item);
+        Debug.Log($"[InventoryManager] 已添加物品：{item.ItemName}，當前物品數：{items.Count}");
+
         //更新 UI 前先檢查是否存在
         if (inventoryUI != null)
         {
             inventoryUI.UpdateUI(items);
-            Debug.Log($"[InventoryManager] 已更新 UI，當前物品數：{items.Count}");
+            Debug.Log($"[InventoryManager] 已更新 UI");
         }
         else
         {
@@ -67,6 +77,10 @@ public class InventoryManager : MonoBehaviour
             inventoryUI.UpdateUI(items);
             Debug.Log($"[InventoryManager] UI 已重新綁定，當前物品數：{items.Count}");
         }
+        else
+        {
+            Debug.LogWarning("[InventoryManager] 試綁定 null UI");
+        }
     }
 
 
@@ -74,7 +88,7 @@ public class InventoryManager : MonoBehaviour
     /// 根據 ItemID 移除背包中的物品
     public bool RemoveItemByID(int itemID)
     {
-        // 尋找符合 ItemID 的物品
+        // 尋找符合 ItemID 的物品  
         Item itemToRemove = items.Find(i => i.ItemID == itemID);
 
         if (itemToRemove != null)
