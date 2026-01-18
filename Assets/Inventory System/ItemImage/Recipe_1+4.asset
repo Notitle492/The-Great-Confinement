@@ -1,21 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5c49204ed9576e4d9a4890a0e979fa2, type: 3}
-  m_Name: Recipe_1+4
-  m_EditorClassIdentifier: 
-  requiredIconIDs:
-  - 1
-  - 4
-  resultIconSO: {fileID: 11400000, guid: 2ff2495430e19c348a335c86d18866d1, type: 2}
-  recipeName: Recipe_1+4
-  alternativeMaterialsToRemove:
-  - 3
+version https://git-lfs.github.com/spec/v1
+oid sha256:58c49fc8222d647455173fb3009cc3bbc3604d7a8ecf11f92f8489fa04298929
+size 577
