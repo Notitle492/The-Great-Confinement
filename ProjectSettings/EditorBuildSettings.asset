@@ -35,6 +35,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LadiesRoom.unity
     guid: 30ebcb976a183344fa480bbe583d9572
+  - enabled: 1
+    path: Assets/Scenes/TheFirstStairwell.unity
+    guid: 18c0adce45ced7a4e97b1b1825e2fb7d
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3427d6a50d1f52742b4c1abc4ccf3ec8,
       type: 2}

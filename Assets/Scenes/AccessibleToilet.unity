@@ -6206,6 +6206,7 @@ MonoBehaviour:
   - AccessibleToilet
   - MensRoom
   - LadiesRoom
+  - TheFirstStairwell
 --- !u!1 &1850507671
 GameObject:
   m_ObjectHideFlags: 0
