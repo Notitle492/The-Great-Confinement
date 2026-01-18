@@ -42,6 +42,25 @@ public class DialogueTrigger : MonoBehaviour
     [Tooltip("第一次對話的 Knot 名稱（預設為 Chapter1）")]
     public string firstDialogueKnot = "Chapter1";
 
+    [Header("對話結束後場景切換")]
+    [Tooltip("是否在對話結束後切換場景")]
+    public bool switchSceneAfterDialogue = false;
+
+    [Tooltip("要切換到的場景名稱")]
+    public string targetSceneName = "";
+
+    [Tooltip("切換場景前的延遲時間(秒)")]
+    public float sceneTransitionDelay = 0.5f;
+
+    [Tooltip("場景切換用的淡出動畫(可選)")]
+    public Animator fadeAnimator;
+
+    [Tooltip("淡出動畫名稱")]
+    public string fadeAnimationName = "FadeToBlack";
+
+    [Tooltip("淡出時間")]
+    public float fadeTime = 1f;
+
     [Header("條件對話設定")]
     [Tooltip("是否啟用條件對話（依據擁有的圖示觸發不同對話）")]
     public bool useConditionalDialogue = false;
@@ -124,6 +143,7 @@ public class DialogueTrigger : MonoBehaviour
 
     [Tooltip("第二次互動的獎勵條件列表（按順序檢查,只會觸發第一個符合的）")]
     public List<RewardCondition> secondInteractionRewards = new List<RewardCondition>();
+
 
     ////private bool hasTalked = false;
     private bool playerInRange;
@@ -321,48 +341,43 @@ public class DialogueTrigger : MonoBehaviour
         }
 
         // 原有的「對話結束後給圖示」邏輯
-        if (!giveIconAfterDialogue)
+        if (giveIconAfterDialogue)
         {
-            // 如果設定為消失，執行消失邏輯
-            if (disappearAfterDialogue)
+            // 第一次對話 → 第一次圖示
+            if (interactCount == 1)
             {
-                gameObject.SetActive(false);
-                Debug.Log($"[DialogueTrigger] 對話結束後物件已隱藏：{gameObject.name}");
+                if (ItemImage != null && !string.IsNullOrEmpty(ItemID))
+                {
+                    IconData icon = new IconData(
+                        IconType.Dialogue,
+                        ItemImage,
+                        ItemID,
+                        ItemName
+                    );
+                    IconManager.Instance?.AddIcon(icon);
+                    Debug.Log($"[DialogueTrigger] 第一次對話結束,已加入圖示:{ItemName}");
+                }
             }
-            return;
+            // 第二次對話 → 第二次圖示
+            else if (interactCount == 2 && SecondItemImage != null && !string.IsNullOrEmpty(SecondItemID))
+            {
+                IconData icon = new IconData(
+                    IconType.Dialogue,
+                    SecondItemImage,
+                    SecondItemID,
+                    SecondItemName
+                );
+                IconManager.Instance?.AddIcon(icon);
+                Debug.Log($"[DialogueTrigger] 第二次對話結束,已加入圖示:{SecondItemName}");
+            }
         }
 
-        // 第一次對話 → 第一次圖示
-        if (interactCount == 1)
+        //對話結束後切換場景(優先於消失)
+        if (switchSceneAfterDialogue && !string.IsNullOrEmpty(targetSceneName))
         {
-            if (ItemImage == null || string.IsNullOrEmpty(ItemID))
-            {
-                Debug.LogWarning($"[DialogueTrigger] 第一次對話圖示資料不完整！ItemImage={ItemImage}, ItemID={ItemID}");
-                return;
-            }
-
-            IconData icon = new IconData(
-                IconType.Dialogue,
-                ItemImage,
-                ItemID,
-                ItemName
-            );
-            IconManager.Instance?.AddIcon(icon);
-            Debug.Log($"[DialogueTrigger] 第一次對話結束，已加入圖示：{ItemName}");
-        }
-
-        // 第二次對話 → 第二次圖示（如果有設定的話）
-        else if (interactCount == 2 && SecondItemImage != null && !string.IsNullOrEmpty(SecondItemID))
-        {
-            IconData icon = new IconData(
-                IconType.Dialogue,
-                SecondItemImage,
-                SecondItemID,
-                SecondItemName
-            );
-
-            IconManager.Instance?.AddIcon(icon);
-            Debug.Log($"[DialogueTrigger] 第二次對話結束，已加入圖示：{SecondItemName}");
+            Debug.Log($"[DialogueTrigger] 對話結束,準備切換到場景:{targetSceneName}");
+            StartCoroutine(TransitionToScene());
+            return; // 直接返回,不執行消失邏輯
         }
 
 
@@ -372,6 +387,26 @@ public class DialogueTrigger : MonoBehaviour
             gameObject.SetActive(false);
             Debug.Log($"[DialogueTrigger] 對話結束後物件已隱藏：{gameObject.name}");
         }
+    }
+
+    
+    /// 切換場景的協程
+    private System.Collections.IEnumerator TransitionToScene()
+    {
+        // 等待一小段時間(讓對話完全關閉)
+        yield return new WaitForSeconds(sceneTransitionDelay);
+
+        // 如果有淡出動畫
+        if (fadeAnimator != null)
+        {
+            fadeAnimator.Play(fadeAnimationName);
+            Debug.Log($"[DialogueTrigger] 播放淡出動畫:{fadeAnimationName}");
+            yield return new WaitForSeconds(fadeTime);
+        }
+
+        // 切換場景
+        Debug.Log($"[DialogueTrigger] 載入場景:{targetSceneName}");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(targetSceneName);
     }
 
     /// 檢查並給予對話結束後的條件獎勵
@@ -595,6 +630,12 @@ public class DialogueTrigger : MonoBehaviour
         if (string.IsNullOrEmpty(uniqueObjectID))
         {
             Debug.LogError($"[DialogueTrigger] {gameObject.name}: uniqueObjectID 不能為空！");
+        }
+
+        // 檢查場景切換設定
+        if (switchSceneAfterDialogue && string.IsNullOrEmpty(targetSceneName))
+        {
+            Debug.LogWarning($"[DialogueTrigger] {gameObject.name}: 已啟用場景切換,但 targetSceneName 是空的!");
         }
     }
 

@@ -38,6 +38,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TheFirstStairwell.unity
     guid: 18c0adce45ced7a4e97b1b1825e2fb7d
+  - enabled: 1
+    path: Assets/Scenes/TestPrepClassroom.unity
+    guid: b9aba3096c2f2044ca57a11fa34062d8
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3427d6a50d1f52742b4c1abc4ccf3ec8,
       type: 2}
