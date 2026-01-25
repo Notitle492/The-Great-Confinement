@@ -164,14 +164,13 @@ public class TimelineDialogueTrigger : MonoBehaviour
 
         hasTriggered = true;
 
+        // 如果沒有設定 Ink 檔案，就跳過對話直接執行後續邏輯
         if (inkJSON == null)
         {
-            Debug.LogError("[TimelineDialogueTrigger] inkJSON 是 null，無法播放對話");
+            Debug.LogWarning("[TimelineDialogueTrigger] inkJSON 是 null，跳過對話");
 
-            if (switchSceneAfterDialogue && !string.IsNullOrEmpty(targetSceneName))
-            {
-                StartCoroutine(TransitionToScene());
-            }
+            // 直接執行對話結束後的邏輯
+            OnDialogueEnded();
             return;
         }
 
