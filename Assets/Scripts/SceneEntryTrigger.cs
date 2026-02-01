@@ -3,22 +3,33 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
-/// 進入場景自動觸發系統（進階版）
-/// 支援：偵測特定場景切換、第一次進入場景自動給圖示、播放對話
+/// 進入場景自動觸發系統
+/// 
+/// 觸發模式說明：
+/// ─────────────────────────────────────────────
+/// OnSceneLoad：物件放在「目標場景本身」裡，場景載入時自動觸發。
+///   → 適用於：進入 MensRoom / MensRoom 2 時觸發對話、給圖示等。
+///   → 這是你 MensRoom 應該用的模式。
+/// 
+/// OnSceneChange：物件必須放在「永久存活的物件」上（DontDestroyOnLoad），
+///   由 SceneEntryTriggerManager 統一管理，偵測「從哪個場景來」才觸發。
+///   → 適用於：需要檢查「前一個場景」才觸發的特殊情況。
+///   → 如果你不需要檢查前一個場景，不要用這個模式。
+/// ─────────────────────────────────────────────
 /// </summary>
 public class SceneEntryTrigger : MonoBehaviour
 {
     [Header("=== 場景識別 ===")]
-    [Tooltip("場景唯一識別ID（自動生成）")]
+    [Tooltip("場景唯一識別ID（自動生成，每個物件必須唯一）")]
     public string sceneEntryID;
 
     [Header("=== 觸發模式 ===")]
-    [Tooltip("觸發模式：場景載入時自動觸發 或 偵測場景切換")]
+    [Tooltip("觸發模式：見上方說明")]
     public TriggerMode triggerMode = TriggerMode.OnSceneLoad;
 
-    [Header("=== 場景切換偵測設定 ===")]
-    [Tooltip("要偵測的目標場景名稱（只在切換到這個場景時觸發）")]
-    public string targetSceneName = "MensRoom";
+    [Header("=== 場景切換偵測設定（僅 OnSceneChange 模式使用）===")]
+    [Tooltip("要偵測的目標場景名稱")]
+    public string targetSceneName = "";
 
     [Tooltip("前一個場景名稱（從哪個場景來才觸發，留空則不檢查）")]
     public string previousSceneName = "";
@@ -57,23 +68,34 @@ public class SceneEntryTrigger : MonoBehaviour
 
     public enum TriggerMode
     {
-        OnSceneLoad,      // 場景載入時立即觸發（需要物件在目標場景中）
-        OnSceneChange     // 偵測場景切換時觸發（物件需要 DontDestroyOnLoad）
+        OnSceneLoad,      // 場景載入時觸發（物件放在目標場景裡）
+        OnSceneChange     // 偵測場景切換時觸發（物件放在永久存活物件上，由 Manager 管理）
     }
 
     private bool hasTriggered = false;
-    private string lastSceneName = "";
 
     private void Awake()
     {
         if (triggerMode == TriggerMode.OnSceneChange)
         {
-            // 場景切換模式：設定為跨場景保留
-            DontDestroyOnLoad(gameObject);
-            lastSceneName = SceneManager.GetActiveScene().name;
+            if (SceneEntryTriggerManager.Instance == null)
+            {
+                Debug.LogError($"[SceneEntryTrigger] [{sceneEntryID}] OnSceneChange 模式需要 SceneEntryTriggerManager！請確認 Manager 已經啟動。");
+                return;
+            }
 
-            // 註冊場景載入事件
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneEntryTriggerManager.Instance.RegisterTrigger(new TriggerRegistration
+            {
+                id = sceneEntryID,
+                targetSceneName = targetSceneName,
+                previousSceneName = previousSceneName,
+                onlyFirstTime = onlyFirstTime,
+                delayTime = delayTime,
+                sourceObject = gameObject,
+                onTrigger = TriggerEntry
+            });
+
+            Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] 已注冊到 Manager（OnSceneChange 模式）");
         }
     }
 
@@ -81,64 +103,27 @@ public class SceneEntryTrigger : MonoBehaviour
     {
         if (triggerMode == TriggerMode.OnSceneLoad)
         {
-            // 場景載入模式：立即檢查並觸發
+            Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] Start() 呼叫，當前場景：{SceneManager.GetActiveScene().name}");
             CheckAndTrigger();
         }
     }
 
-    /// <summary>
-    /// 場景載入回調（僅在 OnSceneChange 模式使用）
-    /// </summary>
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        string currentScene = scene.name;
-
-        Debug.Log($"[SceneEntryTrigger] 場景載入：{currentScene}（上一個場景：{lastSceneName}）");
-
-        // 檢查是否是目標場景
-        if (currentScene == targetSceneName)
-        {
-            // 檢查前一個場景（如果有設定）
-            if (!string.IsNullOrEmpty(previousSceneName))
-            {
-                if (lastSceneName != previousSceneName)
-                {
-                    Debug.Log($"[SceneEntryTrigger] 前一個場景不符（需要：{previousSceneName}，實際：{lastSceneName}），跳過觸發");
-                    lastSceneName = currentScene;
-                    return;
-                }
-            }
-
-            // 延遲觸發
-            StartCoroutine(DelayedTrigger());
-        }
-
-        lastSceneName = currentScene;
-    }
-
-    /// <summary>
-    /// 檢查並觸發（OnSceneLoad 模式）
-    /// </summary>
     private void CheckAndTrigger()
     {
-        // 檢查是否已經觸發過
         if (onlyFirstTime && InteractionStateManager.Instance != null)
         {
             if (InteractionStateManager.Instance.HasInteracted(sceneEntryID))
             {
                 hasTriggered = true;
-                Debug.Log($"[SceneEntryTrigger] {sceneEntryID} 已經觸發過，跳過");
+                Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] 已經觸發過（InteractionStateManager 確認），跳過");
                 return;
             }
         }
 
-        // 延遲觸發
+        Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] 通過檢查，啟動延遲觸發（{delayTime}s）");
         StartCoroutine(DelayedTrigger());
     }
 
-    /// <summary>
-    /// 延遲觸發
-    /// </summary>
     private IEnumerator DelayedTrigger()
     {
         yield return new WaitForSeconds(delayTime);
@@ -150,48 +135,45 @@ public class SceneEntryTrigger : MonoBehaviour
     }
 
     /// <summary>
-    /// 執行進入場景觸發
+    /// 執行觸發內容（兩種模式都會走這裡）
     /// </summary>
     private void TriggerEntry()
     {
-        // 再次檢查是否已觸發（防止重複）
         if (onlyFirstTime && InteractionStateManager.Instance != null)
         {
             if (InteractionStateManager.Instance.HasInteracted(sceneEntryID))
             {
-                Debug.Log($"[SceneEntryTrigger] {sceneEntryID} 已經觸發過，跳過");
+                Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] 觸發前再次確認：已觸發過，跳過");
                 return;
             }
         }
 
-        Debug.Log($"[SceneEntryTrigger] {sceneEntryID} 觸發！");
+        Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] ===== 觸發開始 =====");
 
-        // 1. 給予圖示
         if (giveIcon && iconToGive != null)
         {
             GiveIconToPlayer();
         }
 
-        // 2. 播放對話
         if (playDialogue && inkJSON != null)
         {
             PlayDialogue();
         }
 
-        // 3. 播放音效
         if (triggerSound != null)
         {
             PlaySound(triggerSound);
         }
 
-        // 4. 記錄已觸發（跨場景）
+        // 記錄已觸發
         if (onlyFirstTime && InteractionStateManager.Instance != null)
         {
             InteractionStateManager.Instance.MarkAsInteracted(sceneEntryID);
-            Debug.Log($"[SceneEntryTrigger] {sceneEntryID} 已記錄為觸發過");
+            Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] 已記錄為觸發過");
         }
 
         hasTriggered = true;
+        Debug.Log($"[SceneEntryTrigger] [{sceneEntryID}] ===== 觸發完成 =====");
     }
 
     private void GiveIconToPlayer()
@@ -229,6 +211,10 @@ public class SceneEntryTrigger : MonoBehaviour
                 SoundManager.Instance.PlaySound2D("Pickup");
             }
         }
+        else
+        {
+            Debug.LogWarning($"[SceneEntryTrigger] 給予圖示失敗：{iconToGive.displayName}");
+        }
     }
 
     private void PlayDialogue()
@@ -241,11 +227,11 @@ public class SceneEntryTrigger : MonoBehaviour
 
         if (DialogueManager.GetInstance().dialogueIsPlaying)
         {
-            Debug.LogWarning("[SceneEntryTrigger] 對話已經在播放中");
+            Debug.LogWarning("[SceneEntryTrigger] 對話已經在播放中，無法觸發新對話");
             return;
         }
 
-        Debug.Log($"[SceneEntryTrigger] 播放對話：{dialogueKnot}");
+        Debug.Log($"[SceneEntryTrigger] 播放對話：Knot = {dialogueKnot}");
         DialogueManager.GetInstance().StartDialogue(inkJSON, this.gameObject, dialogueKnot);
     }
 
@@ -257,23 +243,8 @@ public class SceneEntryTrigger : MonoBehaviour
             return;
         }
 
-        // 優先使用備用方案直接播放（最可靠）
         AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, 1f);
         Debug.Log($"[SceneEntryTrigger] 播放音效：{clip.name}");
-
-        // 如果有 SoundManager，也可以額外呼叫（可選）
-        // if (SoundManager.Instance != null)
-        // {
-        //     SoundManager.Instance.PlaySound2D(clip.name);
-        // }
-    }
-
-    private void OnDestroy()
-    {
-        if (triggerMode == TriggerMode.OnSceneChange)
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
     }
 
     private void OnValidate()
@@ -306,7 +277,7 @@ public class SceneEntryTrigger : MonoBehaviour
 
         if (triggerMode == TriggerMode.OnSceneChange && string.IsNullOrEmpty(targetSceneName))
         {
-            Debug.LogWarning($"[SceneEntryTrigger] {gameObject.name}: 使用場景切換模式，但未設定 targetSceneName！");
+            Debug.LogWarning($"[SceneEntryTrigger] {gameObject.name}: 使用 OnSceneChange 模式，但未設定 targetSceneName！");
         }
     }
 }
