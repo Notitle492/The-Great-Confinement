@@ -9,7 +9,7 @@
 === player_has_icon10_teacher ===
 
 # name:老師
-# portrait:Mr
+# portrait:Mr_open_eyes
 
 剛剛漏了幾張考卷，再爬一次真累。
 
