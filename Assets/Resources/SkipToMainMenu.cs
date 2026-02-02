@@ -15,20 +15,25 @@ public class SkipToMainMenu : MonoBehaviour
     [Tooltip("影片播放完後是否自動切換場景")]
     public bool autoSwitchAfterVideo = true;
 
-    private bool hasSkipped = false; // 防止重複觸發
+    // ============================================================
+    // 新增：指定要隱藏的 Persistent Canvas
+    // 在這裡拖入 GameManager 的 persistentObjects 裡那個叫 Canvas 的物件
+    // ============================================================
+    [Header("Persistent Canvas 設定")]
+    [Tooltip("拖入 persistentObjects 裡的 Canvas，這個會在切場景前被隱藏，避免蓋住後面的動畫場景")]
+    public GameObject persistentCanvas;
+
+    private bool hasSkipped = false;
 
     private void Start()
     {
-        // 如果沒有手動指定 VideoPlayer，自動尋找
         if (videoPlayer == null)
         {
             videoPlayer = FindObjectOfType<VideoPlayer>();
         }
 
-        // 如果找到 VideoPlayer 且啟用自動切換
         if (videoPlayer != null && autoSwitchAfterVideo)
         {
-            // 訂閱影片播放結束事件
             videoPlayer.loopPointReached += OnVideoFinished;
             Debug.Log("[SkipToMainMenu] 已訂閱影片結束事件");
         }
@@ -38,18 +43,12 @@ public class SkipToMainMenu : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 影片播放結束時的回調
-    /// </summary>
     private void OnVideoFinished(VideoPlayer vp)
     {
         Debug.Log("[SkipToMainMenu] 影片播放完畢，自動切換場景");
         ChangeToScene();
     }
 
-    /// <summary>
-    /// 跳過按鈕：直接進入主選單
-    /// </summary>
     public void ChangeToScene()
     {
         if (hasSkipped)
@@ -61,20 +60,25 @@ public class SkipToMainMenu : MonoBehaviour
         hasSkipped = true;
         Debug.Log($"[SkipToMainMenu] 切換到場景：{targetSceneName}");
 
-        // 停止影片播放（如果還在播放）
         if (videoPlayer != null && videoPlayer.isPlaying)
         {
             videoPlayer.Stop();
         }
 
-        // 載入場景
+        // ============================================================
+        // 新增：隱藏 Persistent Canvas，避免蓋住後面的動畫場景
+        // ============================================================
+        if (persistentCanvas != null)
+        {
+            persistentCanvas.SetActive(false);
+            Debug.Log($"[SkipToMainMenu] 已隱藏 Persistent Canvas：{persistentCanvas.name}");
+        }
+
         SceneManager.LoadScene(targetSceneName);
     }
 
-    
     private void OnDestroy()
     {
-        // 清理事件訂閱
         if (videoPlayer != null)
         {
             videoPlayer.loopPointReached -= OnVideoFinished;

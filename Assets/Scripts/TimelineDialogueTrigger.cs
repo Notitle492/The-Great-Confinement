@@ -23,8 +23,8 @@ public class TimelineDialogueTrigger : MonoBehaviour
 
     public enum DialogueTriggerMode
     {
-        TimelineEnd,    // Timeline 播完才觸發對話
-        SpecificTime    // 在指定時間點觸發對話
+        TimelineEnd,
+        SpecificTime
     }
 
     [Header("對話設定")]
@@ -40,8 +40,16 @@ public class TimelineDialogueTrigger : MonoBehaviour
     public string targetSceneName = "";
     public float sceneTransitionDelay = 0.5f;
 
+    // ============================================================
+    // 新增：動畫場景是否需要隱藏 Persistent 物件
+    // 在會被 Persistent 物件遮蔽的動畫場景裡勾選這個
+    // ============================================================
+    [Header("Persistent 物件控制")]
+    [Tooltip("勾選後，播放 Timeline 前會隱藏 Persistent 物件，避免遮蔽動畫；播完或對話結束後再恢復")]
+    public bool hidePersistentDuringTimeline = false;
+
     private bool hasTriggered = false;
-    private bool timelineDialogueTriggered = false; // 新增：避免重複觸發
+    private bool timelineDialogueTriggered = false;
 
     private void Start()
     {
@@ -74,6 +82,7 @@ public class TimelineDialogueTrigger : MonoBehaviour
         Debug.Log($"[TimelineDialogueTrigger] Ink JSON: {(inkJSON != null ? inkJSON.name : "NULL")}");
         Debug.Log($"[TimelineDialogueTrigger] Knot: {dialogueKnot}");
         Debug.Log($"[TimelineDialogueTrigger] 觸發模式: {triggerMode}");
+        Debug.Log($"[TimelineDialogueTrigger] hidePersistentDuringTimeline: {hidePersistentDuringTimeline}");
 
         playableDirector.stopped += OnTimelineStopped;
         Debug.Log("[TimelineDialogueTrigger] 已訂閱 Timeline 停止事件");
@@ -91,10 +100,18 @@ public class TimelineDialogueTrigger : MonoBehaviour
 
         if (playableDirector != null)
         {
+            // ============================================================
+            // 在 Timeline 開始播放前隱藏 Persistent 物件
+            // ============================================================
+            if (hidePersistentDuringTimeline && GameManager.Instance != null)
+            {
+                GameManager.Instance.HidePersistentObjects();
+                Debug.Log("[TimelineDialogueTrigger] 已隱藏 Persistent 物件");
+            }
+
             Debug.Log("[TimelineDialogueTrigger] 開始播放 Timeline");
             playableDirector.Play();
 
-            // 如果是指定時間觸發，啟動監聽
             if (triggerMode == DialogueTriggerMode.SpecificTime)
             {
                 StartCoroutine(WaitForTimelineTriggerTime());
@@ -102,9 +119,6 @@ public class TimelineDialogueTrigger : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 新增：等待 Timeline 播放到指定時間點
-    /// </summary>
     private System.Collections.IEnumerator WaitForTimelineTriggerTime()
     {
         Debug.Log($"[TimelineDialogueTrigger] 等待 Timeline 播放到 {dialogueTriggerTime} 秒...");
@@ -124,7 +138,6 @@ public class TimelineDialogueTrigger : MonoBehaviour
 
     private void Update()
     {
-        // 測試用：按 T 鍵手動觸發對話
         if (Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
         {
             Debug.Log("[TimelineDialogueTrigger] ===== 手動測試觸發 (T 鍵) =====");
@@ -144,16 +157,12 @@ public class TimelineDialogueTrigger : MonoBehaviour
     {
         Debug.Log("========== [TimelineDialogueTrigger] OnTimelineStopped ==========");
 
-        // 只有在 TimelineEnd 模式才觸發對話
         if (triggerMode == DialogueTriggerMode.TimelineEnd && !hasTriggered)
         {
             TriggerDialogue();
         }
     }
 
-    /// <summary>
-    /// 新增：統一的對話觸發方法
-    /// </summary>
     private void TriggerDialogue()
     {
         if (hasTriggered)
@@ -164,12 +173,9 @@ public class TimelineDialogueTrigger : MonoBehaviour
 
         hasTriggered = true;
 
-        // 如果沒有設定 Ink 檔案，就跳過對話直接執行後續邏輯
         if (inkJSON == null)
         {
             Debug.LogWarning("[TimelineDialogueTrigger] inkJSON 是 null，跳過對話");
-
-            // 直接執行對話結束後的邏輯
             OnDialogueEnded();
             return;
         }
@@ -228,6 +234,16 @@ public class TimelineDialogueTrigger : MonoBehaviour
     private void OnDialogueEnded()
     {
         Debug.Log("[TimelineDialogueTrigger] OnDialogueEnded 執行");
+
+        // ============================================================
+        // 對話結束後（或沒有對話的情況），恢復 Persistent 物件
+        // 這裡放在切場景之前，確保切到下一個場景時物件已經是可見的
+        // ============================================================
+        if (hidePersistentDuringTimeline && GameManager.Instance != null)
+        {
+            GameManager.Instance.ShowPersistentObjects();
+            Debug.Log("[TimelineDialogueTrigger] 已恢復 Persistent 物件");
+        }
 
         if (giveIconAfterDialogue && iconToGive != null)
         {

@@ -43,6 +43,33 @@ public class GameManager : MonoBehaviour
         // 確認關鍵 Manager 已初始化
         StartCoroutine(VerifyManagers());
     }
+
+
+    public void HidePersistentObjects()
+    {
+        foreach (GameObject obj in persistentObjects)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(false);
+                Debug.Log($"[GameManager] 隱藏：{obj.name}");
+            }
+        }
+    }
+
+    public void ShowPersistentObjects()
+    {
+        foreach (GameObject obj in persistentObjects)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(true);
+                Debug.Log($"[GameManager] 顯示：{obj.name}");
+            }
+        }
+    }
+
+
     private System.Collections.IEnumerator VerifyManagers()
     {
         yield return new WaitForSeconds(0.5f);
