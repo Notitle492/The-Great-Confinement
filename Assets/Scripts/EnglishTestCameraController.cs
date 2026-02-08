@@ -45,7 +45,7 @@ public class EnglishTestCameraController : MonoBehaviour
             // 等待當前題目的持續時間
             yield return new WaitForSeconds(questionDurations[i]);
 
-            // 記錄玩家答案（如果有設定TestManager）
+            // 記錄答案後再移動
             if (testManager != null)
             {
                 testManager.RecordCurrentAnswer();
