@@ -13,6 +13,8 @@ public class EnglishTestCameraController : MonoBehaviour
     [SerializeField] private AudioSource audioSource; // 播放整合音檔的AudioSource
     [SerializeField] private AudioClip fullTestAudio; // 完整的英聽音檔
 
+    [Header("測驗管理")]
+    [SerializeField] private EnglishTestManager testManager; // 測驗管理器（選用）
 
     private int currentQuestion = 0;
     private bool isMoving = false;
@@ -43,7 +45,11 @@ public class EnglishTestCameraController : MonoBehaviour
             // 等待當前題目的持續時間
             yield return new WaitForSeconds(questionDurations[i]);
 
-            
+            // 記錄玩家答案（如果有設定TestManager）
+            if (testManager != null)
+            {
+                testManager.RecordCurrentAnswer();
+            }
 
             // 如果不是最後一題，移動攝影機到下一題
             if (i < totalQuestions - 1)
@@ -83,7 +89,11 @@ public class EnglishTestCameraController : MonoBehaviour
     {
         Debug.Log("英聽測驗完成！");
 
-        
+        // 檢查所有答案（如果有設定TestManager）
+        if (testManager != null)
+        {
+            testManager.CheckAllAnswers();
+        }
 
         // 這裡可以觸發測驗結束的事件，例如：
         // - 顯示結束畫面
@@ -91,22 +101,7 @@ public class EnglishTestCameraController : MonoBehaviour
         // - 顯示成績
     }
 
-    
+ 
 
-    // 公開方法：暫停/繼續音檔（測試用）
-    public void PauseAudio()
-    {
-        if (audioSource != null && audioSource.isPlaying)
-        {
-            audioSource.Pause();
-        }
-    }
-
-    public void ResumeAudio()
-    {
-        if (audioSource != null && !audioSource.isPlaying)
-        {
-            audioSource.UnPause();
-        }
-    }
+   
 }
