@@ -1,6 +1,6 @@
 ->Chapter1
 === Chapter1 ===
-# name:NPC 4
+# name:想法明顯的同學
 # portrait:npc4
 
 ( • ̀ω•́ )

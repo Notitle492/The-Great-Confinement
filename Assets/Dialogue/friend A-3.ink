@@ -1,6 +1,6 @@
 ->Chapter1
 === Chapter1 ===
-# name:朋友A
+# name:偉哲
 # portrait:friendA
 
 你要去哪裡？

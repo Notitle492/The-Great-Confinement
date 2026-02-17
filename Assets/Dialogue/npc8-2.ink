@@ -7,7 +7,7 @@
 門被鎖上了。
 
 
-# name:NPC 8
+# name:遇到困難的人
 # portrait:npc8
 
 救我……我需要衛生紙……嗯……

@@ -1,6 +1,6 @@
 ->Chapter1
 === Chapter1 ===
-# name:朋友A
+# name:偉哲
 # portrait:friendA
 
 NPC2已經在教室囉？我還在這邊等他！
