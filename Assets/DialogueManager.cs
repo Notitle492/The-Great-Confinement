@@ -9,6 +9,15 @@ using UnityEngine.EventSystems;
 
 public class DialogueManager : MonoBehaviour
 {
+
+    [Header("Params")] // [新增] 控制打字速度
+    [SerializeField] private float typingSpeed = 0.07f;
+
+    [SerializeField] private AudioClip typingSound; // [新增] 讓你可以自行選擇音效檔案
+    [Range(1, 5)]
+    [SerializeField] private int soundFrequency = 1; // [新增] 控制音效頻率（每隔幾個字響一次，避免太吵）
+
+
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialogueCanvas;
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -27,6 +36,11 @@ public class DialogueManager : MonoBehaviour
 
     private Story currentStory;
     public bool dialogueIsPlaying { get; private set; }
+
+    // [新增] 用於控制打字狀態與跳過動畫
+    private Coroutine displayLineCoroutine;
+    private bool canContinueToNextLine = false;
+
 
     private List<Button> choiceButtons = new List<Button>();
 
@@ -64,7 +78,10 @@ public class DialogueManager : MonoBehaviour
     {
         if (!dialogueIsPlaying) return;
 
-        if (InputManager.GetInstance().GetSubmitPressed() && currentStory.currentChoices.Count == 0)
+        // [修改] 只有在「文字打完了」且「沒有選項」時，按下 Submit 才會進入下一句
+        if (canContinueToNextLine
+            && currentStory.currentChoices.Count == 0
+            && InputManager.GetInstance().GetSubmitPressed())
         {
             ContinueStory();
         }
@@ -94,7 +111,7 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialogueCanvas.SetActive(true);
 
-        // ✅ 確保 CanvasGroup 可以互動
+        // 確保 CanvasGroup 可以互動
         if (dialogueCanvas.TryGetComponent<CanvasGroup>(out CanvasGroup canvasGroup))
         {
             canvasGroup.interactable = true;
@@ -116,6 +133,9 @@ public class DialogueManager : MonoBehaviour
 
     private void ExitDialogueMode()
     {
+        // 如果還在打字就強行結束，先停止協程
+        if (displayLineCoroutine != null) StopCoroutine(displayLineCoroutine);
+
         dialogueIsPlaying = false;
         dialogueCanvas.SetActive(false);
         dialogueText.text = "";
@@ -124,14 +144,14 @@ public class DialogueManager : MonoBehaviour
         portraitImage.color = new Color(1, 1, 1, 0);
         ClearChoices();
 
-        // 🔽 在對話結束後觸發圖示淡入
+        // 在對話結束後觸發圖示淡入
         if (iconFader != null)
         {
             iconFader.FadeIn(); // ✅ 淡入圖示
         }
 
 
-        // 🔽 對話結束後，呼叫 NPC 的 OnDialogueEnded()
+        // 對話結束後，呼叫 NPC 的 OnDialogueEnded()
         if (currentSpeaker != null)
         {
             
@@ -151,7 +171,7 @@ public class DialogueManager : MonoBehaviour
             }   
         }
 
-        // ✅ 清除 speaker
+        // 清除 speaker
         currentSpeaker = null;
         
     }
@@ -160,16 +180,80 @@ public class DialogueManager : MonoBehaviour
     {
         if (currentStory.canContinue)
         {
+            // [新增] 如果舊的協程還在跑，先把它停掉
+            if (displayLineCoroutine != null)
+            {
+                StopCoroutine(displayLineCoroutine);
+            }
+
             string text = currentStory.Continue().Trim();
             dialogueText.text = text;
             HandleTags(currentStory.currentTags);
-            DisplayChoices();
+
+            // [修改] 改為啟動打字機協程，而不是直接賦值
+            displayLineCoroutine = StartCoroutine(DisplayLine(text));
         }
         else
         {
             ExitDialogueMode();
         }
     }
+
+    // [新增] 打字機動畫核心協程
+    private IEnumerator DisplayLine(string line)
+    {
+        dialogueText.text = line; // 先填入完整文字以便計算
+        dialogueText.maxVisibleCharacters = 0; // 但先不顯示任何字
+
+        canContinueToNextLine = false;
+        choicesPanel.SetActive(false); // 打字時隱藏選項
+
+        bool isAddingRichTextTag = false;
+
+        foreach (char letter in line.ToCharArray())
+        {
+            // 如果玩家在打字期間按下 Submit，直接顯示整行 (Skip 功能)
+            if (InputManager.GetInstance().GetSubmitPressed())
+            {
+                dialogueText.maxVisibleCharacters = line.Length;
+                break;
+            }
+
+            // 處理 Rich Text (如 <b></b>)，避免標籤被逐字拆開顯示
+            if (letter == '<' || isAddingRichTextTag)
+            {
+                isAddingRichTextTag = true;
+                if (letter == '>') isAddingRichTextTag = false;
+            }
+            else
+            {
+                // [新增] 播放音效邏輯
+                PlayTypingSound(dialogueText.maxVisibleCharacters);
+
+                dialogueText.maxVisibleCharacters++;
+                yield return new WaitForSeconds(typingSpeed);
+            }
+        }
+
+        // 打字結束後的處理
+        DisplayChoices();
+        canContinueToNextLine = true;
+    }
+
+    // [新增] 播放文字音效的方法
+    private void PlayTypingSound(int currentDisplayedCharacterCount)
+    {
+        // 只有在設定了音效，且達到播放頻率時才播放
+        if (typingSound != null && currentDisplayedCharacterCount % soundFrequency == 0)
+        {
+            // 這裡直接調用你原本 SoundManager 的 3D 播放功能（物件位置設在相機或 Manager 物件上）
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySound3D(typingSound, transform.position);
+            }
+        }
+    }
+
 
     private void HandleTags(List<string> tags)
     {
