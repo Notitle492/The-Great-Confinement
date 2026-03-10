@@ -1,12 +1,12 @@
 ->Chapter1
 === Chapter1 ===
-# name:NPC 1 
+# name:林柏宏
 # portrait:npc1
 
 你找到我的筆了嗎？
 
 # name: 找到了
-# portrait:NPC1的包包
+# portrait:
 
 空蕩蕩的包包。
 

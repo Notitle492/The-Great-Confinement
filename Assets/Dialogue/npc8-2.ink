@@ -2,7 +2,7 @@
 === Chapter1 ===
 
 # name:……？
-# portrait:
+# portrait:player
 
 門被鎖上了。
 

@@ -1,6 +1,6 @@
 ->Chapter1
 === Chapter1 ===
-# name:NPC 2 
+# name:沈辰偉
 # portrait:npc2
 
 啪！別碰！

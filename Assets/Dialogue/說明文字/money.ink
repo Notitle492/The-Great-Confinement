@@ -1,7 +1,7 @@
 ->Chapter1
 === Chapter1 ===
-# name:
-# portrait:
+# name:……！
+# portrait:player
 
 找到了硬幣。
 

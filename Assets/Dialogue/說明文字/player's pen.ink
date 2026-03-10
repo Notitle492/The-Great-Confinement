@@ -1,9 +1,9 @@
 ->Chapter1
 === Chapter1 ===
-# name:找到
-# portrait:
+# name:……！
+# portrait:player
 
-我的筆。
+是我的筆。
 
  -> END
 
