@@ -147,7 +147,7 @@ public class DialogueManager : MonoBehaviour
         // 在對話結束後觸發圖示淡入
         if (iconFader != null)
         {
-            iconFader.FadeIn(); // ✅ 淡入圖示
+            iconFader.FadeIn(); // 淡入圖示
         }
 
 

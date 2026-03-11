@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnglishTestCameraController : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class EnglishTestCameraController : MonoBehaviour
 
     [Header("測驗管理")]
     [SerializeField] private EnglishTestManager testManager; // 測驗管理器（選用）
+
+    
 
     private int currentQuestion = 0;
     private bool isMoving = false;
@@ -101,7 +104,8 @@ public class EnglishTestCameraController : MonoBehaviour
         // - 顯示成績
     }
 
- 
-
    
+
+
+
 }
