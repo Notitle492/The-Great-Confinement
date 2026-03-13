@@ -13,7 +13,7 @@ public class DialogueManager : MonoBehaviour
     [Header("Params")] // [新增] 控制打字速度
     [SerializeField] private float typingSpeed = 0.07f;
 
-    [SerializeField] private AudioClip typingSound; // [新增] 讓你可以自行選擇音效檔案
+    [SerializeField] private string typingSoundName = "typing";
     [Range(1, 5)]
     [SerializeField] private int soundFrequency = 1; // [新增] 控制音效頻率（每隔幾個字響一次，避免太吵）
 
@@ -243,13 +243,11 @@ public class DialogueManager : MonoBehaviour
     // [新增] 播放文字音效的方法
     private void PlayTypingSound(int currentDisplayedCharacterCount)
     {
-        // 只有在設定了音效，且達到播放頻率時才播放
-        if (typingSound != null && currentDisplayedCharacterCount % soundFrequency == 0)
+        if (!string.IsNullOrEmpty(typingSoundName) && currentDisplayedCharacterCount % soundFrequency == 0)
         {
-            // 這裡直接調用你原本 SoundManager 的 3D 播放功能（物件位置設在相機或 Manager 物件上）
             if (SoundManager.Instance != null)
             {
-                SoundManager.Instance.PlaySound3D(typingSound, transform.position);
+                SoundManager.Instance.PlaySound2D(typingSoundName);
             }
         }
     }
