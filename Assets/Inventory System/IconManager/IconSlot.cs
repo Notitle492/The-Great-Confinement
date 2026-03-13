@@ -76,16 +76,12 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log($"[TEST] OnPointerClick 觸發，slot={name}, isSynthesis={isSynthesisSlot}");
+        // 如果有 EventTrigger 存在，就讓 EventTrigger 負責處理，這裡直接跳過
+        // 避免 IPointerClickHandler 和 EventTrigger 同時觸發兩次
+        if (GetComponent<UnityEngine.EventSystems.EventTrigger>() != null) return;
 
-        
-        if (!HasIcon())
-        {
-            Debug.Log("[OnPointerClick] Slot 沒有圖示，忽略點擊");
-            return;
-        }
+        if (!HasIcon()) return;
 
-        // 無論是顯示區還是合成區，都使用切換邏輯
         Debug.Log($"[OnPointerClick] {iconData.id} 被點擊 → 執行切換邏輯");
         IconManager.Instance?.ToggleSynthesis(iconData);
 

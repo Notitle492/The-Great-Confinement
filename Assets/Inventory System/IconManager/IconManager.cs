@@ -193,9 +193,7 @@ public class IconManager : MonoBehaviour
         }
 
         if (!synthesisHistory.Contains(data))
-        {
             synthesisHistory.Add(data);
-        }
 
         EnsureClickableSlot(go, go.GetComponent<IconSlot>());
     }
@@ -313,6 +311,8 @@ public class IconManager : MonoBehaviour
                 var slot = slotContainer.GetChild(i).GetComponent<IconSlot>();
                 if (slot != null && slot.HasIcon() && slot.IconData.id == icon.id)
                 {
+                    // 已存在就只重新綁定事件，不重新 SpawnSlot
+                    EnsureClickableSlot(slot.gameObject, slot);
                     alreadyExists = true;
                     break;
                 }
@@ -407,54 +407,38 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    // 在 SpawnSlot 方法後面新增這個方法
     private void EnsureClickableSlot(GameObject slotObject, IconSlot slotScript)
     {
         if (slotObject == null || slotScript == null) return;
 
-        // 方法 1: 確保 Image 可以接收射線
+        // 確保 Image 可以接收射線
         Image img = slotObject.GetComponent<Image>();
         if (img == null) img = slotObject.GetComponentInChildren<Image>();
-        if (img != null)
-        {
-            img.raycastTarget = true;
-            Debug.Log($"設置 {slotScript.IconData?.id} 的 Image.raycastTarget = true");
-        }
-        
-        // 方法 2: 如果有 Button 組件，設置點擊事件
+        if (img != null) img.raycastTarget = true;
+
+        // 移除 Button 的 onClick 綁定，避免與 EventTrigger 重複
         Button btn = slotObject.GetComponent<Button>();
         if (btn != null)
         {
             btn.interactable = true;
-            btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(() => 
-            {
-                Debug.Log($"[Button] 點擊 {slotScript.IconData?.id}");
-                if (slotScript.IconData != null)
-                {
-                    ToggleSynthesis(slotScript.IconData);
-                }
-            });
+            btn.onClick.RemoveAllListeners(); // 清空但不新增，讓 EventTrigger 統一處理
         }
-        
-        // 方法 3: 添加 EventTrigger 作為備用方案
+
+        // EventTrigger 作為唯一的點擊來源
         var eventTrigger = slotObject.GetComponent<EventTrigger>();
         if (eventTrigger == null)
-        {
             eventTrigger = slotObject.AddComponent<EventTrigger>();
-        }
-        
-        // 清除舊的事件
+
+        // 每次綁定前清除舊事件，避免重複堆疊
         eventTrigger.triggers.Clear();
-        
-        // 添加點擊事件
+
         var clickEntry = new EventTrigger.Entry();
         clickEntry.eventID = EventTriggerType.PointerClick;
-        clickEntry.callback.AddListener((data) => 
+        clickEntry.callback.AddListener((data) =>
         {
-            Debug.Log($"[EventTrigger] 點擊 {slotScript.IconData?.id}");
             if (slotScript.IconData != null)
             {
+                Debug.Log($"[EventTrigger] 點擊 {slotScript.IconData.id}");
                 ToggleSynthesis(slotScript.IconData);
             }
         });
