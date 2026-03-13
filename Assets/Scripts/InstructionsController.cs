@@ -18,7 +18,9 @@ public class InstructionsController : MonoBehaviour
     // 紀錄目前是哪個子面板被開啟
     private CanvasGroup currentActivePanel;
     private Controls controls;
-         
+
+    private bool isChangingPage = false; // 新增：防止快速重複點擊
+
 
     private void Awake()
     {
@@ -95,20 +97,41 @@ public class InstructionsController : MonoBehaviour
 
     private void ShowPreviousImage()
     {
+        // 如果正在換頁中，直接忽略這次點擊
+        if (isChangingPage) return;
+
         if (currentImageIndex > 0)
         {
+            isChangingPage = true;
             currentImageIndex--;
             UpdateInstructionImage();
+
+            // 短暫延遲後才允許再次換頁（防止連點）
+            StartCoroutine(ResetPageChangeCooldown());
         }
     }
 
     private void ShowNextImage()
     {
+        // 如果正在換頁中，直接忽略這次點擊
+        if (isChangingPage) return;
+
         if (currentImageIndex < instructionSprites.Length - 1)
         {
+            isChangingPage = true;
             currentImageIndex++;
             UpdateInstructionImage();
+
+            // 短暫延遲後才允許再次換頁（防止連點）
+            StartCoroutine(ResetPageChangeCooldown());
         }
+    }
+
+    // 新增協程：冷卻時間結束後重置旗標
+    private System.Collections.IEnumerator ResetPageChangeCooldown()
+    {
+        yield return new WaitForSeconds(0.3f); // 0.3秒內不允許再次換頁
+        isChangingPage = false;
     }
 
     private void UpdateInstructionImage()
