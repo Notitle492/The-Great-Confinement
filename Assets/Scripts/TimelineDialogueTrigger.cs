@@ -34,6 +34,8 @@ public class TimelineDialogueTrigger : MonoBehaviour
     [Header("圖示設定")]
     public bool giveIconAfterDialogue = false;
     public IconDataSO iconToGive;
+    [Tooltip("獲得圖示後，要消除的圖示 ID（留空則不消除）")]
+    public string iconIDToRemove = "";
 
     [Header("場景切換設定")]
     public bool switchSceneAfterDialogue = false;
@@ -270,6 +272,14 @@ public class TimelineDialogueTrigger : MonoBehaviour
         if (added)
         {
             Debug.Log($"[TimelineDialogueTrigger] 給予圖示：{iconToGive.displayName}");
+
+            if (!string.IsNullOrEmpty(iconIDToRemove))
+            {
+                bool removed = IconManager.Instance.RemoveIconByID(iconIDToRemove);
+                Debug.Log(removed
+                    ? $"[TimelineDialogueTrigger] 已消除圖示：{iconIDToRemove}"
+                    : $"[TimelineDialogueTrigger] 找不到要消除的圖示：{iconIDToRemove}");
+            }
         }
         else
         {
