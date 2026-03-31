@@ -154,7 +154,7 @@ public class SynthesisManager : MonoBehaviour
             IconManager.Instance.RemoveFromSynthesis(icon);
         }
 
-        // 2. ✅ 從顯示區移除所有相關材料（包含替代材料）
+        // 2. 從顯示區移除所有相關材料（包含替代材料）
         List<string> allMaterialsToRemove = recipe.GetAllMaterialsToRemove();
         foreach (var materialID in allMaterialsToRemove)
         {
@@ -199,7 +199,7 @@ public class SynthesisManager : MonoBehaviour
 
             // 3秒後自動隱藏
             CancelInvoke(nameof(HideErrorMessage));
-            Invoke(nameof(HideErrorMessage), 3f);
+            Invoke(nameof(HideErrorMessage), 2f);
         }
     }
 

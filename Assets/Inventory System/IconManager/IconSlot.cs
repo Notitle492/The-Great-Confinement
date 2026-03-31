@@ -47,7 +47,7 @@ public class IconSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         
     }
 
-    // ✅ 這裡保留一個就好
+    // 這裡保留一個就好
     public bool HasIcon() => iconData != null;
 
 

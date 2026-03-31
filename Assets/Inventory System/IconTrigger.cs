@@ -27,6 +27,13 @@ public class IconTrigger : MonoBehaviour
     [Tooltip("互動後物件是否消失")]
     public bool disappearAfterInteraction = false;
 
+    [Header("=== 第一次互動前置對話 ===")]
+    [Tooltip("第一次互動時要播放的 Ink 檔案（播完才給圖示）。留空則直接給圖示。")]
+    public TextAsset firstInteractionInkJSON;
+
+    [Tooltip("要跳到的 Knot 名稱（留空則從頭播）")]
+    public string firstInteractionKnot = "";
+
     [Header("=== 條件互動 ===")]
     [Tooltip("是否需要擁有特定圖示才能互動")]
     public bool requiresSpecificIcon = false;
@@ -50,6 +57,11 @@ public class IconTrigger : MonoBehaviour
 
     private bool hasInteracted = false;
 
+    // 用來標記「第一次對話已播完，等待給圖示」
+    private bool pendingIconGrant = false;
+    private bool hasPlayedFirstDialogue = false;
+    private string HasPlayedFirstDialogueKey => $"{uniqueObjectID}_HasPlayedFirstDialogue";
+
     private void Start()
     {
         // 遊戲開始時檢查是否已經互動過
@@ -68,15 +80,26 @@ public class IconTrigger : MonoBehaviour
                 }
             }
         }
+
+        // 載入前置對話是否已播過
+        if (InteractionStateManager.Instance != null)
+        {
+            string data = InteractionStateManager.Instance.GetInteractionData(HasPlayedFirstDialogueKey);
+            if (!string.IsNullOrEmpty(data) && bool.TryParse(data, out bool saved))
+            {
+                hasPlayedFirstDialogue = saved;
+                Debug.Log($"[IconTrigger] {uniqueObjectID} 載入前置對話狀態：{hasPlayedFirstDialogue}");
+            }
+        }
     }
 
     /// 供 ObjectTrigger 呼叫的互動方法
-    
+
     public void Interact()
     {
         Debug.Log($"[IconTrigger] {gameObject.name} Interact() 被呼叫");
 
-        // 檢查是否已經互動過(跨場景記錄)
+        // 1. 檢查是否已經互動過(跨場景記錄)
         if (oneTimeInteraction)
         {
             if (InteractionStateManager.Instance != null)
@@ -94,7 +117,20 @@ public class IconTrigger : MonoBehaviour
             }
         }
 
-        // 檢查是否需要特定圖示
+        // 2. 如果有前置對話且還沒播過，先播對話（條件檢查延後到對話結束後）
+        if (firstInteractionInkJSON != null && !hasPlayedFirstDialogue && !pendingIconGrant)
+        {
+            Debug.Log($"[IconTrigger] 播放第一次互動前置對話");
+            pendingIconGrant = true;
+            DialogueManager.GetInstance().StartDialogue(
+                firstInteractionInkJSON,
+                this.gameObject,
+                firstInteractionKnot
+            );
+            return; // 對話結束後由 OnDialogueEnded() 接手
+        }
+
+        // 3. 對話播完後（或沒有前置對話），才檢查條件互動
         if (requiresSpecificIcon)
         {
             if (!HasRequiredIcon())
@@ -106,13 +142,43 @@ public class IconTrigger : MonoBehaviour
             }
         }
 
-        // 執行互動
+        // 4. 條件通過，給圖示
         PerformInteraction();
     }
 
-    
+    public void OnDialogueEnded()
+    {
+        if (pendingIconGrant)
+        {
+            pendingIconGrant = false;
+            Debug.Log($"[IconTrigger] 前置對話結束，進行條件檢查");
+
+            hasPlayedFirstDialogue = true;
+            if (InteractionStateManager.Instance != null)
+            {
+                InteractionStateManager.Instance.SetInteractionData(HasPlayedFirstDialogueKey, true.ToString());
+                Debug.Log($"[IconTrigger] {uniqueObjectID} 已儲存前置對話狀態");
+            }
+
+            // 對話結束後才做條件檢查
+            if (requiresSpecificIcon)
+            {
+                if (!HasRequiredIcon())
+                {
+                    Debug.Log($"[IconTrigger] 玩家未擁有圖示 {requiredIconID}，對話結束但不給圖示");
+                    ShowFailureMessage();
+                    PlaySound(failureSound);
+                    return;
+                }
+            }
+
+            PerformInteraction();
+        }
+    }
+
+
     /// 檢查玩家是否擁有所需圖示
-    
+
     private bool HasRequiredIcon()
     {
         if (string.IsNullOrEmpty(requiredIconID))

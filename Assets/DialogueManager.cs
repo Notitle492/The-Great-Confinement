@@ -154,21 +154,26 @@ public class DialogueManager : MonoBehaviour
         // 對話結束後，呼叫 NPC 的 OnDialogueEnded()
         if (currentSpeaker != null)
         {
-            
+
             DialogueTrigger dialogueTrigger = currentSpeaker.GetComponent<DialogueTrigger>();
             if (dialogueTrigger != null)
             {
                 dialogueTrigger.OnDialogueEnded();
 
-                // 如果需要對話結束後整個父物件消失
                 if (dialogueTrigger.disappearAfterDialogue)
                 {
                     Transform parent = dialogueTrigger.transform.parent;
                     if (parent != null)
                         parent.gameObject.SetActive(false);
-
                 }
-            }   
+            }
+
+            // 新增：讓 IconTrigger 也能收到對話結束通知
+            IconTrigger iconTrigger = currentSpeaker.GetComponent<IconTrigger>();
+            if (iconTrigger != null)
+            {
+                iconTrigger.OnDialogueEnded();
+            }
         }
 
         // 清除 speaker
